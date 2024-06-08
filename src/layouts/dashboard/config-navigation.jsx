@@ -49,17 +49,17 @@ export const navPrivate  = [
   
   {
     title: 'Applications',
-    path: '/products',
+    path: '/applications',
     icon: icon('ic_cart'),
   },
   {
     title: 'Clubs',
-    path: '/blog',
+    path: '/clubs',
     icon: icon('ic_blog'),
   },
   {
     title: 'History',
-    path: '/blog',
+    path: '/history',
     icon: icon('ic_blog'),
   },
 ];

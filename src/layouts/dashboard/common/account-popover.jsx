@@ -78,7 +78,7 @@ export default function AccountPopover() {
             border: (theme) => `solid 2px ${theme.palette.background.default}`,
           }}
         >
-          {account.nickname.charAt(0).toUpperCase()}
+          {account.nickname}
         </Avatar>
       </IconButton>
 

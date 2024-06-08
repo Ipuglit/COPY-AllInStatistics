@@ -20,10 +20,10 @@ import { Icon } from '@iconify/react';
 
 // ----------------------------------------------------------------------
 
-export default function PostCard({ cover, nickname, email, telegram, idd, status, user, roleName, index }) {
+export default function PostCard({ index, data}) {
 
   return (
-    <Grid xs={12} md={2.4}>
+    <Grid  xs={1.5} sm={3} md={2.4}>
       <Card>
         <Box
           sx={{
@@ -45,8 +45,8 @@ export default function PostCard({ cover, nickname, email, telegram, idd, status
         />
 
         <Avatar
-          alt={user.name}
-          src={user.avatarUrl}
+          alt={data.nickname}
+          src={data.avatar}
           sx={{
             zIndex: 9,
             width: 42,
@@ -58,8 +58,8 @@ export default function PostCard({ cover, nickname, email, telegram, idd, status
         />
         <Box
           component="img"
-          alt={nickname}
-          src={cover}
+          alt={data.nickname}
+          src={data.cover}
           sx={{
             top: 0,
             width: 1,
@@ -76,20 +76,19 @@ export default function PostCard({ cover, nickname, email, telegram, idd, status
           }}
         >
 
-
           <div style={{ display: 'flex', alignItems: 'center' }}>
 
-                  {status == "Active" ? 
-                          <Tooltip title="Active" placement="right" arrow>
+                  {data.status == "Active" ? 
+                          <Tooltip title="Active" placement="right" enterTouchDelay={0} arrow>
                               <Icon icon="mdi:check-circle" color='green' width={20} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
                   :
-                  status == "Pending" ?
-                          <Tooltip title="Pending" placement="right" arrow>
+                  data.status == "Pending" ?
+                          <Tooltip title="Pending" placement="right" enterTouchDelay={0} arrow>
                               <Icon icon="mdi:clock-outline" color='orange' width={20} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
                   :
-                          <Tooltip title="Pending" placement="right" arrow>
+                          <Tooltip title="Pending" placement="right" enterTouchDelay={0} arrow>
                               <Icon icon="mdi:close-circle" color='red' width={20} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
                   } 
@@ -100,7 +99,7 @@ export default function PostCard({ cover, nickname, email, telegram, idd, status
                               mb: 0,
                               color: 'text.disabled',
                             }}>
-                  {roleName}
+                  {data.rolename}
                 </Typography>
           </div>
 
@@ -116,7 +115,7 @@ export default function PostCard({ cover, nickname, email, telegram, idd, status
               WebkitBoxOrient: 'vertical',
             }}
           >
-            <span style={{fontSize:"16px"}}>{nickname}</span>
+            <span style={{fontSize:"16px"}}>{data.nickname}</span>
           </Link>
 
 
@@ -132,8 +131,8 @@ export default function PostCard({ cover, nickname, email, telegram, idd, status
           >
 
             {
-              telegram ? 
-              <Tooltip title={telegram} arrow>
+              data.telegram ? 
+              <Tooltip title={data.telegram} arrow>
                 <Stack direction="row">
                   <Icon icon="mdi:telegram" width={20} sx={{ mr: 0.5 }}  />
                 </Stack>
@@ -143,8 +142,8 @@ export default function PostCard({ cover, nickname, email, telegram, idd, status
             }
 
             {
-              email ? 
-              <Tooltip title={email} arrow>
+              data.email ? 
+              <Tooltip title={data.email} arrow>
                 <Stack direction="row">
                   <Icon icon="mdi:email" width={20} sx={{ mr: 0.5 }}  />
                 </Stack>

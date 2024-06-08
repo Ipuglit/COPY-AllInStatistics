@@ -3,7 +3,7 @@ import { useState, useLayoutEffect } from 'react';
 
 import * as Imp from '../importants'
 
-export const RawUsers = () => {
+export const RawApplications = (i) => {
 
   const Token = JSON.parse( localStorage.getItem('slk-token') );
 
@@ -11,19 +11,20 @@ export const RawUsers = () => {
   const [data, setData] = useState([])
 
   const Auth = {
-              A:  Token.id,
-              B:  Token.token,
-              C:  Token.gadget,
-              D:  Imp.TimeZoned,
+              A:    Token.id,
+              B:    Token.token,
+              C:    Token.gadget,
+              D:    Imp.TimeZoned,
+              FOR:  i ? i : "ALL",
           }; 
 
   async function fetching() {
       setLoad(false)
     try {
-      const response = await axios.post(Imp.Fetch['users'], Auth);
+      const response = await axios.post(Imp.Fetch['applications'], Auth);
       setData(response.data);
       setLoad(true)
-      //console.log("Users items fetched..."+JSON.stringify(response.data,null,2))
+      console.log("Applications items fetched..."+JSON.stringify(response.data,null,2))
     } catch (error) {
       console.error("Error fetching data: ", error);
     }

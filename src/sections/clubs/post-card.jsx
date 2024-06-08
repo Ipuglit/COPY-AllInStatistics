@@ -20,10 +20,10 @@ import { Icon } from '@iconify/react';
 
 // ----------------------------------------------------------------------
 
-export default function PostCard({ cover, nickname, app, clubs, idd, status, user, roleName, index }) {
+export default function PostCard({ index, data}) {
 
   return (
-    <Grid  xs={2} sm={3} md={3}>
+    <Grid  xs={1.5} sm={3} md={2.4}>
       <Card>
         <Box
           sx={{
@@ -45,8 +45,8 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
         />
 
         <Avatar
-          alt={user.name}
-          src={user.avatarUrl}
+          alt={data.name}
+          src={data.appimage}
           sx={{
             zIndex: 9,
             width: 42,
@@ -58,8 +58,8 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
         />
         <Box
           component="img"
-          alt={nickname}
-          src={cover}
+          alt={data.name}
+          src={data.cover}
           sx={{
             top: 0,
             width: 1,
@@ -76,40 +76,36 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
           }}
         >
 
-
           <div style={{ display: 'flex', alignItems: 'center' }}>
 
-                  {status == "Active" ? 
-                          <Tooltip title="Active" placement="right" arrow>
+                  {data.status == "Active" ? 
+                          <Tooltip title="Active" placement="right" enterTouchDelay={0} arrow>
                               <Icon icon="mdi:check-circle" color='green' width={20} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
                   :
-                  status == "Pending" ?
-                          <Tooltip title="Pending" placement="right" arrow>
+                  data.status == "Pending" ?
+                          <Tooltip title="Pending" placement="right" enterTouchDelay={0} arrow>
                               <Icon icon="mdi:clock-outline" color='orange' width={20} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
                   :
-                          <Tooltip title="Pending" placement="right" arrow>
+                          <Tooltip title="Pending" placement="right" enterTouchDelay={0} arrow>
                               <Icon icon="mdi:close-circle" color='red' width={20} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
                   } 
 
-                <Typography variant="body2"
+                <Typography variant="caption"
                             component="div"
                             sx={{
                               mb: 0,
-                              size: 20,
                               color: 'text.disabled',
                             }}>
-                  {app}
+                  {data.app}
                 </Typography>
-
-
           </div>
 
           <Link
             color="inherit"
-            variant="h6"
+            variant="subtitle2"
             underline="hover"
             sx={{
               height: 25,
@@ -119,32 +115,34 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
               WebkitBoxOrient: 'vertical',
             }}
           >
-            <span style={{fontSize:"16px"}}>{nickname}</span>
+            <span style={{fontSize:"12px"}}>{data.name}</span>
           </Link>
-              <Typography variant="caption"
-                            component="div"
-                            sx={{
-                              mb: 0,
-                              color: 'text.disabled',
-                            }}>
-                  {roleName}
-                </Typography>
+
+
             <Stack
-                  direction="row"
-                  flexWrap="wrap"
-                  spacing={1.5}
-                  justifyContent="flex-end"
-                  sx={{
-                    mt: 1,
-                    color: 'text.disabled',
-                  }}
-                >
+            direction="row"
+            flexWrap="wrap"
+            spacing={1.5}
+            justifyContent="flex-end"
+            sx={{
+              mt: 1,
+              color: 'text.disabled',
+            }}
+          >
 
             {
-              clubs != 0 || clubs != null ? 
+              data.union ? 
                 <Stack direction="row">
-                  <SvgColor src={`/assets/icons/navbar/ic_club2.svg`} sx={{ mr: 0.5, width: 18 }} /> 
-                  {clubs == 1 ? "1 club" : clubs > 1 ? clubs+" clubs" : "No club"}
+                  <span style={{fontSize:"12px"}}>{data.type}</span>
+                </Stack>
+              :
+              null
+            }
+
+            {
+              data.union ? 
+                <Stack direction="row">
+                  <span style={{fontSize:"12px"}}>{data.union}</span>
                 </Stack>
               :
               null

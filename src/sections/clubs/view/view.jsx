@@ -8,7 +8,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
 import { posts } from 'src/_mock/blog';
-import { RawUsers } from 'src/hooks/raw/users';
+import { RawClubs } from 'src/hooks/raw/clubs';
 import Iconify from 'src/components/iconify';
 
 import PostCard from '../post-card';
@@ -17,61 +17,70 @@ import PostSearch from '../post-search';
 
 // ----------------------------------------------------------------------
 
-export default function UsersView() {
+export default function ClubsView() {
 
-    const rawusers = RawUsers()
+    const [dataFilter,setdataFilter] = useState("ALL")
 
-    const [userlist,setUserlist] = useState([])
+    const rawData = RawClubs(dataFilter)
+
+    const [datalist,setdataList] = useState([])
 
     useEffect(() => {
-        setUserlist(rawusers.data)
-    }, [rawusers.load == true]);
+        setdataList(rawData.data)
+    }, [rawData.load == true]);
 
     const sortBy =()=>{
       
     }
 
+    const onFilter =(i)=>{
+      setdataFilter(i)
+    }
+    
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-        <Typography variant="h3">Users</Typography>
+        <Typography variant="h3">Clubs</Typography>
 
         <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
-          New User
+          New Club
         </Button>
 
       </Stack>
 
       <Stack mb={3} direction="row" alignItems="center" justifyContent="space-between">
 
-        <PostSearch posts={userlist} />
+        <PostSearch posts={datalist} />
 
         <PostSort
           options={[
-                    { value: 'Everyone', label: 'Everyone' },
-                    { value: 'Player', label: 'Player' },
-                    { value: 'Customers', label: 'Customers' },
-                    { value: 'Cash Admin', label: 'Cash Admin' },
-                    { value: 'Owner Admin', label: 'Owner Admin' },
+                    { value: 'All', label: 'All' },
+                    { value: 'Active', label: 'Active' },
+                    { value: 'Pending', label: 'Pending' },
+                    { value: 'ActivePending', label: 'Active & Pending' },
+                    { value: 'Disabled', label: 'Disabled' },
                   ]}
+                  selected={onFilter}
         />
 
       </Stack>
       
       <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 3, sm: 8, md: 14.5 }}>
-        {userlist.map((i, index) => (
+        {datalist.map((i, index) => (
           <PostCard key={i.id} 
                     index={index}
                     data={{
                       cover:          "/images/users.png",
                       idd:            i.idd,
-                      nickname:       i.nickname,
-                      rolename:       i.roleName,
-                      email:          i.email,
-                      telegram:       i.telegram,
-                      avatar:         i.avatarFull,
+                      name:           i.name,
+                      app:            i.appName,
+                      appimage:       i.appImage,
+                      type:           i.type,
+                      union:          i.unionName,
+                      percent:        i.percent,
+                      avatar:         i.image,
                       status:         i.statusLabel,
-                    }}  />
+                    }} />
         ))}
       </Grid>
 
