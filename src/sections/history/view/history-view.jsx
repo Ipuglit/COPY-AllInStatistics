@@ -10,7 +10,7 @@ import { users } from 'src/_mock/user';
 import { RawUsers } from 'src/hooks/raw/users';
 
 import { PlainTableHistory } from 'src/items/tables/history/'
-
+import { Cards } from 'src/items/cards/clubs/'
 import Scrollbar from 'src/components/scrollbar';
 
 import { emptyRows, applyFilter, getComparator } from '../utils';
@@ -111,7 +111,7 @@ export default function HistoryView() {
         <Scrollbar>
 
             <PlainTableHistory  />
-
+            <Cards />
 
         </Scrollbar>
 

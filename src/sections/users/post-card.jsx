@@ -3,6 +3,8 @@
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
+import CardActions from "@mui/material/CardActions";
+import Button from "@mui/material/Button";
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
@@ -132,7 +134,7 @@ export default function PostCard({ index, data}) {
 
             {
               data.telegram ? 
-              <Tooltip title={data.telegram} arrow>
+              <Tooltip title={data.telegram} arrow enterTouchDelay={0} leaveTouchDelay={5000}>
                 <Stack direction="row">
                   <Icon icon="mdi:telegram" width={20} sx={{ mr: 0.5 }}  />
                 </Stack>
@@ -143,7 +145,7 @@ export default function PostCard({ index, data}) {
 
             {
               data.email ? 
-              <Tooltip title={data.email} arrow>
+              <Tooltip title={data.email} arrow enterTouchDelay={0} leaveTouchDelay={5000}>
                 <Stack direction="row">
                   <Icon icon="mdi:email" width={20} sx={{ mr: 0.5 }}  />
                 </Stack>
@@ -155,7 +157,10 @@ export default function PostCard({ index, data}) {
           </Stack>
 
         </Box>
-
+        <CardActions>
+          <Button size="small">Share</Button>
+          <Button size="small">Learn More</Button>
+        </CardActions>
       </Card>
     </Grid>
   );
