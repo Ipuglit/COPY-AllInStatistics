@@ -56,7 +56,7 @@ export default function MyAccountsView() {
 
       </Stack>
       
-      <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 3, sm: 8, md: 14.5 }}>
+      <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 3, sm: 8, md: 18 }}>
         {accountlist.map((i, index) => (
           <PostCard key={i.id} cover={i.appImage} nickname={i.accountNickname} app={i.appName} clubs={i.accountClubsCount} idd={i.accountID} status={i.statusLabel} 
                     user={{

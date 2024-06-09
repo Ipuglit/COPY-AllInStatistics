@@ -23,7 +23,7 @@ import { Icon } from '@iconify/react';
 export default function PostCard({ cover, nickname, app, clubs, idd, status, user, roleName, index }) {
 
   return (
-    <Grid xs={12} md={2.4}>
+    <Grid  xs={2} sm={3} md={4}>
       <Card>
         <Box
           sx={{
@@ -49,10 +49,10 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
           src={user.avatarUrl}
           sx={{
             zIndex: 9,
-            width: 42,
-            height: 42,
+            width: 47,
+            height: 47,
             position: 'absolute',
-            left: (theme) => theme.spacing(2.5),
+            left: (theme) => theme.spacing(1.9),
             bottom: (theme) => theme.spacing(-2),
           }}
         />

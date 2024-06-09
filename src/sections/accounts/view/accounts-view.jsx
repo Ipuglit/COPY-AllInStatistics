@@ -12,7 +12,7 @@ import Iconify from 'src/components/iconify';
 import PostCard from '../post-card';
 import PostSort from '../post-sort';
 import PostSearch from '../post-search';
-
+import OnSorting from '../sorting';
 // ----------------------------------------------------------------------
 
 export default function AccountsView() {
@@ -56,7 +56,10 @@ export default function AccountsView() {
 
       </Stack>
       
-      <Grid container spacing={3}>
+      <OnSorting/>
+
+
+      <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 3, sm: 8, md: 18 }}>
         {accountlist.map((i, index) => (
           <PostCard key={i.id} cover={i.appImage} nickname={i.accountNickname} app={i.appName} clubs={i.accountClubsCount} idd={i.accountID} status={i.statusLabel} 
                     user={{

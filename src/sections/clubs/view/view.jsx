@@ -20,7 +20,7 @@ import PostSearch from '../post-search';
 export default function ClubsView() {
 
     const [dataFilter,setdataFilter] = useState("ALL")
-
+    const [datas,setdatas]      = useState(true)
     const rawData = RawClubs(dataFilter)
 
     const [datalist,setdataList] = useState([])
@@ -35,8 +35,17 @@ export default function ClubsView() {
 
     const onFilter =(i)=>{
       setdataFilter(i)
+      setdatas(false)
+
+      const T = setTimeout(() => {
+        setdatas(true)
+
+      }, 500);
+      return () => clearTimeout(T);
+
+      console.log(i)
     }
-    
+
   return (
     <Container>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
@@ -54,11 +63,11 @@ export default function ClubsView() {
 
         <PostSort
           options={[
-                    { value: 'All', label: 'All' },
-                    { value: 'Active', label: 'Active' },
-                    { value: 'Pending', label: 'Pending' },
-                    { value: 'ActivePending', label: 'Active & Pending' },
-                    { value: 'Disabled', label: 'Disabled' },
+                    { value: 'ALL', label: 'All' },
+                    { value: 'ACTIVE', label: 'Active' },
+                    { value: 'PENDING', label: 'Pending' },
+                    { value: 'ACTIVEPENDING', label: 'Active & Pending' },
+                    { value: 'DISABLED', label: 'Disabled' },
                   ]}
                   selected={onFilter}
         />

@@ -19,7 +19,7 @@ export default function PostSort({options, selected}) {
   };
 
   return (
-    <TextField select size="small" value={value ? value : "All"} onChange={onSort}>
+    <TextField select size="small" value={value ? value : "ALL"} onChange={onSort}>
         {options.map((option) => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
