@@ -15,7 +15,7 @@ export const RawApplications = (i) => {
               B:    Token.token,
               C:    Token.gadget,
               D:    Imp.TimeZoned,
-              FOR:  i ? i : "ALL",
+              STATUS:  i ? i : "ALL",
           }; 
 
   async function fetching() {
