@@ -10,14 +10,19 @@ import { RawAccounts } from 'src/hooks/raw/accounts';
 import Iconify from 'src/components/iconify';
 
 import PostCard from '../post-card';
-import PostSort from '../post-sort';
-import PostSearch from '../post-search';
+
 import OnSorting from '../sorting';
 // ----------------------------------------------------------------------
 
 export default function AccountsView() {
 
-    const rawaccounts = RawAccounts("ALL","")
+    const [filterStatus,setfilterStatus]    = useState('ALL')
+    const [filterRole,setfilterRole]        = useState('EVERYONE')
+    const [filterApp,setfilterApp]          = useState('ALL')
+
+    const rawaccounts                       = RawAccounts(  filterStatus ? filterStatus : "ALL",
+                                                            filterRole ? filterRole : "EVERYONE",
+                                                            filterApp ? filterApp : "ALL",)
 
     const [accountlist,setAccountlist] = useState([])
 
@@ -25,13 +30,23 @@ export default function AccountsView() {
         setAccountlist(rawaccounts.data)
     }, [rawaccounts.load == true]);
 
-    const sortBy =()=>{
-      
+    const onByRoles =(i)=>{
+      setfilterRole(i)
+    }
+
+    const onByStatus =(i)=>{
+      setfilterStatus(i)
+    }
+
+    const onByApp =(i)=>{
+      setfilterApp(i)
     }
 
   return (
     <Container>
+
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+
         <Typography variant="h3">Accounts</Typography>
 
         <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
@@ -40,26 +55,16 @@ export default function AccountsView() {
 
       </Stack>
 
-      <Stack mb={3} direction="row" alignItems="center" justifyContent="space-between">
+      <Stack mb={3} direction="row" alignItems="right" justifyContent="flex-start">
 
-        <PostSearch posts={accountlist} />
-
-        <PostSort
-          options={[
-                    { value: 'Everyone', label: 'Everyone' },
-                    { value: 'Player', label: 'Player' },
-                    { value: 'Agent', label: 'Agent' },
-                    { value: 'Super Agent', label: 'Super Agent' },
-                    { value: 'Agency', label: 'Agency' },
-                  ]}
-        />
+      <OnSorting byRoles={onByRoles} byStatus={onByStatus} byApp={onByApp}/>
 
       </Stack>
-      
-      <OnSorting/>
 
 
-      <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 3, sm: 8, md: 18 }}>
+
+
+      <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 4, sm: 10, md: 20 }}>
         {accountlist.map((i, index) => (
           <PostCard key={i.id} cover={i.appImage} nickname={i.accountNickname} app={i.appName} clubs={i.accountClubsCount} idd={i.accountID} status={i.statusLabel} 
                     user={{

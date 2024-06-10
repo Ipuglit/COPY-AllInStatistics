@@ -2,7 +2,7 @@ import { useLayoutEffect, useState } from 'react';
 import axios from 'axios';
 import * as Imp from '../importants'
 
-export const RawAccounts = (i,ii) => {
+export const RawAccounts = (i,ii,iii) => {
 
     const Token = JSON.parse( localStorage.getItem('slk-token') );
 
@@ -14,11 +14,13 @@ export const RawAccounts = (i,ii) => {
                 B:      Token.token,
                 C:      Token.gadget,
                 D:      Imp.TimeZoned,
-                FOR:    i,
-                WHAT:   ii, 
+                STATUS:     i,
+                ROLE:       ii, 
+                APP:        iii,
             }; 
 
     async function fetching() {
+        console.log(i+ii+iii)
         setLoad(false)
         try {
         const response = await axios.post(Imp.Fetch['accounts'], Auth);
@@ -32,7 +34,7 @@ export const RawAccounts = (i,ii) => {
 
     useLayoutEffect(() => {
         fetching();
-        }, []);
+        }, [i,ii,iii]);
 
     return ({load, data})
 }

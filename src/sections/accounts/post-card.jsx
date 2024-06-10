@@ -47,6 +47,7 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
         <Avatar
           alt={user.name}
           src={user.avatarUrl}
+          style={status == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
           sx={{
             zIndex: 9,
             width: 47,
@@ -59,6 +60,7 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
         <Box
           component="img"
           alt={nickname}
+          style={status == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
           src={cover}
           sx={{
             top: 0,
