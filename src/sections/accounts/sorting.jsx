@@ -227,7 +227,7 @@ export default function OnSorting({byRoles,byStatus,byApp,bySort,bySortBy}) {
         endIcon={<Iconify icon={openApp ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />}
       >
         <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
-        {filterApp == 99999 ? "All applications" : SORT_APPS[filterApp].name}
+        {filterApp == 99999 ? "All" : SORT_APPS[filterApp].name}
         </Typography>
       </Button>
 
@@ -272,7 +272,7 @@ export default function OnSorting({byRoles,byStatus,byApp,bySort,bySortBy}) {
         onClick={(event) => { filtering(event.currentTarget, setopenSortBy) }}
         endIcon={<Iconify icon={openSortBy ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />}
       >
-        Sort by:&nbsp;&nbsp;
+        Sort:&nbsp;&nbsp;
         <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
         {ORDER_BY_THIS[filterSortBy].label}
         </Typography>
