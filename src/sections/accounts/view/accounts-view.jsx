@@ -5,15 +5,16 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
-// import Tooltip from '@mui/material/Tooltip';
+import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 
 import { RawAccounts } from 'src/hooks/raw/accounts';
 import Iconify from 'src/components/iconify';
 
-import PostCard from '../post-card';
+import LoadCards from '../post-card';
 
 import OnSorting from '../sorting';
+
 // ----------------------------------------------------------------------
 
 export default function AccountsView() {
@@ -26,9 +27,9 @@ export default function AccountsView() {
                                                             filterRole ? filterRole : "EVERYONE",
                                                             filterApp ? filterApp : "ALL",)
 
-    const [accountlist,setAccountlist] = useState([])
-    const [listLoading,setlistLoading] = useState(false)
-    const [listFound,setlistFound] = useState(true)
+    const [accountlist,setAccountlist]      = useState([])
+    const [listLoading,setlistLoading]      = useState(false)
+    const [listFound,setlistFound]          = useState(true)
 
     useEffect(() => {
         setAccountlist(rawaccounts.data)
@@ -36,15 +37,15 @@ export default function AccountsView() {
     }, [rawaccounts.load == true]);
 
     const onByRoles =(i)=>{
-      setfilterRole(i)
+        setfilterRole(i)
     }
 
     const onByStatus =(i)=>{
-      setfilterStatus(i)
+        setfilterStatus(i)
     }
 
     const onByApp =(i)=>{
-      setfilterApp(i)
+        setfilterApp(i)
     }
     
     useEffect(() => {
@@ -100,24 +101,25 @@ export default function AccountsView() {
       {listFound == true ?
         <>
           {accountlist.map((i, index) => (
-          <PostCard key={i.id} cover={i.appImage} nickname={i.accountNickname} app={i.appName} clubs={i.accountClubsCount} idd={i.accountID} status={i.statusLabel} 
-                    user={{
-                        name: i.accountNickname,
-                        avatarUrl: i.userAvatar,
-                      }} 
-                      roleName={i.accountRole}/>
+          <LoadCards key={i.id}
+                    data={{
+                            cover:        i.appImage,
+                            appname:      i.appName,
+                            clubs:        i.accountClubsCount,
+                            accountid:    i.accountID,
+                            nickname:     i.accountNickname,
+                            role:         i.accountRole,
+                            avatar:       i.userAvatar,
+                            status:       i.statusLabel,
+                        }} />
         ))}
         </>
       :
-                <Typography variant="body2"
-                            component="div"
-                            sx={{
-                              mb: 0,
-                              size: 20,
-                              color: 'text.disabled',
-                            }}>
-                  Nothing found...
-                </Typography>
+          <Grid xs={22} sm={22} md={22}>
+            <Alert variant="outlined" severity="info" width="100%">
+                Nothing found..
+            </Alert>
+          </Grid>
       }
 
       </>

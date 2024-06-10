@@ -20,7 +20,7 @@ import { Icon } from '@iconify/react';
 
 // ----------------------------------------------------------------------
 
-export default function PostCard({ cover, nickname, app, clubs, idd, status, user, roleName, index }) {
+export default function LoadCards({ index, data }) {
 
   return (
     <Grid  xs={2} sm={3} md={4} key={index}>
@@ -45,9 +45,9 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
         />
 
         <Avatar
-          alt={user.name}
-          src={user.avatarUrl}
-          style={status == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
+          alt={data.nickname}
+          src={data.avatar}
+          style={data.status == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
           sx={{
             zIndex: 9,
             width: 47,
@@ -59,9 +59,9 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
         />
         <Box
           component="img"
-          alt={nickname}
-          style={status == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
-          src={cover}
+          alt={data.nickname}
+          style={data.status == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
+          src={data.cover}
           sx={{
             top: 0,
             width: 1,
@@ -81,12 +81,12 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
 
           <div style={{ display: 'flex', alignItems: 'center' }}>
 
-                  {status == "Active" ? 
+                  {data.status == "Active" ? 
                           <Tooltip title="Active" placement="right" arrow>
                               <Icon icon="mdi:check-circle" color='green' width={20} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
                   :
-                  status == "Pending" ?
+                  data.status == "Pending" ?
                           <Tooltip title="Pending" placement="right" arrow>
                               <Icon icon="mdi:clock-outline" color='orange' width={20} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
@@ -103,7 +103,7 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
                               size: 20,
                               color: 'text.disabled',
                             }}>
-                  {app}
+                  {data.appname}
                 </Typography>
 
 
@@ -121,7 +121,7 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
               WebkitBoxOrient: 'vertical',
             }}
           >
-            <span style={{fontSize:"16px"}}>{nickname}</span>
+            <span style={{fontSize:"16px"}}>{data.nickname}</span>
           </Link>
               <Typography variant="caption"
                             component="div"
@@ -129,7 +129,7 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
                               mb: 0,
                               color: 'text.disabled',
                             }}>
-                  {roleName}
+                  {data.role}
                 </Typography>
                 <Typography variant="caption"
                             component="div"
@@ -137,7 +137,7 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
                               mb: 0,
                               color: 'text.disabled',
                             }}>
-                  {clubs == 1 ? "1 club" : clubs > 1 ? clubs+" clubs" : "No club"}
+                  {data.clubs == 1 ? "1 club" : data.clubs > 1 ? data.clubs+" clubs" : "No club"}
                 </Typography>
             <Stack
                   direction="row"
@@ -151,10 +151,10 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
                 >
 
             {
-              clubs != 0 || clubs != null ? 
+              data.clubs != 0 || data.clubs != null ? 
                 <Stack direction="row">
                   <SvgColor src={`/assets/icons/navbar/ic_club2.svg`} sx={{ mr: 0.5, width: 18 }} /> 
-                  {clubs == 1 ? "1 club" : clubs > 1 ? clubs+" clubs" : "No club"}
+                  {data.clubs == 1 ? "1 club" : data.clubs > 1 ? data.clubs+" clubs" : "No club"}
                 </Stack>
               :
               null
