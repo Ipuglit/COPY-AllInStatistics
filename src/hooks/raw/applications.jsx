@@ -24,7 +24,7 @@ export const RawApplications = (i) => {
       const response = await axios.post(Imp.Fetch['applications'], Auth);
       setData(response.data);
       setLoad(true)
-      console.log("Applications items fetched..."+JSON.stringify(response.data,null,2))
+      //console.log("Applications items fetched..."+JSON.stringify(response.data,null,2))
     } catch (error) {
       console.error("Error fetching data: ", error);
     }

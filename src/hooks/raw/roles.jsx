@@ -23,7 +23,7 @@ export const RawRoles = (i) => {
         const response = await axios.post(Imp.Fetch['roles'], Auth);
         setData(response.data);
         setLoad(true)
-        console.log("Roles items fetched..."+JSON.stringify(response.data,null,2))
+        //console.log("Roles items fetched..."+JSON.stringify(response.data,null,2))
         } catch (error) {
         console.error("Error fetching data: ", error);
         }

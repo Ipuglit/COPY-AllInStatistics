@@ -23,12 +23,12 @@ import { Icon } from '@iconify/react';
 export default function PostCard({ cover, nickname, app, clubs, idd, status, user, roleName, index }) {
 
   return (
-    <Grid  xs={2} sm={3} md={4}>
+    <Grid  xs={2} sm={3} md={4} key={index}>
       <Card>
         <Box
           sx={{
             position: 'relative',
-            pt: 'calc(100% * 2 / 5)',
+            pt: 'calc(100% * 2 / 4)',
           }}
         >
         <SvgColor
@@ -130,6 +130,14 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
                               color: 'text.disabled',
                             }}>
                   {roleName}
+                </Typography>
+                <Typography variant="caption"
+                            component="div"
+                            sx={{
+                              mb: 0,
+                              color: 'text.disabled',
+                            }}>
+                  {clubs == 1 ? "1 club" : clubs > 1 ? clubs+" clubs" : "No club"}
                 </Typography>
             <Stack
                   direction="row"

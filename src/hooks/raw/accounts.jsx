@@ -20,7 +20,6 @@ export const RawAccounts = (i,ii,iii) => {
             }; 
 
     async function fetching() {
-        console.log(i+ii+iii)
         setLoad(false)
         try {
         const response = await axios.post(Imp.Fetch['accounts'], Auth);

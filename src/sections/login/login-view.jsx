@@ -28,8 +28,8 @@ export default function LoginView() {
 
   const router = useRouter();
 
-  const [username, setUsername]           = useState(false);
-  const [password, setPassword]           = useState(false);
+  const [username, setUsername]           = useState("");
+  const [password, setPassword]           = useState("");
   const [showPassword, setShowPassword]   = useState(false);
   const [showAlert, setShowAlert]         = useState(false);
   const [showRed, setshowRed]             = useState(false);
