@@ -50,19 +50,21 @@ export default function Nav({ openNav, onCloseNav }) {
       sx={{
         my: 3,
         mx: 2.5,
-        py: 2,
+        py: 4,
         px: 2.5,
         display: 'flex',
         borderRadius: 1.5,
         alignItems: 'center',
-        bgcolor: (theme) => alpha(theme.palette.grey[400], 0.12),
+        bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
       }}
     >
       <Avatar src={account.avatar} alt="photoURL" />
 
       <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle2">{account.nickname}</Typography>
-
+        <Typography variant="subtitle1">{account.nickname}</Typography>
+        {
+        //rgba(255, 255, 255, 0.7)
+        }
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           {account.role}
         </Typography>
@@ -87,7 +89,7 @@ export default function Nav({ openNav, onCloseNav }) {
   );
   
   const renderUpgrade = (
-    <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
+    <Box sx={{ px: 2.5, pb: 3, mt: 10 }} s>
       <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
         <Box
           component="img"
@@ -126,7 +128,7 @@ export default function Nav({ openNav, onCloseNav }) {
         },
       }}
     >
-      <Logo sx={{ mt: 3, ml: 4 }} />
+      
 
 
       {renderAccount}

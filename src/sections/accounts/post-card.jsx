@@ -6,10 +6,11 @@ import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import IconButton from '@mui/material/IconButton';
-// import { alpha } from '@mui/material/styles';
+import CardActions from '@mui/material/CardActions';
+import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
-// import Button from '@mui/material/Button';
+
 import Tooltip from '@mui/material/Tooltip';
 // import { fDate } from 'src/utils/format-time';
 // import { fShortenNumber } from 'src/utils/format-number';
@@ -20,7 +21,7 @@ import { Icon } from '@iconify/react';
 
 // ----------------------------------------------------------------------
 
-export default function LoadCards({ index, data }) {
+export default function PostCard({ cover, nickname, app, clubs, idd, status, user, roleName, index, data }) {
 
   return (
     <Grid  xs={2} sm={3} md={4} key={index}>
@@ -50,8 +51,8 @@ export default function LoadCards({ index, data }) {
           style={data.status == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
           sx={{
             zIndex: 9,
-            width: 47,
-            height: 47,
+            width: 52,
+            height: 52,
             position: 'absolute',
             left: (theme) => theme.spacing(1.9),
             bottom: (theme) => theme.spacing(-2),
@@ -74,7 +75,7 @@ export default function LoadCards({ index, data }) {
 
         <Box
           sx={{
-            p: (theme) => theme.spacing(4, 3, 2, 2),
+            p: (theme) => theme.spacing(3.5, 1.5, 1, 1.5),
           }}
         >
 
@@ -137,6 +138,14 @@ export default function LoadCards({ index, data }) {
                               mb: 0,
                               color: 'text.disabled',
                             }}>
+                  ID: {data.accountid}
+                </Typography>
+                <Typography variant="caption"
+                            component="div"
+                            sx={{
+                              mb: 0,
+                              color: 'text.disabled',
+                            }}>
                   {data.clubs == 1 ? "1 club" : data.clubs > 1 ? data.clubs+" clubs" : "No club"}
                 </Typography>
             <Stack
@@ -150,15 +159,14 @@ export default function LoadCards({ index, data }) {
                   }}
                 >
 
-            {
-              data.clubs != 0 || data.clubs != null ? 
-                <Stack direction="row">
-                  <SvgColor src={`/assets/icons/navbar/ic_club2.svg`} sx={{ mr: 0.5, width: 18 }} /> 
-                  {data.clubs == 1 ? "1 club" : data.clubs > 1 ? data.clubs+" clubs" : "No club"}
+                <Stack direction="row" >
+                  <Button sx={{
+                                mt: 0,
+                                color: 'text.disabled',
+                              }} size="small">
+                      View details
+                  </Button>
                 </Stack>
-              :
-              null
-            }
 
           </Stack>
 

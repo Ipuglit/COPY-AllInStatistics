@@ -15,8 +15,8 @@ import Iconify from 'src/components/iconify';
 
 import Searchbar from './common/searchbar';
 import { NAV, HEADER } from './config-layout';
-import AccountPopover from './common/account-popover';
-import LanguagePopover from './common/language-popover';
+import ProfilePopover from './common/profile-popover';
+import ThemeMode from './common/theme-mode';
 import NotificationsPopover from './common/notifications-popover';
 
 // ----------------------------------------------------------------------
@@ -28,21 +28,21 @@ export default function Header({ onOpenNav }) {
 
   const renderContent = (
     <>
+
       {!lgUp && (
         <IconButton onClick={onOpenNav} sx={{ mr: 1 }}>
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
       )}
 
-
-
       <Box sx={{ flexGrow: 1 }} />
 
       <Stack direction="row" alignItems="center" spacing={1}>
-        <LanguagePopover />
+        <ThemeMode />
         <NotificationsPopover />
-        <AccountPopover />
+        <ProfilePopover />
       </Stack>
+
     </>
   );
 

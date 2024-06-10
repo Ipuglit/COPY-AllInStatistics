@@ -5,7 +5,21 @@
 if($Verified == "FOUND"){
 
         if ( $Got['STATUS'] == "ALL" && $Got['ROLE'] == "EVERYONE" && $Got['APP'] == "ALL" ){
-                $Extend = " ";
+            
+            if ( $Got['SORTBY'] != "NONE" ){
+                $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
+            } else {
+                $Extend_Sort = " ORDER BY id ".$Got['SORT'];
+            }
+
+            if ( !empty($Got['SEARCH']) ){
+                $Extend_Search = " WHERE CONCAT(a.accountID,' ',a.accountNickname,' ', r.name, ' ', app.name,' ',a.status) LIKE '%".$Got['SEARCH']."%' ";
+            } else {
+                $Extend_Search = " ";
+            }
+
+            $Extend = " ".$Extend_Search." ".$Extend_Sort;
+
         } else {
 
             if ( $Got['STATUS'] == "ACTIVE"){
@@ -16,25 +30,39 @@ if($Verified == "FOUND"){
                 $Extend_Status = " a.status=1 ";
             } else if ( $Got['STATUS'] == "DISABLED"){
                 $Extend_Status = " a.status=2 ";
+            } else if ( $Got['STATUS'] == "ALL"){
+                $Extend_Status = " a.status IN (0, 1, 2) ";
             } else {
-                $Extend_Status = " a.status!=9 ";
+                $Extend_Status = " a.status IN (0, 1, 2) ";
             }
 
             if ( $Got['ROLE'] != "EVERYONE"){
-                $Extend_Role = " AND a.accountRole= '".$Got['ROLE']."' ";
+                $Extend_Role = " AND a.accountRole = '".$Got['ROLE']."' ";
             } else {
                 $Extend_Role = " ";
             }
 
             if ( $Got['APP'] != "ALL"){
-                $Extend_App = " AND a.appID= ".$Got['APP']." ";
+                $Extend_App = " AND a.appID = '".$Got['APP']."' ";
             } else {
                 $Extend_App = " ";
             }
 
-            $Extend = " WHERE ".$Extend_Status. " ".$Extend_Role." ".$Extend_App;
-        }
+            if ( !empty($Got['SEARCH']) ){
+                $Extend_Search = " AND CONCAT(a.accountID,' ',a.accountNickname, ' ', r.name, ' ', app.name,' ',a.status) LIKE '%".$Got['SEARCH']."%' ";
+            } else {
+                $Extend_Search = " ";
+            }
 
+            if ( $Got['SORTBY'] != "NONE" ){
+                $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
+            } else {
+                $Extend_Sort = " ORDER BY id ".$Got['SORT'];
+            }
+
+            $Extend = " WHERE ".$Extend_Status. " ".$Extend_Role." ".$Extend_App." ".$Extend_Search." ".$Extend_Sort;
+        }
+    
     $sql = "SELECT DISTINCT
                                 a.id AS id,
                                 a.accountID AS accountID,
@@ -66,12 +94,14 @@ if($Verified == "FOUND"){
 
     $result = $conx->query($sql);
     $data = [];
+    $counted = 0;
 
         if ($result->num_rows > 0) {
             while ($i = $result->fetch_assoc()) {
-
+                $counted++;
                 $data[] = array(
                     'id' =>                 $i['id'],
+                    'increment' =>          $counted,
                     'accountID' =>          $i['accountID'],
                     'accountNickname' =>    $i['accountNickname'],
                     'accountRole' =>        $i['accountRole'],

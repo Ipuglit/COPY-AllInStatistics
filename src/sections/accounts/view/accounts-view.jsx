@@ -7,14 +7,14 @@ import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
-
+import Divider from '@mui/material/Divider';
 import { RawAccounts } from 'src/hooks/raw/accounts';
 import Iconify from 'src/components/iconify';
 
 import LoadCards from '../post-card';
 
 import OnSorting from '../sorting';
-
+import OnSearching from '../searching';
 // ----------------------------------------------------------------------
 
 export default function AccountsView() {
@@ -22,22 +22,28 @@ export default function AccountsView() {
     const [filterStatus,setfilterStatus]    = useState('ALL')
     const [filterRole,setfilterRole]        = useState('EVERYONE')
     const [filterApp,setfilterApp]          = useState('ALL')
-
+    const [filterSort,setfilterSort]        = useState('ASC')
+    const [filterSortBy,setfilterSortBy]        = useState('NONE')
+    const [filterSearch,setfilterSearch]    = useState('')
     const rawaccounts                       = RawAccounts(  filterStatus ? filterStatus : "ALL",
                                                             filterRole ? filterRole : "EVERYONE",
-                                                            filterApp ? filterApp : "ALL",)
+                                                            filterApp ? filterApp : "ALL",
+                                                            filterSort ? filterSort : "DESC",
+                                                            filterSortBy ? filterSortBy : "NONE",
+                                                            filterSearch ? filterSearch : "",)
 
-    const [accountlist,setAccountlist]      = useState([])
+    const [listofData,setlistofData]        = useState([])
     const [listLoading,setlistLoading]      = useState(false)
     const [listFound,setlistFound]          = useState(true)
 
     useEffect(() => {
-        setAccountlist(rawaccounts.data)
+        setlistofData(rawaccounts.data)
         setlistLoading(rawaccounts.load)
     }, [rawaccounts.load == true]);
 
     const onByRoles =(i)=>{
         setfilterRole(i)
+        console.log(i)
     }
 
     const onByStatus =(i)=>{
@@ -48,9 +54,24 @@ export default function AccountsView() {
         setfilterApp(i)
     }
     
+    const onBySort=(i)=>{
+      setfilterSort(i)
+      console.log(i)
+    }
+
+    const onBySortBy=(i)=>{
+      setfilterSortBy(i)
+
+    }
+
+    const onBySearch=(i)=>{
+      setfilterSearch(i)
+      console.log(i)
+    }
+
     useEffect(() => {
       if(listLoading == true){
-        if (!accountlist.length) {
+        if (!listofData.length) {
           setlistFound(false)
         } else {
           setlistFound(true)
@@ -71,11 +92,17 @@ export default function AccountsView() {
 
       </Stack>
 
-      <Stack mb={3} direction="row" alignItems="right" justifyContent="flex-start">
 
-            <OnSorting byRoles={onByRoles} byStatus={onByStatus} byApp={onByApp}/>
+      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
+          <Grid xs={6} sm={6} md={6}>
+          <OnSorting byRoles={onByRoles} byStatus={onByStatus} byApp={onByApp} bySort={onBySort} bySortBy={onBySortBy}/>
+          </Grid>
+          <Grid xs={6} sm={6} md={6}>
+          <OnSearching bySearching={onBySearch} />
+          </Grid>
+      </Grid>
 
-      </Stack>
+        <Divider sx={{ borderStyle: 'dashed', m: 3 }} />
 
       <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 4, sm: 10, md: 20 }}>
     { listLoading == false ? 
@@ -100,8 +127,8 @@ export default function AccountsView() {
       <>
       {listFound == true ?
         <>
-          {accountlist.map((i, index) => (
-          <LoadCards key={i.id}
+          {listofData.map((i, index) => (
+          <LoadCards key={i.increment}
                     data={{
                             cover:        i.appImage,
                             appname:      i.appName,

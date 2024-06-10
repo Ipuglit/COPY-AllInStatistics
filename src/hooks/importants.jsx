@@ -72,3 +72,8 @@ export const unionType = [
                           value: 'UNION',
                         },
                       ]
+
+export function LogOut(){
+    window.location.replace("/login"); 
+    window.location.href = "/login";
+}
