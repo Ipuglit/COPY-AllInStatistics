@@ -17,8 +17,13 @@ export default function OnSearching({bySearching,}) {
 
   const submitSearch = () => {
     bySearching(searchValue)
-    console.log(searchValue)
   }
+
+  const submitEnter = (event) => {
+    if (event.key === 'Enter') {
+      bySearching(searchValue)
+    }
+  };
 
   return (
     <>
@@ -30,6 +35,7 @@ export default function OnSearching({bySearching,}) {
                 variant="standard"
                 size="small"
                 value={searchValue}
+                onKeyDown={submitEnter}
                 onChange={onSearch}
                 InputProps={{
                   endAdornment: (
