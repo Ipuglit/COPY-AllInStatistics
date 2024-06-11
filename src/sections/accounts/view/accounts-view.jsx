@@ -3,27 +3,39 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
-import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { RawAccounts } from 'src/hooks/raw/accounts';
 import Iconify from 'src/components/iconify';
+import { Icon } from '@iconify/react';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
+import Loading_Skeletons from 'src/items/loaders/loadings'
 import LoadCards from '../post-card';
+import LoadList from '../post-list';
+import LoadTable from '../post-table'
+
 
 import OnSorting from '../sorting';
 import OnSearching from '../searching';
+import AddingAccount from '../upsert/form-upsert';
+
 // ----------------------------------------------------------------------
 
 export default function AccountsView() {
+
+    const dataView  = localStorage.getItem('slk-dataview')
+
+    const [onview, setonView]               = useState(dataView);
 
     const [filterStatus,setfilterStatus]    = useState('ALL')
     const [filterRole,setfilterRole]        = useState('EVERYONE')
     const [filterApp,setfilterApp]          = useState('ALL')
     const [filterSort,setfilterSort]        = useState('ASC')
-    const [filterSortBy,setfilterSortBy]        = useState('NONE')
+    const [filterSortBy,setfilterSortBy]    = useState('NONE')
     const [filterSearch,setfilterSearch]    = useState('')
     const rawaccounts                       = RawAccounts(  filterStatus ? filterStatus : "ALL",
                                                             filterRole ? filterRole : "EVERYONE",
@@ -36,6 +48,8 @@ export default function AccountsView() {
     const [listLoading,setlistLoading]      = useState(false)
     const [listFound,setlistFound]          = useState(true)
 
+    const [upsertofData,setupsertofData]    = useState([])
+
     useEffect(() => {
         setlistofData(rawaccounts.data)
         setlistLoading(rawaccounts.load)
@@ -43,7 +57,6 @@ export default function AccountsView() {
 
     const onByRoles =(i)=>{
         setfilterRole(i)
-        console.log(i)
     }
 
     const onByStatus =(i)=>{
@@ -56,7 +69,6 @@ export default function AccountsView() {
     
     const onBySort=(i)=>{
       setfilterSort(i)
-      console.log(i)
     }
 
     const onBySortBy=(i)=>{
@@ -66,8 +78,16 @@ export default function AccountsView() {
 
     const onBySearch=(i)=>{
       setfilterSearch(i)
-      console.log(i)
     }
+
+    const onupsertData=(i)=>{
+      setupsertofData(i)
+    }
+
+    const onchangeView = (event, i) => {
+      setonView(i);
+      localStorage.setItem('slk-dataview',i)
+    };
 
     useEffect(() => {
       if(listLoading == true){
@@ -78,6 +98,7 @@ export default function AccountsView() {
         }
       }
     }, [listLoading]); 
+
 
   return (
     <Container>
@@ -99,47 +120,51 @@ export default function AccountsView() {
           </Grid>
           <Grid xs={6} sm={6} md={6}>
           <OnSearching bySearching={onBySearch} />
+
+
           </Grid>
       </Grid>
 
-        <Divider sx={{ borderStyle: 'dashed', m: 3 }} />
+        <Divider sx={{ borderStyle: 'dashed', m: 1 }} />
+        
+        <Stack mb={1} direction="row" alignItems="right" justifyContent="flex-end">
+
+            <ToggleButtonGroup value={onview} onChange={onchangeView} exclusive size="small"  >
+                  <ToggleButton value="table">
+                        <Icon icon="fluent-mdl2:table" color='gray' width={22} sx={{ mr: 5 }}  />
+                  </ToggleButton>
+                  <ToggleButton value="list">
+                        <Icon icon="cil:list" color='gray' width={22} sx={{ mr: 5 }}  />
+                  </ToggleButton>
+                  <ToggleButton value="card">
+                        <Icon icon="clarity:view-cards-line" color='gray' width={22} sx={{ mr: 5 }}  />
+                  </ToggleButton>
+            </ToggleButtonGroup>
+
+        </Stack>
+
 
       <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 4, sm: 10, md: 20 }}>
     { listLoading == false ? 
+        <Loading_Skeletons type={dataView} />
+      :
       <>
-        <Grid  xs={2} sm={3} md={4}>
-          <Skeleton width="100%" height="300px" />
-        </Grid>
-        <Grid  xs={2} sm={3} md={4}>
-          <Skeleton width="100%" height="300px" />
-        </Grid>
-        <Grid  xs={2} sm={3} md={4}>
-          <Skeleton width="100%" height="300px" />
-        </Grid>
-        <Grid  xs={2} sm={3} md={4}>
-          <Skeleton width="100%" height="300px" />
-        </Grid>
-        <Grid  xs={2} sm={3} md={4}>
-          <Skeleton width="100%" height="300px" />
-        </Grid>
-      </>
-    :
-      <>
+
       {listFound == true ?
         <>
-          {listofData.map((i, index) => (
-          <LoadCards key={i.increment}
-                    data={{
-                            cover:        i.appImage,
-                            appname:      i.appName,
-                            clubs:        i.accountClubsCount,
-                            accountid:    i.accountID,
-                            nickname:     i.accountNickname,
-                            role:         i.accountRole,
-                            avatar:       i.userAvatar,
-                            status:       i.statusLabel,
-                        }} />
-        ))}
+
+          {dataView == 'card' ? 
+              listofData.map((i, index) => (
+                <LoadCards key={i.increment}
+                          upsertData={onupsertData}
+                          data={i} />
+                ))
+          : dataView == 'list' ?
+              <LoadList data={listofData} upsertData={onupsertData} />
+          : 
+              <LoadTable data={listofData} upsertData={onupsertData} />
+          }
+
         </>
       :
           <Grid xs={22} sm={22} md={22}>
@@ -154,6 +179,7 @@ export default function AccountsView() {
 
       </Grid>
 
+    <AddingAccount receivedData={upsertofData}/>
 
 
     </Container>

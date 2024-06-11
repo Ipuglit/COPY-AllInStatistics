@@ -49,7 +49,7 @@ if($Verified == "FOUND"){
             }
 
             if ( !empty($Got['SEARCH']) ){
-                $Extend_Search = " AND CONCAT(a.accountID,' ',a.accountNickname, ' ', r.name, ' ', app.name,' ',a.status) LIKE '%".$Got['SEARCH']."%' ";
+                $Extend_Search = " AND CONCAT(a.accountID,' ',a.accountNickname, ' ', r.name, ' ', app.name,' ',a.status, ' ',statusLabel) LIKE '%".$Got['SEARCH']."%' ";
             } else {
                 $Extend_Search = " ";
             }

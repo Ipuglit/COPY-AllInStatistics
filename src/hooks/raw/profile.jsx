@@ -22,6 +22,11 @@ export const RawProfile = () => {
       const raw =  response.data
       setData(response.data);
 
+      if(response.data == "NOTFOUND"){
+        window.location.replace("/login"); 
+        window.location.href = "/login";
+    }
+      
             localStorage.setItem('slk-user', JSON.stringify({
                                                               role:       raw.rolename,
                                                               nickname:   raw.nickname,

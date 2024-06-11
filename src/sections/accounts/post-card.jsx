@@ -1,27 +1,25 @@
-//import PropTypes from 'prop-types';
-
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
-import IconButton from '@mui/material/IconButton';
-import CardActions from '@mui/material/CardActions';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import Typography from '@mui/material/Typography';
 
 import Tooltip from '@mui/material/Tooltip';
-// import { fDate } from 'src/utils/format-time';
-// import { fShortenNumber } from 'src/utils/format-number';
-
-// import Iconify from 'src/components/iconify';
+import Iconify from 'src/components/iconify';
 import SvgColor from 'src/components/svg-color';
 import { Icon } from '@iconify/react';
 
 // ----------------------------------------------------------------------
 
-export default function PostCard({ cover, nickname, app, clubs, idd, status, user, roleName, index, data }) {
+export default function PostCard({ index, data, upsertData }) {
+
+  function viewDetails(i){
+    upsertData(i)
+
+  };
 
   return (
     <Grid  xs={2} sm={3} md={4} key={index}>
@@ -46,9 +44,9 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
         />
 
         <Avatar
-          alt={data.nickname}
-          src={data.avatar}
-          style={data.status == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
+          alt={data.accountNickname}
+          src={data.userAvatar}
+          style={data.statusLabel == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
           sx={{
             zIndex: 9,
             width: 52,
@@ -60,9 +58,9 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
         />
         <Box
           component="img"
-          alt={data.nickname}
-          style={data.status == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
-          src={data.cover}
+          alt={data.accountNickname}
+          style={data.statusLabel == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
+          src={data.appImage}
           sx={{
             top: 0,
             width: 1,
@@ -82,12 +80,12 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
 
           <div style={{ display: 'flex', alignItems: 'center' }}>
 
-                  {data.status == "Active" ? 
+                  {data.statusLabel == "Active" ? 
                           <Tooltip title="Active" placement="right" arrow>
                               <Icon icon="mdi:check-circle" color='green' width={20} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
                   :
-                  data.status == "Pending" ?
+                  data.statusLabel == "Pending" ?
                           <Tooltip title="Pending" placement="right" arrow>
                               <Icon icon="mdi:clock-outline" color='orange' width={20} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
@@ -104,7 +102,7 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
                               size: 20,
                               color: 'text.disabled',
                             }}>
-                  {data.appname}
+                  {data.appName}
                 </Typography>
 
 
@@ -122,33 +120,37 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
               WebkitBoxOrient: 'vertical',
             }}
           >
-            <span style={{fontSize:"16px"}}>{data.nickname}</span>
+            <span style={{fontSize:"16px"}}>{data.accountNickname}</span>
           </Link>
+
               <Typography variant="caption"
                             component="div"
                             sx={{
                               mb: 0,
                               color: 'text.disabled',
                             }}>
-                  {data.role}
+                  {data.accountRole}
                 </Typography>
+
                 <Typography variant="caption"
                             component="div"
                             sx={{
                               mb: 0,
                               color: 'text.disabled',
                             }}>
-                  ID: {data.accountid}
+                  ID: {data.accountID}
                 </Typography>
+
                 <Typography variant="caption"
                             component="div"
                             sx={{
                               mb: 0,
                               color: 'text.disabled',
                             }}>
-                  {data.clubs == 1 ? "1 club" : data.clubs > 1 ? data.clubs+" clubs" : "No club"}
+                  {data.accountClubsCount == 1 ? "1 club" : data.accountClubsCount > 1 ? data.accountClubsCount+" clubs" : "No club"}
                 </Typography>
-            <Stack
+
+                <Stack
                   direction="row"
                   flexWrap="wrap"
                   spacing={1.5}
@@ -160,11 +162,14 @@ export default function PostCard({ cover, nickname, app, clubs, idd, status, use
                 >
 
                 <Stack direction="row" >
-                  <Button sx={{
-                                mt: 0,
-                                color: 'text.disabled',
-                              }} size="small">
-                      View details
+                  <Button sx={{ mt: 0, color: 'text.disabled', }} 
+                          size="small"
+                          endIcon={<Iconify icon="eva:arrow-ios-forward-fill" color='purple' />}
+                          onClick={() => viewDetails({
+                                                        modal: "Open",
+                                                        ...data,
+                                                    })}  >
+                      <span style={{color: "purple"}}> View </span>
                   </Button>
                 </Stack>
 

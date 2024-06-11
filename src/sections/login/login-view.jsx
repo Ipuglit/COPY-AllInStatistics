@@ -82,6 +82,9 @@ export default function LoginView() {
                                                           telegram:   feed.telegram,
                                                           status:     feed.status,
                                                       }));
+                                                      
+        localStorage.setItem('slk-dataview', 'card');    
+
         console.log("Success! Logging in..."+response.data)
 
         const Timed = setTimeout(() => {

@@ -4,12 +4,12 @@ import Menu from '@mui/material/Menu';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
+import IconButton from '@mui/material/IconButton';
 import { listClasses } from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 
 import Iconify from 'src/components/iconify';
-
-
+import { Icon } from '@iconify/react';
 import { RawApplications } from 'src/hooks/raw/applications';
 import { RawRoles } from 'src/hooks/raw/roles';
 
@@ -25,12 +25,12 @@ const SORT_STATUS = [
 ];
 
 const ORDER_BY = [
-  { id: 0, value: 'ASC', label: 'Ascending' },
-  { id: 1, value: 'DESC', label: 'Descending' },
+  { id: 0, value: 'ASC', label: <Icon icon="bxs:up-arrow"/> },
+  { id: 1, value: 'DESC', label: <Icon icon="bxs:down-arrow" className="reset-icon" /> },
 ];
 
 const ORDER_BY_THIS = [
-  { id: 0, value: 'NONE', label: 'None' },
+  { id: 0, value: 'NONE', label: 'ID' },
   { id: 1, value: 'app.name', label: 'Application' },
   { id: 2, value: 'a.accountID', label: 'Account ID' },
   { id: 3, value: 'a.accountNickname', label: 'Nickname' },
@@ -266,48 +266,14 @@ export default function OnSorting({byRoles,byStatus,byApp,bySort,bySortBy}) {
       <Stack mb={0} direction="row" alignItems="right" justifyContent="flex-start">
 
 
-      <Button
-        disableRipple
-        color="inherit"
-        onClick={(event) => { filtering(event.currentTarget, setopenSortBy) }}
-        endIcon={<Iconify icon={openSortBy ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />}
-      >
-        Sort:&nbsp;&nbsp;
-        <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
-        {ORDER_BY_THIS[filterSortBy].label}
-        </Typography>
-      </Button>
-
-      <Menu
-        open={!!openSortBy}
-        anchorEl={openSortBy}
-        onClose={closeMenu}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        slotProps={{
-          paper: {
-            sx: {
-              [`& .${listClasses.root}`]: {
-                p: 0,
-              },
-            },
-          },
-        }}
-      >
-          {ORDER_BY_THIS.map((i, index) => (
-          <MenuItem key={index} value={index} name={i.value} selected={index === filterSortBy} onClick={itemsSortBy}>
-            {i.label}
-          </MenuItem>
-        ))}
-      </Menu>
 
       <Button
         disableRipple
         color="inherit"
         onClick={(event) => { filtering(event.currentTarget, setopenSort) }}
-        endIcon={<Iconify icon={openSort ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />}
-      >
 
+      >
+        Sort:&nbsp;&nbsp;
         <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
         {ORDER_BY[filterSort].label}
         </Typography>
@@ -337,16 +303,51 @@ export default function OnSorting({byRoles,byStatus,byApp,bySort,bySortBy}) {
       </Menu>
 
 
+      <Button
+        disableRipple
+        color="inherit"
+        onClick={(event) => { filtering(event.currentTarget, setopenSortBy) }}
+        endIcon={<Iconify icon={openSortBy ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />}
+      >
 
-      <Stack direction="row" >
-                  <Button sx={{
-                                mt: 0,
-                                color: 'text.disabled',
-                              }} size="small"
-                          onClick={resetSorting}>
-                      Reset 
-                  </Button>
-                </Stack>
+        <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
+        {ORDER_BY_THIS[filterSortBy].label}
+        </Typography>
+      </Button>
+
+      <Menu
+        open={!!openSortBy}
+        anchorEl={openSortBy}
+        onClose={closeMenu}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        slotProps={{
+          paper: {
+            sx: {
+              [`& .${listClasses.root}`]: {
+                p: 0,
+              },
+            },
+          },
+        }}
+      >
+          {ORDER_BY_THIS.map((i, index) => (
+          <MenuItem key={index} value={index} name={i.value} selected={index === filterSortBy} onClick={itemsSortBy}>
+            {i.label}
+          </MenuItem>
+        ))}
+      </Menu>
+
+        <Stack direction="row" >
+            <IconButton  sx={{
+                                  mt: 0,
+                                  color: 'text.disabled',
+                                }} size="small"
+                            onClick={resetSorting}>
+                <Icon icon="grommet-icons:power-reset" />
+            </IconButton >
+        </Stack>
+
       </Stack>
 
     </>
