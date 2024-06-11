@@ -27,11 +27,11 @@ export default function Loading_Skeletons({type}) {
         </>
         : type == "list" ?
         <>
-            <Skeleton width="100%" height="94px" />
-            <Skeleton width="100%" height="94px" />
-            <Skeleton width="100%" height="94px" />
-            <Skeleton width="100%" height="94px" />
-            <Skeleton width="100%" height="94px" />
+            <Skeleton width="100%" height="134px" />
+            <Skeleton width="100%" height="134px" />
+            <Skeleton width="100%" height="134px" />
+            <Skeleton width="100%" height="134px" />
+            <Skeleton width="100%" height="134px" />
         </>
         : type == "table" ?
         <>
