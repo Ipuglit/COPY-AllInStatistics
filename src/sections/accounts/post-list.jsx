@@ -119,14 +119,20 @@ function ItemList({ i, onReturn }) {
 
       </Box>
 
-        <Button
-            size="small"
-            color="inherit"
-            endIcon={<Iconify icon="eva:arrow-ios-forward-fill" color='purple' />}
-            onClick={viewItems}
-            >
-            <span style={{color: "purple"}}> View </span>
-        </Button>
+      <Box  >
+
+            <Button
+                size="small"
+                color="inherit"
+                endIcon={<Iconify icon="eva:arrow-ios-forward-fill" color='purple' />}
+                onClick={viewItems}
+                >
+                <span style={{color: "purple"}}> View </span>
+            </Button>
+
+      </Box>
+
+
 
     </Stack>
   );
