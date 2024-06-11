@@ -13,6 +13,7 @@ import CardHeader from '@mui/material/CardHeader';
 import { Icon } from '@iconify/react';
 import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
+import OnMobileScreen from 'src/items/screen/resize';
 
 // ----------------------------------------------------------------------
 
@@ -59,6 +60,9 @@ function ItemList({ i, onReturn }) {
         onReturn({...i,modal:'Open'})
     }
 
+    const OnMobile= OnMobileScreen();
+
+
   return (
     <Stack direction="row" alignItems="center" spacing={3} key={i.id} sx={{ width: '100%' }}>
         
@@ -87,36 +91,65 @@ function ItemList({ i, onReturn }) {
           {i.appName}
         </Typography>
 
-        <Typography variant="subtitle1" fontSize="small" sx={{ color: 'text.secondary' }} noWrap>
-            {i.accountClubsCount == 0 ? "0 club" : i.accountClubsCount > 1 ? i.accountClubsCount+" clubs" : "1 club"}
+
+
+        {
+        OnMobile ?
+        <Typography variant="caption" align="left" sx={{ pr: 2, flexShrink: 0, color: 'text.secondary' }} noWrap >
+        {
+        i.statusLabel == "Active" ? 
+            <Button size="small"
+                startIcon={<Icon icon="mdi:check-circle" color='green' width={22} sx={{ mr: 0 }}  />} >
+                <span style={{color: "green"}}> Active </span>
+            </Button>
+        : i.statusLabel == "Pending" ? 
+            <Button size="small"
+                startIcon={<Icon icon="mdi:clock-outline" color='orange' width={22} sx={{ mr: 0 }}  />} >
+                <span style={{color: "orange"}}> Pending </span>
+            </Button>
+        :
+            <Button size="small"
+                startIcon={<Icon icon="mdi:close-circle" color='red' width={22} sx={{ mr: 0 }}  />} >
+                <span style={{color: "red"}}> Disabled </span>
+            </Button>
+        }
         </Typography>
+        :
+        null
+        }
 
       </Box>
 
+      {
+        !OnMobile ?
+        <Box sx={{  minWidth: 30, flexGrow: 1, display: 'flex', justifyContent: 'flex-start' }} >
 
-      <Box sx={{  minWidth: 30, flexGrow: 1, display: 'flex', justifyContent: 'flex-start' }} >
+        <Typography variant="caption" align="left" sx={{ pr: 2, flexShrink: 0, color: 'text.secondary' }} noWrap >
+                {
+                i.statusLabel == "Active" ? 
+                    <Button size="small"
+                        startIcon={<Icon icon="mdi:check-circle" color='green' width={22} sx={{ mr: 0 }}  />} >
+                        <span style={{color: "green"}}> Active </span>
+                    </Button>
+                : i.statusLabel == "Pending" ? 
+                    <Button size="small"
+                        startIcon={<Icon icon="mdi:clock-outline" color='orange' width={22} sx={{ mr: 0 }}  />} >
+                        <span style={{color: "orange"}}> Pending </span>
+                    </Button>
+                :
+                    <Button size="small"
+                        startIcon={<Icon icon="mdi:close-circle" color='red' width={22} sx={{ mr: 0 }}  />} >
+                        <span style={{color: "red"}}> Disabled </span>
+                    </Button>
+                }
+            </Typography>
 
-            <Typography variant="caption" align="left" sx={{ pr: 2, flexShrink: 0, color: 'text.secondary' }} noWrap >
-                    {
-                    i.statusLabel == "Active" ? 
-                        <Button size="small"
-                            startIcon={<Icon icon="mdi:check-circle" color='green' width={22} sx={{ mr: 0 }}  />} >
-                            <span style={{color: "green"}}> Active </span>
-                        </Button>
-                    : i.statusLabel == "Pending" ? 
-                        <Button size="small"
-                            startIcon={<Icon icon="mdi:clock-outline" color='orange' width={22} sx={{ mr: 0 }}  />} >
-                            <span style={{color: "orange"}}> Pending </span>
-                        </Button>
-                    :
-                        <Button size="small"
-                            startIcon={<Icon icon="mdi:close-circle" color='red' width={22} sx={{ mr: 0 }}  />} >
-                            <span style={{color: "red"}}> Disabled </span>
-                        </Button>
-                    }
-                </Typography>
+  </Box>
+        :
+        null
+        }
 
-      </Box>
+
 
 
       <Box sx={{  minWidth: 30, flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }} >
