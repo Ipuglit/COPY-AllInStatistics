@@ -119,7 +119,7 @@ function ItemList({ i, onReturn }) {
 
       </Box>
 
-      <Box  >
+      <Box sx={{  minWidth: 30 }} >
 
             <Button
                 size="small"
