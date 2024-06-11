@@ -94,7 +94,7 @@ function ItemList({ i, onReturn }) {
 
       </Box>
 
-      <Box sx={{  minWidth: 30, flexGrow: 1 }} >
+      <Box sx={{  minWidth: 30, flexGrow: 1, }} >
 
       <Typography variant="caption" align="left" sx={{ pr: 2, flexShrink: 0, color: 'text.secondary' }} noWrap >
             {
@@ -119,7 +119,7 @@ function ItemList({ i, onReturn }) {
 
       </Box>
 
-      <Box sx={{  minWidth: 30 }} >
+      <Box sx={{  minWidth: 30, flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }} >
 
             <Button
                 size="small"
