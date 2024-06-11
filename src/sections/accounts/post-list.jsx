@@ -32,14 +32,14 @@ export default function PostList({ data, upsertData, ...other }) {
     <Card {...other}>
 
         <Scrollbar>
-            <Stack spacing={3} sx={{ pl: 18, pr: 18, '@media (max-width: 600px)':{pl: 2, pr: 2,} }}>
+            <Stack spacing={3} sx={{ pl: 20, pr: 20, '@media (max-width: 600px)':{pl: 2, pr: 2,} }}>
                 {data.map((i, index) => (
                     <ItemList key={index} i={i} onReturn={onReturn} />
                 ))}
                 </Stack>
         </Scrollbar>
 
-        <Box sx={{ p: 80, textAlign: 'right' }}></Box>
+        <Box sx={{ p: 90, textAlign: 'right' }}></Box>
         
     </Card>
 </>
@@ -73,7 +73,7 @@ function ItemList({ i, onReturn }) {
         sx={{ width: 48, height: 48, borderRadius: 1.5, flexShrink: 0 }}
       />
 
-      <Box sx={{ minWidth: 215, flexGrow: 1, '@media (max-width: 600px)':{minWidth: 115, flexGrow: 1,} }} >
+      <Box sx={{ minWidth: 275, flexGrow: 1, '@media (max-width: 600px)':{minWidth: 115, flexGrow: 1,} }} >
 
         <Typography variant="subtitle1" fontSize="small" sx={{ color: 'text.secondary' }} noWrap>
           {i.accountRole}
@@ -124,7 +124,7 @@ function ItemList({ i, onReturn }) {
         !OnMobile ?
         <Box sx={{  minWidth: 30, flexGrow: 1, display: 'flex', justifyContent: 'flex-start' }} >
 
-        <Typography variant="caption" align="left" sx={{ pr: 2, flexShrink: 0, color: 'text.secondary' }} noWrap >
+            <Typography variant="caption" align="left" sx={{ pr: 2, flexShrink: 0, color: 'text.secondary' }} noWrap >
                 {
                 i.statusLabel == "Active" ? 
                     <Button size="small"
@@ -144,13 +144,10 @@ function ItemList({ i, onReturn }) {
                 }
             </Typography>
 
-  </Box>
+        </Box>
         :
         null
         }
-
-
-
 
       <Box sx={{  minWidth: 30, flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }} >
 
