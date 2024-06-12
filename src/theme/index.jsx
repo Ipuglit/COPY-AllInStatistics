@@ -13,6 +13,7 @@ import { customShadows } from './custom-shadows';
 // ----------------------------------------------------------------------
 
 export default function ThemeProvider({ children }) {
+  
   const memoizedValue = useMemo(
     () => ({
       palette: palette(),
