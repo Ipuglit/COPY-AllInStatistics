@@ -19,6 +19,7 @@ import AppConversionRates from '../app-conversion-rates';
 // ----------------------------------------------------------------------
 
 export default function AppView() {
+  const hide = false
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" sx={{ mb: 5 }}>
@@ -28,8 +29,8 @@ export default function AppView() {
       <Grid container spacing={3}>
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Weekly Sales"
-            total={714000}
+            title="Monthly Result"
+            total={100000}
             color="success"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_bag.png" />}
           />
@@ -37,8 +38,8 @@ export default function AppView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="New Users"
-            total={1352831}
+            title="Accounts"
+            total={100}
             color="info"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_users.png" />}
           />
@@ -46,7 +47,7 @@ export default function AppView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Item Orders"
+            title="Clubs"
             total={1723315}
             color="warning"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_buy.png" />}
@@ -55,7 +56,7 @@ export default function AppView() {
 
         <Grid xs={12} sm={6} md={3}>
           <AppWidgetSummary
-            title="Bug Reports"
+            title="Total Results"
             total={234}
             color="error"
             icon={<img alt="icon" src="/assets/icons/glass/ic_glass_message.png" />}
@@ -64,7 +65,7 @@ export default function AppView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AppWebsiteVisits
-            title="Website Visits"
+            title="Monthly Results"
             subheader="(+43%) than last year"
             chart={{
               labels: [
@@ -106,13 +107,13 @@ export default function AppView() {
 
         <Grid xs={12} md={6} lg={4}>
           <AppCurrentVisits
-            title="Current Visits"
+            title="Application Results"
             chart={{
               series: [
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
+                { label: 'Poker Bros', value: 4344 },
+                { label: 'PP Poker', value: 5435 },
+                { label: 'Suprema Poker', value: 1443 },
+                { label: 'Fishpoker', value: 4443 },
               ],
             }}
           />
@@ -120,99 +121,123 @@ export default function AppView() {
 
         <Grid xs={12} md={6} lg={8}>
           <AppConversionRates
-            title="Conversion Rates"
+            title="Clubs Result"
             subheader="(+43%) than last year"
             chart={{
               series: [
-                { label: 'Italy', value: 400 },
-                { label: 'Japan', value: 430 },
-                { label: 'China', value: 448 },
-                { label: 'Canada', value: 470 },
-                { label: 'France', value: 540 },
-                { label: 'Germany', value: 580 },
-                { label: 'South Korea', value: 690 },
-                { label: 'Netherlands', value: 1100 },
-                { label: 'United States', value: 1200 },
-                { label: 'United Kingdom', value: 1380 },
+                { label: 'WHALECLUBGG', value: 400 },
+                { label: 'DEUCES LOW', value: 430 },
+                { label: 'AFGHANISTAN', value: 448 },
+                { label: 'MGM', value: 470 },
+                { label: 'BALENCIAGA', value: 540 },
+                { label: 'HOUSE OF POKERCH', value: 580 },
+                { label: 'ARENA X', value: 690 },
               ],
             }}
           />
         </Grid>
 
         <Grid xs={12} md={6} lg={4}>
-          <AppCurrentSubject
-            title="Current Subject"
+          <AppConversionRates
+            title="Accounts Result"
+            subheader="(+43%) than last year"
             chart={{
-              categories: ['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math'],
               series: [
-                { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
-                { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
-                { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
+                { label: '22217', value: 400 },
+                { label: '12345678', value: 430 },
+                { label: '12345678', value: 448 },
+                { label: '12345678', value: 470 },
+                { label: '12345678', value: 540 },
+                { label: '12345678', value: 580 },
+
               ],
             }}
           />
         </Grid>
 
-        <Grid xs={12} md={6} lg={8}>
-          <AppNewsUpdate
-            title="News Update"
-            list={[...Array(5)].map((_, index) => ({
-              id: faker.string.uuid(),
-              title: faker.person.jobTitle(),
-              description: faker.commerce.productDescription(),
-              image: `/assets/images/covers/cover_${index + 1}.jpg`,
-              postedAt: faker.date.recent(),
-            }))}
-          />
-        </Grid>
-
+{
+  hide ?
         <Grid xs={12} md={6} lg={4}>
-          <AppOrderTimeline
-            title="Order Timeline"
-            list={[...Array(5)].map((_, index) => ({
-              id: faker.string.uuid(),
-              title: [
-                '1983, orders, $4220',
-                '12 Invoices have been paid',
-                'Order #37745 from September',
-                'New order placed #XF-2356',
-                'New order placed #XF-2346',
-              ][index],
-              type: `order${index + 1}`,
-              time: faker.date.past(),
-            }))}
-          />
-        </Grid>
+        <AppCurrentSubject
+          title="Current Subject"
+          chart={{
+            categories: ['English', 'History', 'Physics', 'Geography', 'Chinese', 'Math'],
+            series: [
+              { name: 'Series 1', data: [80, 50, 30, 40, 100, 20] },
+              { name: 'Series 2', data: [20, 30, 40, 80, 20, 80] },
+              { name: 'Series 3', data: [44, 76, 78, 13, 43, 10] },
+            ],
+          }}
+        />
+      </Grid>
+:null
+}
 
+{
+  hide ?
+
+<>
+
+
+<Grid xs={12} md={6} lg={8}>
+  <AppNewsUpdate
+    title="News Update"
+    list={[...Array(5)].map((_, index) => ({
+      id: faker.string.uuid(),
+      title: faker.person.jobTitle(),
+      description: faker.commerce.productDescription(),
+      image: `/assets/images/covers/cover_${index + 1}.jpg`,
+      postedAt: faker.date.recent(),
+    }))}
+  />
+</Grid>
+
+<Grid xs={12} md={6} lg={4}>
+<AppOrderTimeline
+  title="Order Timeline"
+  list={[...Array(5)].map((_, index) => ({
+    id: faker.string.uuid(),
+    title: [
+      '1983, orders, $4220',
+      '12 Invoices have been paid',
+      'Order #37745 from September',
+      'New order placed #XF-2356',
+      'New order placed #XF-2346',
+    ][index],
+    type: `order${index + 1}`,
+    time: faker.date.past(),
+  }))}
+/>
+</Grid>
         <Grid xs={12} md={6} lg={4}>
-          <AppTrafficBySite
-            title="Traffic by Site"
-            list={[
-              {
-                name: 'FaceBook',
-                value: 323234,
-                icon: <Iconify icon="eva:facebook-fill" color="#1877F2" width={32} />,
-              },
-              {
-                name: 'Google',
-                value: 341212,
-                icon: <Iconify icon="eva:google-fill" color="#DF3E30" width={32} />,
-              },
-              {
-                name: 'Linkedin',
-                value: 411213,
-                icon: <Iconify icon="eva:linkedin-fill" color="#006097" width={32} />,
-              },
-              {
-                name: 'Twitter',
-                value: 443232,
-                icon: <Iconify icon="eva:twitter-fill" color="#1C9CEA" width={32} />,
-              },
-            ]}
-          />
-        </Grid>
+        <AppTrafficBySite
+          title="Traffic by Site"
+          list={[
+            {
+              name: 'FaceBook',
+              value: 323234,
+              icon: <Iconify icon="eva:facebook-fill" color="#1877F2" width={32} />,
+            },
+            {
+              name: 'Google',
+              value: 341212,
+              icon: <Iconify icon="eva:google-fill" color="#DF3E30" width={32} />,
+            },
+            {
+              name: 'Linkedin',
+              value: 411213,
+              icon: <Iconify icon="eva:linkedin-fill" color="#006097" width={32} />,
+            },
+            {
+              name: 'Twitter',
+              value: 443232,
+              icon: <Iconify icon="eva:twitter-fill" color="#1C9CEA" width={32} />,
+            },
+          ]}
+        />
+      </Grid>
 
-        <Grid xs={12} md={6} lg={8}>
+      <Grid xs={12} md={6} lg={8}>
           <AppTasks
             title="Tasks"
             list={[
@@ -224,6 +249,16 @@ export default function AppView() {
             ]}
           />
         </Grid>
+</>
+:null
+}
+
+
+
+
+
+
+
       </Grid>
     </Container>
   );

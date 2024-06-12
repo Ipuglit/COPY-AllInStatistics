@@ -82,16 +82,16 @@ export default function PostCard({ index, data, upsertData }) {
 
                   {data.statusLabel == "Active" ? 
                           <Tooltip title="Active" placement="right" arrow>
-                              <Icon icon="mdi:check-circle" color='green' width={20} sx={{ mr: 0.3 }}  />
+                              <Icon icon="mdi:check-circle" color='green' width={22} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
                   :
                   data.statusLabel == "Pending" ?
                           <Tooltip title="Pending" placement="right" arrow>
-                              <Icon icon="mdi:clock-outline" color='orange' width={20} sx={{ mr: 0.3 }}  />
+                              <Icon icon="mdi:clock-outline" color='orange' width={22} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
                   :
-                          <Tooltip title="Pending" placement="right" arrow>
-                              <Icon icon="mdi:close-circle" color='red' width={20} sx={{ mr: 0.3 }}  />
+                          <Tooltip title="Disabled" placement="right" arrow>
+                              <Icon icon="mdi:close-circle" color='red' width={22} sx={{ mr: 0.3 }}  />
                           </Tooltip>  
                   } 
 
@@ -104,7 +104,6 @@ export default function PostCard({ index, data, upsertData }) {
                             }}>
                   {data.appName}
                 </Typography>
-
 
           </div>
 
