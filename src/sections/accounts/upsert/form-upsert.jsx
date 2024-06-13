@@ -241,7 +241,7 @@ export  function AddingAccount({receivedData,submittedResult}) {
         <DialogContent>
 
 
-      <Grid container spacing={2} sx={{ padding: OnMobile ? '1rem' : '2rem' }}>
+      <Grid container spacing={OnMobile ? 1 : 2} sx={{ padding: OnMobile ? '0rem' : '2rem' }}>
         <Grid item xs={12}>
           <Typography variant="h6" component="div">
             Account Form
@@ -400,7 +400,7 @@ export  function AddingAccount({receivedData,submittedResult}) {
 
               { 
                 onEdit ? 
-                <Grid item xs={OnMobile ? 5 : 3.5} >
+                <Grid item xs={OnMobile ? 7 : 3.5} >
                 {
                   onSubmitLoad ?
                   <Button  color="secondary" >Submitting...</Button>
