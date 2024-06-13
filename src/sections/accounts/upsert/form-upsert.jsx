@@ -28,6 +28,7 @@ import {AlertSnack} from 'src/items/alert_snack'
 
 import { UpsertData, UpsertLink } from 'src/hooks/upsert/upsert-data'
 
+import OnMobileScreen from 'src/items/screen/resize';
 
 export  function AddingAccount({receivedData,submittedResult}) {
   
@@ -48,6 +49,8 @@ export  function AddingAccount({receivedData,submittedResult}) {
 
   const [onEdit, setonEdit] = useState(false);
   const [onAdd, setonAdd] = useState(false);
+
+  const OnMobile= OnMobileScreen();
 
   const ondialogClose = () => {
     if(onAdd){
@@ -238,7 +241,7 @@ export  function AddingAccount({receivedData,submittedResult}) {
         <DialogContent>
 
 
-      <Grid container spacing={2} sx={{ padding: '2rem' }}>
+      <Grid container spacing={2} sx={{ padding: OnMobile ? '1rem' : '2rem' }}>
         <Grid item xs={12}>
           <Typography variant="h6" component="div">
             Account Form
@@ -397,7 +400,7 @@ export  function AddingAccount({receivedData,submittedResult}) {
 
               { 
                 onEdit ? 
-                <Grid item xs={3.5} >
+                <Grid item xs={OnMobile ? 5 : 3.5} >
                 {
                   onSubmitLoad ?
                   <Button  color="secondary" >Submitting...</Button>
