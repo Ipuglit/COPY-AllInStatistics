@@ -395,7 +395,7 @@ export  function AddingAccount({receivedData,submittedResult}) {
 
 
       </Grid>
-
+      { OnMobile ? <br/> : null}
         <Grid container justifyContent="flex-end">
 
               { 
