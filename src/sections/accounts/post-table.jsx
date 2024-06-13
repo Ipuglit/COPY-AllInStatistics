@@ -68,15 +68,24 @@ export default function PostTable({data,upsertData}) {
     const tableRows = data.map(i => {
               return {
                         id:                         i.id,
-                        statusLabel:                i.statusLabel,
+                        accountAsDownline:          i.accountAsDownline,
+                        accountAsUpline:            i.accountAsUpline,
                         accountID:                  i.accountID,
                         accountNickname:            i.accountNickname,
                         accountRole:                i.accountRole,
-                        userNickname:               i.userNickname,
+                        accountRoleID:              i.accountRoleID,
+                        appID:                      i.appID,
+                        appImage:                   i.appImage,
                         appName:                    i.appName,
+                        status:                     i.status,
+                        statusLabel:                i.statusLabel,
+                        userID:                     i.userID,
+                        userNickname:               i.userNickname,
+                        userRole:                   i.userRole,
+                        userAvatar:                 i.userAvatar,
                         accountClubsCount:          i.accountClubsCount == 0 ? "0 club" : i.accountClubsCount > 1 ? i.accountClubsCount+" clubs" : "1 club",
                         action:                     i.action,
-                        userAvatar:                 i.userAvatar,
+
                       };
                       })
 

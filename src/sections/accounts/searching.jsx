@@ -32,7 +32,7 @@ export default function OnSearching({bySearching,}) {
 
             <TextField
                 label="Search"
-                variant="standard"
+
                 size="small"
                 value={searchValue}
                 onKeyDown={submitEnter}

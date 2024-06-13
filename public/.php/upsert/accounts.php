@@ -27,7 +27,7 @@
                     `status`            = $status
                 WHERE  `id`             = $id ";
 
-    $check_update = "SELECT * FROM accounts WHERE `accountID`=$accountID AND `id`!=$id ";
+    $check_update = "SELECT * FROM accounts WHERE (`accountID`=$accountID OR (`appID`=$appID AND `accountNickname`='$accountNickname')) AND `id`!=$id ";
 
     if(empty($id) || $id == 0){
         //IF NO ID THEN INSERT
@@ -35,15 +35,18 @@
             $duplicate_insert = $conx->query($check_insert);
 
             if ($duplicate_insert->num_rows > 0) {
+                
                     while ($i = $duplicate_insert->fetch_assoc()) {
                             $gotID          = $i["id"];
                             $gotNickname    = $i["id"];
                     }
                     $feedback = "Already taken! ".$gotID." (".$gotNickname.")";
+
             } else {
 
                 if ($conx->query($insert) === TRUE) {
-                    $feedback = "Added";
+                    $last_id = mysqli_insert_id($conx);
+                    $feedback = "Added New (".$last_id.")";
                     $historyAction      = "ADDED";
                     $historyFor         = "ACCOUNT";
                     $historyDetails     = "Account ID: ".$accountID.", Account Role: ".$accountRole.", User ID: ".$userID.", App ID: ".$appID.", Status: ".$status;
@@ -55,7 +58,7 @@
             }
 
         } catch (Exception $e) {
-            $feedback = "Err Catch";
+            $feedback = "Err Catch: Adding id ".$id.", appID".$appID.", userID".$userID.", accountID".$accountID.", accountNickname".$accountNickname.", accountRole".$accountRole.", status".$status;
         }
     } else {
         //IF WITH ID THEN UPDATE
@@ -64,10 +67,10 @@
 
             if ($duplicate_update->num_rows > 0) {
                     while ($i = $duplicate_update->fetch_assoc()) {
-                            $gotID          = $i["id"];
-                            $gotNickname    = $i["id"];
+                            $gotID          = $i["accountID"];
+                            $gotNickname    = $i["accountNickname"];
                     }
-                    $feedback = "Already taken! ".$gotID." (".$gotNickname.")";
+                    $feedback = "Already taken! ID: ".$gotID." (".$gotNickname.")";
             } else {
 
                 if ($conx->query($update) === TRUE) {
@@ -77,13 +80,13 @@
                     $historyDetails     = "ID: ".$id.", Account ID: ".$accountID.", Account Role: ".$accountRole.", User ID: ".$userID.", App ID: ".$appID.", Status: ".$status;
                     include './history.php';
                 } else {
-                    $feedback = "Err Add";
+                    $feedback = "Err Update";
                 }
 
             }
 
         } catch (Exception $e) {
-            $feedback = "Err Catch";
+            $feedback = "Err Catch: Duplicate ".$e;
         }
     }
 

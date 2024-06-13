@@ -339,13 +339,9 @@ export default function OnSorting({byRoles,byStatus,byApp,bySort,bySortBy}) {
       </Menu>
 
         <Stack direction="row" >
-            <IconButton  sx={{
-                                  mt: 0,
-                                  color: 'text.disabled',
-                                }} size="small"
-                            onClick={resetSorting}>
-                <Icon icon="grommet-icons:power-reset" />
-            </IconButton >
+            <Button sx={{ mt: 0, color: 'text.disabled',  }} onClick={resetSorting}>
+                <Icon icon="grommet-icons:power-reset" /> Reset
+            </Button >
         </Stack>
 
       </Stack>

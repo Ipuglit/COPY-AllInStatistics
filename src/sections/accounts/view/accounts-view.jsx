@@ -21,8 +21,9 @@ import LoadTable from '../post-table'
 
 import OnSorting from '../sorting';
 import OnSearching from '../searching';
-import AddingAccount from '../upsert/form-upsert';
+import {AddingAccount} from '../upsert/form-upsert';
 
+import {AlertSnack} from 'src/items/alert_snack'
 // ----------------------------------------------------------------------
 
 export default function AccountsView() {
@@ -84,10 +85,30 @@ export default function AccountsView() {
       setupsertofData(i)
     }
 
+    const submittedResult=(i)=>{
+
+      const items = i.items
+
+        if(i.type == "add"){
+          const newArray = [...listofData,items];
+          setlistofData(newArray)
+        } else if(i.type == "update"){
+          const x = listofData.findIndex((o) => o.id == items.id);
+          const newArray = [...listofData];
+          newArray[x] = items;
+          setlistofData(newArray)
+        }
+
+    }
+    
     const onchangeView = (event, i) => {
       setonView(i);
       localStorage.setItem('slk-dataview',i)
     };
+
+    const addingNew=()=>{
+      setupsertofData({modal:"Open"})
+    }
 
     useEffect(() => {
       if(listLoading == true){
@@ -107,7 +128,7 @@ export default function AccountsView() {
 
         <Typography variant="h3">Accounts</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
+        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />} onClick={addingNew}>
           New Account 
         </Button>
 
@@ -116,32 +137,40 @@ export default function AccountsView() {
 
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
           <Grid xs={6} sm={6} md={6}>
-          <OnSorting byRoles={onByRoles} byStatus={onByStatus} byApp={onByApp} bySort={onBySort} bySortBy={onBySortBy}/>
+              <OnSorting byRoles={onByRoles} byStatus={onByStatus} byApp={onByApp} bySort={onBySort} bySortBy={onBySortBy}/>
           </Grid>
-          <Grid xs={6} sm={6} md={6}>
-          <OnSearching bySearching={onBySearch} />
 
-
-          </Grid>
       </Grid>
 
         <Divider sx={{ borderStyle: 'dashed', m: 1 }} />
         
-        <Stack mb={1} direction="row" alignItems="right" justifyContent="flex-end">
+      <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 12, sm: 8, md: 12 }}>
 
-            <ToggleButtonGroup value={onview} onChange={onchangeView} exclusive size="small"  >
-                  <ToggleButton value="table">
-                        <Icon icon="fluent-mdl2:table" color='gray' width={22} sx={{ mr: 5 }}  />
-                  </ToggleButton>
-                  <ToggleButton value="list">
-                        <Icon icon="cil:list" color='gray' width={22} sx={{ mr: 5 }}  />
-                  </ToggleButton>
-                  <ToggleButton value="card">
-                        <Icon icon="clarity:view-cards-line" color='gray' width={22} sx={{ mr: 5 }}  />
-                  </ToggleButton>
-            </ToggleButtonGroup>
+            <Grid xs={9} sm={6} md={6}>
+                <Stack mb={1} direction="row" alignItems="right" justifyContent="flex-start">
+                    <OnSearching bySearching={onBySearch} />
+                </Stack>
+            </Grid>
 
-        </Stack>
+            <Grid xs={3} sm={6} md={6}>
+                <Stack mb={1} direction="row" alignItems="right" justifyContent="flex-end">
+
+                    <ToggleButtonGroup value={onview} onChange={onchangeView} exclusive size="small"  >
+                          <ToggleButton value="table">
+                                <Icon icon="fluent-mdl2:table" color='gray' width={22} sx={{ mr: 5 }}  />
+                          </ToggleButton>
+                          <ToggleButton value="list">
+                                <Icon icon="cil:list" color='gray' width={22} sx={{ mr: 5 }}  />
+                          </ToggleButton>
+                          <ToggleButton value="card">
+                                <Icon icon="clarity:view-cards-line" color='gray' width={22} sx={{ mr: 5 }}  />
+                          </ToggleButton>
+                    </ToggleButtonGroup>
+
+                </Stack>
+            </Grid>
+
+      </Grid>
 
 
       <Grid container spacing={{ xs: 2, md: 2 }} columns={{ xs: 4, sm: 10, md: 20 }}>
@@ -179,8 +208,7 @@ export default function AccountsView() {
 
       </Grid>
 
-    <AddingAccount receivedData={upsertofData}/>
-
+    <AddingAccount receivedData={upsertofData} submittedResult={submittedResult}/>
 
     </Container>
   );

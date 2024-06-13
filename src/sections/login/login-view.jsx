@@ -106,6 +106,8 @@ export default function LoginView() {
                                                       
         localStorage.setItem('slk-dataview', 'card');    
 
+
+        
         console.log("Success! Logging in..."+response.data)
 
         const Timed = setTimeout(() => {
@@ -166,7 +168,10 @@ export default function LoginView() {
 
   useEffect(() => {
     checkUrl()
-    
+    localStorage.setItem("slk-theme",JSON.stringify({
+                                                      id: 0,
+                                                      theme: 'light',
+                                                    }))
   }, []);
 
   const renderForm = (

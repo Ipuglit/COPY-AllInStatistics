@@ -1,23 +1,27 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Box from '@mui/material/Box';
 import Popover from '@mui/material/Popover';
 import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 
+import { Icon } from '@iconify/react';
+
 // ----------------------------------------------------------------------
 
 const MODE = [
   { id: 0,
-    value: 'LIGHT',
+    value: 'light',
     label: 'Light mode',
-    icon: '/assets/icons/sun.svg',
+    color:  'black',
+    icon: 'line-md:sun-rising-filled-loop',
   },
   {
     id: 1,
-    value: 'DARK',
+    value: 'dark',
     label: 'Dark mode',
-    icon: '/assets/icons/moon.svg',
+    color:  'white',
+    icon: 'line-md:moon-filled-loop',
   },
 ];
 
@@ -27,11 +31,13 @@ export default function ThemeMode() {
 
   const themeModed    = JSON.parse(localStorage.getItem("theme-mode"))
   
-  if(!themeModed){
+  if(!themeModed || !themeModed.theme){
+
     localStorage.setItem("theme-mode",JSON.stringify({
                                                       id: MODE[0].id,
                                                       theme: MODE[0].value,
                                                     }))
+
   }
 
   const [open, setOpen] = useState(null);
@@ -52,6 +58,7 @@ export default function ThemeMode() {
                                                       theme: MODE[event.target.value].value,
                                                     }))
     setOpen(null);
+    window.location.reload();
   };
 
   return (
@@ -66,7 +73,7 @@ export default function ThemeMode() {
           }),
         }}
       >
-        <img src={MODE[selected].icon} alt={MODE[selected].label} />
+        <Icon icon={MODE[selected].icon} color={MODE[selected].color} width={26} sx={{ mr: 0.3 }}  />
       </IconButton>
 
       <Popover
@@ -92,7 +99,7 @@ export default function ThemeMode() {
             onClick={itemSelected}
             sx={{ typography: 'body2', py: 1 }}
           >
-            <Box component="img" alt={i.label} src={i.icon} sx={{ width: 28, mr: 2 }} />
+            <Icon icon={i.icon} color={MODE[selected].color} width={24} sx={{ mr: 0.3 }}  />
 
             {i.label}
           </MenuItem>

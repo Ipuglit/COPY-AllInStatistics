@@ -4,42 +4,34 @@ import axios from 'axios';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 import {
   Dialog,
-  DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  IconButton,
   TextField,
   Button,
-  FormControlLabel,
   Grid,
   Typography,
   Accordion,
   AccordionSummary,
   AccordionDetails,
 
-
-
 } from '@mui/material';
 
 import { Icon } from '@iconify/react';
 
 import * as Fnc from 'src/hooks/functions'
-import * as Imp from 'src/hooks/importants'
-import * as Thm from 'src/hooks/theme'
 
 import { RawApplications } from 'src/hooks/raw/applications'
 import { RawRoles } from 'src/hooks/raw/roles'
 import { RawUsers } from 'src/hooks/raw/users'
 
-import {AlertDialog} from 'src/items/alert'
+import {AlertSnack} from 'src/items/alert_snack'
 
 import { UpsertData, UpsertLink } from 'src/hooks/upsert/upsert-data'
 
 
-export default function AddingAccount(receivedData) {
+export  function AddingAccount({receivedData,submittedResult}) {
   
-  const item        = receivedData.receivedData
+  const item        = receivedData
 
   const rawApp      = RawApplications().data
   const rawRoles    = RawRoles("LOWERMID").data
@@ -48,9 +40,22 @@ export default function AddingAccount(receivedData) {
   const [dataList, setdataList] = useState(item);
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState(false);
+  
+  const [onAlertShow, setonAlertShow] = useState(false);
+  const [onAlertType, setonAlertType] = useState("");
+  const [onAlertMessage, setonAlertMessage] = useState("");
+  const [onSubmitLoad, setonSubmitLoad] = useState(false);
+
+  const [onEdit, setonEdit] = useState(false);
+  const [onAdd, setonAdd] = useState(false);
 
   const ondialogClose = () => {
-    setOpen(false);
+    if(onAdd){
+      setOpen(false);
+      //window.location.reload();
+    } else {
+      setOpen(false);
+    }
   };
 
   const handleAccordionChange = (panel) => (event, isExpanded) => {
@@ -60,6 +65,19 @@ export default function AddingAccount(receivedData) {
   const onchangeItem = (val, x) => {
 
       const newArray = [item];
+
+      if(!newArray.status){
+        item["status"]       = 2
+        newArray["status"]   = 2
+        item["accountClubsCount"]       = 0
+        newArray["accountClubsCount"]   = 0
+        item["accountAsUpline"]       = 0
+        newArray["accountAsUpline"]   = 0
+        item["accountAsDownline"]       = 0
+        newArray["accountAsDownline"]   = 0
+        item["modal"]       = 'Open'
+        newArray["modal"]   = 'Open'
+      }
 
       if(x == "statusLabel"){
 
@@ -81,7 +99,7 @@ export default function AddingAccount(receivedData) {
           }
 
       } else {
-
+        
         item[x] = val
         newArray[x] = val;
 
@@ -91,50 +109,107 @@ export default function AddingAccount(receivedData) {
         const x = rawApp.find((o) => o.name == val);
         item["appID"]       = x.id
         newArray["appID"]   = x.id
+        item["appImage"]       = x.imageFull
+        newArray["appImage"]   = x.imageFull
       }
 
       if(x == "accountRole"){
         const x = rawRoles.find((o) => o.name == val);
         item["accountRoleID"]       = x.id
         newArray["accountRoleID"]   = x.id
+        item["accountRole"]       = x.name
+        newArray["accountRole"]   = x.name
       }
 
       if(x == "userNickname"){
         const x = rawUsers.find((o) => o.nickname == val);
         item["userID"]       = x.id
         newArray["userID"]   = x.id
+        item["userNickname"]       = x.nickname
+        newArray["userNickname"]   = x.nickname
+        item["userAvatar"]       = x.avatarFull
+        newArray["userAvatar"]   = x.avatarFull
+        item["userRole"]       = x.roleID
+        newArray["userRole"]   = x.roleID
       }
 
+      setonEdit(true)
       setdataList(newArray);
   };
 
+
+  const inputComplete = (i,ii) => {
+    if(i == "" || i == null || i == undefined){
+      return true
+    } else {
+      return false
+    }
+  };
+
+  const checkIfComplete = (i) => {
+    if(i.accountID == "" || i.accountNickname == "" || i.accountRole == "" || i.userNickname == "" || i.appName == ""){
+      return true
+    } else {
+      return false
+    }
+  };
+
   const onSubmitting =(i,ii)=>{
+    if( checkIfComplete(i) ){
+      showAlert('warning',4000,"Please complete all details")
+      setonAlertShow(true)
+    } else {
+        setonSubmitLoad(true)
+        proceedSubmit()
+    }
 
-     async function proceedSubmit() {
-        try {
-          const response = await axios.post(UpsertLink(ii),UpsertData(i));
-          const feed =  response.data;
-          console.log("Sent"+feed)
-        } catch (error) {
-          console.error("Error fetching data: ", error);
+    async function proceedSubmit() {
+
+      try {
+        const response = await axios.post(UpsertLink(ii),UpsertData(i));
+        const feed =  response.data;
+
+        if(feed == "Updated"){
+          showAlert('success',3000,'Account successfully updated!','update')
+        } else if(feed.includes("Added New")){
+          onchangeItem(feed.replace(/.*\(|\).*/g, ''),'id')
+          showAlert('success',3000,'Account successfully added! ','add')
+          setonAdd(true)
+        } else {
+          showAlert('warning',4000,feed,'none')
+          setonEdit(true)
         }
-    }
-    
-    if(UpsertData(i)){
-      proceedSubmit();
-      if(
-        item.accountID.length > 5 && 
-        item.accountNickname.length > 3 &&
-        item.accountRole &&
-        item.appName
-      ){
-        
-      }
-      
-    }
+        setonAlertShow(true)
+        setonSubmitLoad(false)
 
+      } catch (error) {
+        setonAlertShow(true)
+        setonSubmitLoad(false)
+        showAlert('error',4000,'Sorry! Something went wrong...','none')
+      }
+    }
 
   }
+
+  const showAlert = (i,ii,iii,iiii) => {
+    setonAlertType(i)
+    setonAlertMessage(iii)
+    setonEdit(false)
+    submittedResult({
+                    status: true,
+                    alert: i,
+                    duration: ii,
+                    message: iii,
+                    items: item,
+                    type: iiii,
+                  })
+    const T = setTimeout(() => {
+      setonAlertShow(false)
+    }, ii);
+    return () => clearTimeout(T);
+
+  };
+
 
   useEffect(() => {
 
@@ -145,6 +220,8 @@ export default function AddingAccount(receivedData) {
     } else {
         setOpen(false);
     }
+    setonAdd(false)
+    setonEdit(false)
     setdataList(item);
   }, [receivedData,item]);
 
@@ -172,18 +249,10 @@ export default function AddingAccount(receivedData) {
             label="Account ID"
             name="Account ID"
             size="small"
-            sx={{
-                  "& .MuiOutlinedInput-input": { color: 'gray' }, // Change text color
-                  "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: 'gray', // Change border color on focus
-                  },
-                  "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: '#EE82EE', // Change border color on selection
-                  },
-              }}
-            InputLabelProps={{ style: { color: 'violet' }, }}
+            error={inputComplete(item.accountID)}
+            //InputLabelProps={{ style: { color: '#BA55D3' }, }}
             inputProps={{ maxLength: 22 }}
-            value={item.accountID}
+            value={item.accountID ? item.accountID : ''}
             onChange={(e) => onchangeItem(Fnc.numberWhole(e.currentTarget.value), "accountID")}
             fullWidth
             required
@@ -194,8 +263,10 @@ export default function AddingAccount(receivedData) {
             label="Nickname"
             name="Nickname"
             size="small"
+            error={inputComplete(item.accountNickname)}
+            //nputLabelProps={{ style: { color: '#BA55D3' }, }}
             inputProps={{ maxLength: 18 }}
-            value={item.accountNickname}
+            value={item.accountNickname ? item.accountNickname : ''}
             onChange={(e) => onchangeItem(Fnc.wordNoSpace(e.currentTarget.value), "accountNickname")}
             fullWidth
             required
@@ -204,12 +275,16 @@ export default function AddingAccount(receivedData) {
 
         <Grid item xs={6}>
                 <FormControl fullWidth size='small'>
-                    <InputLabel id="filter-select-label">Select role</InputLabel>
+                    <InputLabel 
+                        id="filter-select-label" 
+                        //style={{color: '#BA55D3'}}
+                        >Role</InputLabel>
                     <Select
                       labelId="filter-select-label"
                       id="filter-select"
-                      value={item.accountRole}
-                      label="Select role"
+                      error={inputComplete(item.accountRole)}
+                      value={item.accountRole ? item.accountRole : ''}
+                      label="Role"
                       required
                       onChange={(e) => onchangeItem(e.target.value, "accountRole")}
                     >
@@ -224,12 +299,16 @@ export default function AddingAccount(receivedData) {
 
         <Grid item xs={12}>
                 <FormControl fullWidth size='small'>
-                    <InputLabel id="filter-select-label">Select application</InputLabel>
+                    <InputLabel 
+                        id="filter-select-label" 
+                        //style={{color: '#BA55D3'}}
+                        >Application</InputLabel>
                     <Select
                       labelId="filter-select-label"
                       id="filter-select"
-                      value={item.appName}
-                      label="Select application"
+                      error={inputComplete(item.appName)}
+                      value={item.appName ? item.appName : ''}
+                      label="Application"
                       onChange={(e) => onchangeItem(e.target.value, "appName")}
                     >
                       {
@@ -243,12 +322,18 @@ export default function AddingAccount(receivedData) {
 
         <Grid item xs={6}>
                 <FormControl fullWidth size='small'>
-                    <InputLabel id="filter-select-label">Select user</InputLabel>
+                    <InputLabel 
+                        id="filter-select-label" 
+                        //style={{color: '#BA55D3'}}
+                        >
+                          User
+                    </InputLabel>
                     <Select
                       labelId="filter-select-label"
                       id="filter-select"
-                      value={item.userNickname}
-                      label="Select user"
+                      error={inputComplete(item.userNickname)}
+                      value={item.userNickname ? item.userNickname : ''}
+                      label="User"
                       onChange={(e) => onchangeItem(e.target.value, "userNickname")}
                     >
                       {
@@ -308,18 +393,31 @@ export default function AddingAccount(receivedData) {
 
       </Grid>
 
-      <Grid container justifyContent="flex-end">
+        <Grid container justifyContent="flex-end">
 
-          <Grid item xs={4} >
-              <Button onClick={ondialogClose} sx={{ color: 'gray'}} >Cancel</Button>
-              <Button onClick={()=>onSubmitting(item,'accounts')} color="secondary">Save Account</Button>
-          </Grid>
-
-      </Grid>
-
+              { 
+                onEdit ? 
+                <Grid item xs={3.5} >
+                {
+                  onSubmitLoad ?
+                  <Button  color="secondary" >Submitting...</Button>
+                  :
+                  <Button onClick={()=>onSubmitting(item,'accounts')} color="secondary">Save Account</Button>
+                }
+                  
+                </Grid>
+                : 
+                null
+              }
+            
+            <Grid item xs={2} >
+              <Button onClick={ondialogClose} sx={{ color: 'gray'}} >{onEdit ? "Cancel" : "Close" }</Button>
+            </Grid>
+        </Grid>
+                
         </DialogContent>
 
-
+        {onAlertShow ? AlertSnack(onAlertType,onAlertMessage) : null}
 
       </Dialog>
 

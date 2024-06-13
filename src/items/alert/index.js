@@ -1,1 +1,1 @@
-export { default as AlertDialog } from './dialog';
+export { default as Alerting } from './view';
