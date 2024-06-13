@@ -46,6 +46,18 @@ export const Upsert = {
                         exchangerate:       import.meta.env.VITE_UPSERT_EXCHANGERATE,
                     };
 
+export const Upserts = {
+                        login:              import.meta.env.VITE_GO_LOGIN,
+                        users:              import.meta.env.VITE_UPSERTS_USERS,
+                        accounts:           import.meta.env.VITE_UPSERTS_ACCOUNTS,
+                        applications:       import.meta.env.VITE_UPSERTS_APPS,
+                        clubs:              import.meta.env.VITE_UPSERTS_CLUBS,
+                        unions:             import.meta.env.VITE_UPSERTS_UNIONS,
+                        uplines:            import.meta.env.VITE_UPSERTS_UPLINES,
+                        profile:            import.meta.env.VITE_UPSERTS_PROFILE,
+                        exchangerate:       import.meta.env.VITE_UPSERTS_EXCHANGERATE,
+                    };
+
 export const Path = {
                         icons:              "/images/icons/",
                         apps:               "/images/apps/",
@@ -77,3 +89,5 @@ export function LogOut(){
     window.location.replace("/login"); 
     window.location.href = "/login";
 }
+
+

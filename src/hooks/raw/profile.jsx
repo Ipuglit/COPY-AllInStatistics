@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState, useLayoutEffect } from 'react';
 
 import * as Imp from '../importants'
+import * as Fnc from '../functions'
 
 export const RawProfile = () => {
 
@@ -22,10 +23,7 @@ export const RawProfile = () => {
       const raw =  response.data
       setData(response.data);
 
-      if(response.data == "NOTFOUND"){
-        window.location.replace("/login"); 
-        window.location.href = "/login";
-    }
+      Fnc.NotFound(response.data)
       
             localStorage.setItem('slk-user', JSON.stringify({
                                                               role:       raw.rolename,
