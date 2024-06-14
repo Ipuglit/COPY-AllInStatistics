@@ -146,13 +146,13 @@ export default function AccountsView() {
         
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 12, sm: 8, md: 12 }}>
 
-            <Grid xs={9} sm={6} md={6}>
+            <Grid xs={7.5} sm={6} md={6}>
                 <Stack mb={1} direction="row" alignItems="right" justifyContent="flex-start">
                     <OnSearching bySearching={onBySearch} />
                 </Stack>
             </Grid>
 
-            <Grid xs={3} sm={6} md={6}>
+            <Grid xs={4.5} sm={6} md={6}>
                 <Stack mb={1} direction="row" alignItems="right" justifyContent="flex-end">
 
                     <ToggleButtonGroup value={onview} onChange={onchangeView} exclusive size="small"  >
