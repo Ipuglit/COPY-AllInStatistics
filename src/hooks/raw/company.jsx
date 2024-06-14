@@ -4,7 +4,7 @@ import { useState, useLayoutEffect } from 'react';
 import * as Imp from '../importants'
 import * as Fnc from '../functions'
 
-export const RawApplications = (i,ii,iii,iiii,iiiii) => {
+export const RawCompany = (i) => {
 
   const Token = JSON.parse( localStorage.getItem('slk-token') );
 
@@ -16,24 +16,20 @@ export const RawApplications = (i,ii,iii,iiii,iiiii) => {
               B:    Token.token,
               C:    Token.gadget,
               D:    Imp.TimeZoned,
-              STATUS:     i ? i : 'ALL',
-              COMPANY:    ii ? ii : 'ALL', 
-              SORT:       iii ? iii : 'DESC',
-              SORTBY:     iiii ? iiii : 'NONE',
-              SEARCH:     iiiii ? iiiii : '',
+              FOR:  i ? i : "ALL",
           }; 
-        
+
   async function fetching() {
       setLoad(false)
     try {
-      const response = await axios.post(Imp.Fetch['applications'], Auth);
+      const response = await axios.post(Imp.Fetch['company'], Auth);
       if(response.data == "NOTFOUND"){
           Fnc.NotFound()
       } else {
           setData(response.data);
           setLoad(true)
       }
-      console.log("Applications items fetched..."+JSON.stringify(response.data,null,2))
+      console.log("Company items fetched..."+JSON.stringify(response.data,null,2))
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -41,8 +37,7 @@ export const RawApplications = (i,ii,iii,iiii,iiiii) => {
 
   useLayoutEffect(() => {
       fetching();
-      console.log(JSON.stringify(Auth,null,2))
-    }, [i,ii,iii,iiii,iiiii]);
+    }, [i]);
 
   return ({load, data})
 }

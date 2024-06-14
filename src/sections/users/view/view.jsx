@@ -22,7 +22,7 @@ import LoadTable from '../post-table'
 
 import OnSorting from '../sorting';
 import OnSearching from '../searching';
-import {AddingItem} from '../upsert/form-upsert';
+import {AddingItem} from '../upsert/form';
 
 // ----------------------------------------------------------------------
 

@@ -22,7 +22,9 @@ import LoadTable from '../post-table'
 
 import OnSorting from '../sorting';
 import OnSearching from '../searching';
-import {AddingItem} from '../upsert/form-upsert';
+import {AddingItem} from '../upsert/form';
+
+import {UploadItem} from '../upload/';
 
 // ----------------------------------------------------------------------
 
@@ -54,7 +56,7 @@ export default function ApplicationsView() {
         setlistLoading(rawItems.load)
     }, [rawItems.load == true]);
 
-    const onByRoles =(i)=>{
+    const onByCompany =(i)=>{
         setfilterCompany(i)
     }
 
@@ -134,7 +136,7 @@ export default function ApplicationsView() {
 
           <Grid xs={6} sm={6} md={6}>
 
-              <OnSorting byRoles={onByRoles} byStatus={onByStatus} bySort={onBySort} bySortBy={onBySortBy}/>
+              <OnSorting byCompany={onByCompany} byStatus={onByStatus} bySort={onBySort} bySortBy={onBySortBy}/>
               
           </Grid>
 
@@ -192,9 +194,11 @@ export default function ApplicationsView() {
 
           {dataView == 'card' ? 
               listofData.map((i, index) => (
+                <Grid key={i.id} xs={2} sm={3} md={3.3}>
                 <LoadCards key={i.id}
                           upsertData={onupsertData}
                           data={i} />
+                 </Grid>
                 ))
           : dataView == 'list' ?
               <LoadList data={listofData} upsertData={onupsertData} />
@@ -213,6 +217,10 @@ export default function ApplicationsView() {
 
       </>
     }
+
+
+
+
 
       </Grid>
 

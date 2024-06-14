@@ -1,1 +1,1 @@
-export { default as AddingItem } from './form-upsert';
+export { default as AddingItem } from './form';

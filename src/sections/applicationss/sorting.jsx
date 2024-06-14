@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography';
 import Iconify from 'src/components/iconify';
 import { Icon } from '@iconify/react';
 import { RawRoles } from 'src/hooks/raw/roles';
-
+import { RawCompany } from 'src/hooks/raw/company';
 // ----------------------------------------------------------------------
 
 const SORT_STATUS = [
@@ -28,29 +28,29 @@ const ORDER_BY = [
 
 const ORDER_BY_THIS = [
   { id: 0, value: 'u.id', label: 'ID' },
-  { id: 1, value: 'u.nickname', label: 'Nickname' },
-  { id: 2, value: 'r.name', label: 'Role' },
-  { id: 3, value: '(SELECT COUNT(id) FROM accounts WHERE userID=u.id AND status=0)', label: 'Active Accounts' },
+  { id: 1, value: 'a.name', label: 'Name' },
+  { id: 2, value: 'c.name', label: 'Company' },
+  { id: 3, value: '(SELECT COUNT(id) FROM accounts WHERE appID = a.id AND status = 0)', label: 'Active Accounts' },
+  { id: 3, value: '(SELECT COUNT(id) FROM clubs WHERE appID = a.id AND status = 0)', label: 'Active Clubs' },
   { id: 4, value: 'u.status', label: 'Status' },
 ];
 
-export default function OnSorting({byRoles,byStatus,bySort,bySortBy}) {
+export default function OnSorting({byCompany,byStatus,bySort,bySortBy}) {
 
+  const SORT_COMPANY  = RawCompany("ALL").data
 
-  const SORT_ROLES = RawRoles("LOWERMID").data
+  const [openCompany, setopenCompany]     = useState(null);
+  const [openStatus, setopenStatus]       = useState(null);
+  const [openSort, setopenSort]           = useState(null);
+  const [openSortBy, setopenSortBy]       = useState(null);
 
-  const [openRole, setopenRole] = useState(null);
-  const [openStatus, setopenStatus] = useState(null);
-  const [openSort, setopenSort] = useState(null);
-  const [openSortBy, setopenSortBy] = useState(null);
-
-  const [filterRole, setfilterRole]       = useState(99999);
-  const [filterStatus, setfilterStatus]   = useState(0);
-  const [filterSort, setfilterSort]       = useState(0);
-  const [filterSortBy, setfilterSortBy]   = useState(0);
+  const [filterCompany, setfilterCompany]       = useState(99999);
+  const [filterStatus, setfilterStatus]         = useState(0);
+  const [filterSort, setfilterSort]             = useState(0);
+  const [filterSortBy, setfilterSortBy]         = useState(0);
 
   const closeMenu = () => {
-    setopenRole(null);
+    setopenCompany(null)
     setopenStatus(null);
     setopenSort(null);
     setopenSortBy(null)
@@ -60,15 +60,17 @@ export default function OnSorting({byRoles,byStatus,bySort,bySortBy}) {
     ii(i);
   };
 
-  const itemsRoles = (event) => {
+  const itemsCompany = (event) => {
     if(event.currentTarget.value == 99999){
-      setfilterRole(event.currentTarget.value)
-      byRoles("EVERYONE")
+      setfilterCompany(event.currentTarget.value)
+      byCompany("ALL")
     } else {
-      setfilterRole(event.currentTarget.value)
-      byRoles(SORT_ROLES[event.currentTarget.value].id)
+      setfilterCompany(event.currentTarget.value)
+      byCompany(SORT_COMPANY[event.currentTarget.value].id)
+      console.log(SORT_COMPANY[event.currentTarget.value].id)
     }
-    setopenRole(null);
+    setopenCompany(null);
+
   };
 
   const itemsStatus = (event) => {
@@ -78,27 +80,27 @@ export default function OnSorting({byRoles,byStatus,bySort,bySortBy}) {
   };
 
   const itemsSort = (event) => {
-    setfilterSort(event.currentTarget.value)
-    setopenSort(null);
-    bySort(ORDER_BY[event.currentTarget.value].value)
+      setfilterSort(event.currentTarget.value)
+      setopenSort(null);
+      bySort(ORDER_BY[event.currentTarget.value].value)
   };
 
   const itemsSortBy = (event) => {
-    setfilterSortBy(event.currentTarget.value)
-    setopenSortBy(null);
-    bySortBy(ORDER_BY_THIS[event.currentTarget.value].value)
+      setfilterSortBy(event.currentTarget.value)
+      setopenSortBy(null);
+      bySortBy(ORDER_BY_THIS[event.currentTarget.value].value)
   };
 
   const onSort = (event) => {
-    setfilterRole(event.target.value);
+    setfilterCompany(event.target.value);
   };
 
   const resetSorting = (event) => {
-    setfilterRole(99999)
+    setfilterCompany(99999)
     setfilterStatus(0)
     setfilterSort(0)
     setfilterSortBy(0)
-    byRoles("EVERYONE")
+    byCompany("ALL")
     byStatus("ALL")
     bySort("ASC")
     bySortBy("NONE")
@@ -112,12 +114,10 @@ export default function OnSorting({byRoles,byStatus,bySort,bySortBy}) {
     <>
 
 <Stack mb={0} direction="row" alignItems="right" justifyContent="flex-start">
-<Button
-        disableRipple
-        color="inherit"
-        onClick={(event) => { filtering(event.currentTarget, setopenStatus) }}
-        endIcon={<Iconify icon={openStatus ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />}
-      >
+
+        <Button disableRipple color="inherit"
+            onClick={(event) => { filtering(event.currentTarget, setopenStatus) }}
+            endIcon={<Iconify icon={openStatus ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />} >
         Filter:&nbsp;&nbsp;
         <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
         {SORT_STATUS[filterStatus].label}
@@ -147,26 +147,18 @@ export default function OnSorting({byRoles,byStatus,bySort,bySortBy}) {
         ))}
       </Menu>
 
-      {
-        // ------------------------------------------------------------ 
-        // ------------------------------------------------------------
-      }
-
-      <Button
-        disableRipple
-        color="inherit"
-        onClick={(event) => { filtering(event.currentTarget, setopenRole) }}
-        endIcon={<Iconify icon={openRole ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />}
+    <Button disableRipple color="inherit"
+        onClick={(event) => { filtering(event.currentTarget, setopenCompany) }}
+        endIcon={<Iconify icon={openCompany ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />}
       >
         <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
-        {filterRole == 99999 ? "Everyone" : capitalFirst(SORT_ROLES[filterRole].name)}
+        {filterCompany == 99999 ? "All" : capitalFirst(SORT_COMPANY[filterCompany].name)}
         </Typography>
       </Button>
 
       <Menu
-        open={!!openRole}
-        anchorEl={openRole}
-        onChange={onSort}
+        open={!!openCompany}
+        anchorEl={openCompany}
         onClose={closeMenu}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -180,17 +172,15 @@ export default function OnSorting({byRoles,byStatus,bySort,bySortBy}) {
           },
         }}
       >
-          <MenuItem value={99999} name={"Everyone"} onClick={itemsRoles}>
-            Everyone
+          <MenuItem value={99999} name={"All"} onClick={itemsCompany}>
+            All
           </MenuItem>
 
-        {SORT_ROLES.map((i, index) => (
-          <MenuItem key={index} value={index} name={i.name} selected={index === filterRole} onClick={itemsRoles}>
-            {capitalFirst(i.name)}
+        {SORT_COMPANY.map((o, index) => (
+          <MenuItem key={o.id} value={index} selected={index === filterCompany} onClick={itemsCompany}>
+            {o.name}
           </MenuItem>
         ))}
-
-
       </Menu>
 
       </Stack>
@@ -201,8 +191,6 @@ export default function OnSorting({byRoles,byStatus,bySort,bySortBy}) {
     }
 
       <Stack mb={0} direction="row" alignItems="right" justifyContent="flex-start">
-
-
 
       <Button
         disableRipple
