@@ -18,7 +18,7 @@ export default function ThemeProvider({ children }) {
 
   const memoizedValue = useMemo(
     () => ({
-      palette: {mode: themeModed.theme ? themeModed.theme : 'light'},
+      palette: {mode: themeModed ? themeModed.theme : 'light'},
       typography,
       shadows: shadows(),
       customShadows: customShadows(),
