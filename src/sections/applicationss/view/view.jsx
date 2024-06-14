@@ -125,8 +125,8 @@ export default function ApplicationsView() {
 
         <Typography variant="h3">APPLICATIONS</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />} onClick={addingNew}>
-          New Application 
+        <Button variant="contained" color="inherit" startIcon={<Iconify icon="line-md:plus" />} onClick={addingNew}>
+          NEW 
         </Button>
 
       </Stack>

@@ -123,8 +123,8 @@ export default function UsersView() {
 
         <Typography variant="h3">USERS</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />} onClick={addingNew}>
-          New User 
+        <Button variant="contained" color="inherit" startIcon={<Iconify icon="line-md:plus" />} onClick={addingNew}>
+          NEW 
         </Button>
 
       </Stack>

@@ -128,8 +128,8 @@ export default function AccountsView() {
 
         <Typography variant="h3">ACCOUNTS</Typography>
 
-        <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />} onClick={addingNew}>
-          New Account 
+        <Button variant="contained" color="inherit" startIcon={<Iconify icon="line-md:plus" />} onClick={addingNew}>
+          NEW 
         </Button>
 
       </Stack>
