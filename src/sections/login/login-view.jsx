@@ -86,6 +86,8 @@ export default function LoginView() {
         setShowAlert(true)
         console.log("Failed Logging!")
 
+        localStorage.removeItem("slk-theme")
+
       } else {
 
         localStorage.setItem('slk-token', JSON.stringify({
