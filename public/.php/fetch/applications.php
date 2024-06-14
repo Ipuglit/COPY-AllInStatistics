@@ -4,16 +4,57 @@
 
  if($Verified == "FOUND"){
 
-    if ( $Got['STATUS'] == "ACTIVE"){
-        $Extend_Status = " a.status=0 ";
-    } else if ( $Got['STATUS'] == "ACTIVEPENDING"){
-        $Extend_Status = " a.status!=2 ";
-    } else if ( $Got['STATUS'] == "PENDING"){
-        $Extend_Status = " a.status=1 ";
-    } else if ( $Got['STATUS'] == "DISABLED"){
-        $Extend_Status = " a.status=2 ";
+    if ( $Got['STATUS'] == "ALL" && $Got['COMPANY'] == "ALL" ){
+            
+        if ( $Got['SORTBY'] != "NONE" ){
+            $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
+        } else {
+            $Extend_Sort = " ORDER BY a.id ".$Got['SORT'];
+        }
+
+        if ( !empty($Got['SEARCH']) ){
+            $Extend_Search = " WHERE CONCAT(a.name,' ',c.name,' ', a.details, ' ', IF(a.status = 0, 'Active', IF(a.status=1, 'Pending', 'Disabled')),' ',(SELECT COUNT(id) FROM accounts WHERE appID = a.id)) LIKE '%".$Got['SEARCH']."%' ";
+        } else {
+            $Extend_Search = " ";
+        }
+
+        $Extend = " ".$Extend_Search." ".$Extend_Sort;
+
     } else {
-        $Extend_Status = " a.status!=9 ";
+
+        if ( $Got['STATUS'] == "ACTIVE"){
+            $Extend_Status = " a.status=0 ";
+        } else if ( $Got['STATUS'] == "ACTIVEPENDING"){
+            $Extend_Status = " a.status!=2 ";
+        } else if ( $Got['STATUS'] == "PENDING"){
+            $Extend_Status = " a.status=1 ";
+        } else if ( $Got['STATUS'] == "DISABLED"){
+            $Extend_Status = " a.status=2 ";
+        } else if ( $Got['STATUS'] == "ALL"){
+            $Extend_Status = " a.status IN (0, 1, 2) ";
+        } else {
+            $Extend_Status = " a.status IN (0, 1, 2) ";
+        }
+
+        if ( $Got['COMPANY'] != "ALL"){
+            $Extend_App = " AND c.name = '".$Got['COMPANY']."' ";
+        } else {
+            $Extend_App = " ";
+        }
+
+        if ( !empty($Got['SEARCH']) ){
+            $Extend_Search = " WHERE CONCAT(a.name,' ',c.name,' ', a.details, ' ', IF(a.status = 0, 'Active', IF(a.status=1, 'Pending', 'Disabled')),' ',(SELECT COUNT(id) FROM accounts WHERE appID = a.id)) LIKE '%".$Got['SEARCH']."%' ";
+        } else {
+            $Extend_Search = " ";
+        }
+
+        if ( $Got['SORTBY'] != "NONE" ){
+            $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
+        } else {
+            $Extend_Sort = " ORDER BY a.id ".$Got['SORT'];
+        }
+
+        $Extend = " WHERE ".$Extend_Status. " ".$Extend_Role." ".$Extend_App." ".$Extend_Search." ".$Extend_Sort;
     }
 
          $sql = "SELECT DISTINCT
@@ -25,7 +66,9 @@
                     c.id AS companyID,
                     c.name AS company,
                     a.details AS details,
-                    (SELECT COUNT(id) FROM accounts WHERE appID = a.id) AS acctCount,
+                    (SELECT COUNT(id) FROM accounts WHERE appID = a.id) AS allAccounts,
+                    (SELECT COUNT(id) FROM accounts WHERE appID = a.id AND status = 0) AS activeAccounts,
+                    (SELECT COUNT(id) FROM accounts WHERE appID = a.id AND status = 1) AS pendingAccounts,
                     IF(a.status = 0, 'Active', IF(a.status=1, 'Pending', 'Disabled')) AS statusLabel,
                     a.status AS status
                 FROM applications AS a
@@ -62,14 +105,16 @@
                     'details' =>        $i['details'],
                     'statusLabel' =>    $i['statusLabel'],
                     'status' =>         $i['status'],
-                    'accountCount' =>   $i['acctCount'],
+                    'allAccounts' =>    $i['allAccounts'],
+                    'activeAccounts' =>    $i['activeAccounts'],
+                    'pendingAccounts' =>    $i['pendingAccounts'],
                     'userCount' =>      $userCount,
                 );
             }
         }
     echo json_encode($data, true);
  } else {
-    echo json_encode("Err");
+    echo json_encode("NOTFOUND");
  }
 
 ?>

@@ -22,7 +22,7 @@ export default function PostCard({ index, data, upsertData }) {
   };
 
   return (
-    <Grid  xs={2} sm={3} md={4} key={index}>
+    <Grid  xs={2} sm={3} md={3.3} key={index}>
       <Card>
         <Box
           sx={{
@@ -49,8 +49,8 @@ export default function PostCard({ index, data, upsertData }) {
           style={data.statusLabel == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
           sx={{
             zIndex: 9,
-            width: 52,
-            height: 52,
+            width: 55,
+            height: 55,
             position: 'absolute',
             left: (theme) => theme.spacing(1.9),
             bottom: (theme) => theme.spacing(-2),
@@ -168,7 +168,7 @@ export default function PostCard({ index, data, upsertData }) {
                                                         modal: "Open",
                                                         ...data,
                                                     })}  >
-                      <span style={{color: "purple"}}> View </span>
+                      <span style={{color: "violet"}}> View </span>
                   </Button>
                 </Stack>
 

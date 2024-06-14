@@ -15,12 +15,12 @@ export const RawAccounts = (i,ii,iii,iiii,iiiii,iiiiii) => {
                 B:      Token.token,
                 C:      Token.gadget,
                 D:      Imp.TimeZoned,
-                STATUS:     i,
-                ROLE:       ii, 
-                APP:        iii,
-                SORT:       iiii,
-                SORTBY:     iiiii,
-                SEARCH:     iiiiii,
+                STATUS:     i ? i : 'ALL',
+                ROLE:       ii ? ii : 'EVERYONE', 
+                APP:        iii ? iii : 'ALL',
+                SORT:       iiii ? iiii : 'DESC',
+                SORTBY:     iiiii ? iiiii : 'NONE',
+                SEARCH:     iiiiii ? iiiiii : '',
             }; 
 
     async function fetching() {
@@ -36,7 +36,7 @@ export const RawAccounts = (i,ii,iii,iiii,iiiii,iiiiii) => {
         
             //console.log("Accounts items fetched..."+JSON.stringify(response.data,null,2))
         } catch (error) {
-            console.error("Error fetching data: ", error);
+            console.error("Error fetching data");
         }
     }
 

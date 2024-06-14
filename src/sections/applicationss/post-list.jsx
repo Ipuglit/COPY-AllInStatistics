@@ -68,29 +68,24 @@ function ItemList({ i, onReturn }) {
         
       <Box
         component="img"
-        alt={i.accountID}
-        src={i.userAvatar}
+        alt={i.id}
+        src={i.imageFull}
         sx={{ width: 48, height: 48, borderRadius: 1.5, flexShrink: 0 }}
       />
 
       <Box sx={{ minWidth: 275, flexGrow: 1, '@media (max-width: 600px)':{minWidth: 115, flexGrow: 1,} }} >
 
         <Typography variant="subtitle1" fontSize="small" sx={{ color: 'text.secondary' }} noWrap>
-          {i.accountRole}
+          {i.company}
         </Typography>
 
         <Link color="inherit" variant="subtitle2" fontSize="large" underline="hover" noWrap>
-          {i.accountNickname}
+          {i.name}
         </Link>
 
-        <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-          ID: {i.accountID}
-        </Typography>
-
         <Typography variant="subtitle1" fontSize="small" sx={{ color: 'text.secondary' }} noWrap>
-          {i.appName}
+          {i.activeAccounts == 0 ? "No active account" : i.activeAccounts > 1 ? i.activeAccounts+" active accounts" : "1 active account"}
         </Typography>
-
 
 
         {

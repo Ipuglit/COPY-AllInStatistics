@@ -17,15 +17,17 @@ export default function PostTable({data,upsertData}) {
 // -----------------------
 
   const tableHeaders = [ { field: "id", headerName: "ID", flex: 0.5 },  
-                        { field: "avatarFull", headerName: "Avatar", flex: 1,
+                        { field: "imageFull", headerName: "Image", flex: 1,
                           renderCell: (params) => {
                             return (
-                              <Avatar alt={params.row.id} src={params.row.avatarFull} />
+                              <Avatar alt={params.row.id} src={params.row.imageFull} />
                             );
                           },
                          },  
-                        { field: "nickname", headerName: "Nickname", flex: 1, cellClassName: "name-column--cell no-border-bottom", },  
-                        { field: "roleName", headerName: "Role", flex: 1, },   
+                        { field: "name", headerName: "Name", flex: 1, cellClassName: "name-column--cell no-border-bottom", },  
+                        { field: "company", headerName: "Company", flex: 1, },   
+                        { field: "details", headerName: "Details", flex: 1 }, 
+                        { field: "activeAccounts", headerName: "Active Accounts", flex: 1 }, 
                         { field: "statusLabel", headerName: "Status", flex: 1,
                           renderCell: (params) => {
                             return (
@@ -46,10 +48,7 @@ export default function PostTable({data,upsertData}) {
                                   </Button>
                             );
                           },
-                         },   
-                        { field: "activeAccounts", headerName: "Active Accounts", flex: 1, cellClassName: "name-column--cell no-border-bottom", }, 
-                        { field: "email", headerName: "Email", flex: 1 }, 
-                        { field: "telegram", headerName: "Telegram", flex: 1 },      
+                         },      
                         { field: "action", headerName: "Action", flex: 1,
                           renderCell: (params) => {
 
@@ -68,20 +67,15 @@ export default function PostTable({data,upsertData}) {
     const tableRows = data.map(i => {
               return {
                         id:                         i.id,
-                        totalAccounts:              i.totalAccounts,
-                        activeAccounts:             i.activeAccounts == 0 ? "No account" : i.activeAccounts > 1 ? i.activeAccounts+" accounts" : "1 account",
-                        pendingAccounts:            i.pendingAccounts,
-                        disabledAccounts:           i.disabledAccounts,
-                        nickname:                   i.nickname,
-                        username:                   i.username,
-                        roleName:                   i.roleName,
-                        roleID:                     i.roleID,
-                        email:                      i.email,
+                        activeAccounts:               i.activeAccounts == 0 ? "No account" : i.activeAccounts > 1 ? i.activeAccounts+" accounts" : "1 account",
+                        name:                       i.name,
+                        companyID:                  i.companyID,
+                        company:                    i.company,
+                        imageID:                    i.imageID,
+                        imageFull:                  i.imageFull,
+                        details:                    i.details,
                         status:                     i.status,
                         statusLabel:                i.statusLabel,
-                        avatarID:                   i.avatarID,
-                        avatarFull:                 i.avatarFull,
-                        telegram:                   i.telegram,
                         action:                     i.action,
                       };
                       })

@@ -9,20 +9,23 @@ export default function Loading_Skeletons({type}) {
     {
         type == "card" ?
         <>
-            <Grid  xs={2} sm={3} md={4}>
-                <Skeleton width="100%" height="300px" />
+            <Grid  xs={2} sm={3} md={3.3}>
+                <Skeleton width="100%" height="350px" />
             </Grid>
-            <Grid  xs={2} sm={3} md={4}>
-                <Skeleton width="100%" height="300px" />
+            <Grid  xs={2} sm={3} md={3.3}>
+                <Skeleton width="100%" height="350px" />
             </Grid>
-            <Grid  xs={2} sm={3} md={4}>
-                <Skeleton width="100%" height="300px" />
+            <Grid  xs={2} sm={3} md={3.3}>
+                <Skeleton width="100%" height="350px" />
             </Grid>
-            <Grid  xs={2} sm={3} md={4}>
-                <Skeleton width="100%" height="300px" />
+            <Grid  xs={2} sm={3} md={3.3}>
+                <Skeleton width="100%" height="350px" />
             </Grid>
-            <Grid  xs={2} sm={3} md={4}>
-                <Skeleton width="100%" height="300px" />
+            <Grid  xs={2} sm={3} md={3.3}>
+                <Skeleton width="100%" height="350px" />
+            </Grid>
+            <Grid  xs={2} sm={3} md={3.3}>
+                <Skeleton width="100%" height="350px" />
             </Grid>
         </>
         : type == "list" ?

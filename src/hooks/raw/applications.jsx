@@ -4,7 +4,7 @@ import { useState, useLayoutEffect } from 'react';
 import * as Imp from '../importants'
 import * as Fnc from '../functions'
 
-export const RawApplications = (i) => {
+export const RawApplications = (i,ii,iii,iiii,iiiii) => {
 
   const Token = JSON.parse( localStorage.getItem('slk-token') );
 
@@ -16,7 +16,11 @@ export const RawApplications = (i) => {
               B:    Token.token,
               C:    Token.gadget,
               D:    Imp.TimeZoned,
-              STATUS:  i ? i : "ALL",
+              STATUS:     i ? i : 'ALL',
+              COMPANY:    ii ? ii : 'ALL', 
+              SORT:       iii ? iii : 'DESC',
+              SORTBY:     iiii ? iiii : 'NONE',
+              SEARCH:     iiiii ? iiiii : '',
           }; 
 
   async function fetching() {
@@ -29,7 +33,7 @@ export const RawApplications = (i) => {
           setData(response.data);
           setLoad(true)
       }
-      //console.log("Applications items fetched..."+JSON.stringify(response.data,null,2))
+      console.log("Applications items fetched..."+JSON.stringify(response.data,null,2))
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -37,7 +41,7 @@ export const RawApplications = (i) => {
 
   useLayoutEffect(() => {
       fetching();
-    }, []);
+    }, [i,ii,iii,iiii,iiiii]);
 
   return ({load, data})
 }

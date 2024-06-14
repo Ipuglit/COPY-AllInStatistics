@@ -4,7 +4,7 @@ import { useState, useLayoutEffect } from 'react';
 import * as Imp from '../importants'
 import * as Fnc from '../functions'
 
-export const RawUsers = () => {
+export const RawUsers = (i,ii,iii,iiii,iiiii) => {
 
   const Token = JSON.parse( localStorage.getItem('slk-token') );
 
@@ -16,6 +16,11 @@ export const RawUsers = () => {
               B:  Token.token,
               C:  Token.gadget,
               D:  Imp.TimeZoned,
+              STATUS:     i ? i : 'ALL',
+              ROLE:       ii ? ii : 'EVERYONE', 
+              SORT:       iii ? iii : 'DESC',
+              SORTBY:     iiii ? iiii : 'NONE',
+              SEARCH:     iiiii ? iiiii : '',
           }; 
 
   async function fetching() {
@@ -24,19 +29,19 @@ export const RawUsers = () => {
       const response = await axios.post(Imp.Fetch['users'], Auth);
       if(response.data == "NOTFOUND"){
         Fnc.NotFound()
-    } else {
-        setData(response.data);
-        setLoad(true)
-    }
+      } else {
+          setData(response.data);
+          setLoad(true)
+      }
       //console.log("Users items fetched..."+JSON.stringify(response.data,null,2))
     } catch (error) {
-      console.error("Error fetching data: ", error);
+      console.error("Error fetching data");
     }
   }
 
   useLayoutEffect(() => {
       fetching();
-    }, []);
+    }, [i,ii,iii,iiii,iiiii]);
 
   return ({load, data})
 }

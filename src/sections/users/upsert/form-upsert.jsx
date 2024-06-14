@@ -13,7 +13,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Autocomplete,
+
 } from '@mui/material';
 
 import { Icon } from '@iconify/react';
@@ -52,14 +52,6 @@ export  function AddingItem({receivedData,submittedResult}) {
 
   const OnMobile= OnMobileScreen();
 
-  const dataUsers = rawUsers.map(i => {
-    return {
-              label:                        i.nickname,
-              value:                        i.nickname,
-            };
-            })
-
-
   const ondialogClose = () => {
     if(onAdd){
       setOpen(false);
@@ -80,12 +72,14 @@ export  function AddingItem({receivedData,submittedResult}) {
       if(!newArray.status){
         item["status"]       = 2
         newArray["status"]   = 2
-        item["accountClubsCount"]       = 0
-        newArray["accountClubsCount"]   = 0
-        item["accountAsUpline"]       = 0
-        newArray["accountAsUpline"]   = 0
-        item["accountAsDownline"]       = 0
-        newArray["accountAsDownline"]   = 0
+        item["totalAccounts"]       = 0
+        newArray["totalAccounts"]   = 0
+        item["activeAccounts"]       = 0
+        newArray["activeAccounts"]   = 0
+        item["pendingAccounts"]       = 0
+        newArray["pendingAccounts"]   = 0
+        item["disabledAccounts"]       = 0
+        newArray["disabledAccounts"]   = 0
         item["modal"]       = 'Open'
         newArray["modal"]   = 'Open'
       }
@@ -116,32 +110,12 @@ export  function AddingItem({receivedData,submittedResult}) {
 
       }
 
-      if(x == "appName"){
-        const x = rawApp.find((o) => o.name == val);
-        item["appID"]       = x.id
-        newArray["appID"]   = x.id
-        item["appImage"]       = x.imageFull
-        newArray["appImage"]   = x.imageFull
-      }
-
-      if(x == "accountRole"){
+      if(x == "roleName"){
         const x = rawRoles.find((o) => o.name == val);
-        item["accountRoleID"]       = x.id
-        newArray["accountRoleID"]   = x.id
-        item["accountRole"]       = x.name
-        newArray["accountRole"]   = x.name
-      }
-
-      if(x == "userNickname"){
-        const x = rawUsers.find((o) => o.nickname == val);
-        item["userID"]       = x.id
-        newArray["userID"]   = x.id
-        item["userNickname"]       = x.nickname
-        newArray["userNickname"]   = x.nickname
-        item["userAvatar"]       = x.avatarFull
-        newArray["userAvatar"]   = x.avatarFull
-        item["userRole"]       = x.roleID
-        newArray["userRole"]   = x.roleID
+        item["roleID"]       = x.id
+        newArray["roleID"]   = x.id
+        item["roleName"]       = x.name
+        newArray["roleName"]   = x.name
       }
 
       setonEdit(true)
@@ -158,7 +132,7 @@ export  function AddingItem({receivedData,submittedResult}) {
   };
 
   const checkIfComplete = (i) => {
-    if(i.accountID == "" || i.accountID == undefined  || i.accountNickname == "" || i.accountNickname == undefined || i.accountRole == "" || i.accountRole == undefined || i.userNickname == "" || i.userNickname == undefined || i.appName == "" || i.appName == undefined || i.statusLabel == "" || i.statusLabel == undefined  || i.userID == "" || i.userID == undefined){
+    if(i.roleName == "" || i.roleName == undefined  || i.nickname == "" || i.nickname == undefined || i.username == "" || i.username == undefined || i.password == "" || i.password == undefined || i.statusLabel == "" || i.statusLabel == undefined ){
       return true
     } else {
       return false
@@ -166,6 +140,7 @@ export  function AddingItem({receivedData,submittedResult}) {
   };
 
   const onSubmitting =(i,ii)=>{
+
     if( checkIfComplete(i) ){
       showAlert('warning',2000,"Please complete all details")
       setonAlertShow(true)
@@ -181,10 +156,10 @@ export  function AddingItem({receivedData,submittedResult}) {
         const feed =  response.data;
 
         if(feed == "Updated"){
-          showAlert('success',2500,'Account successfully updated!','update')
+          showAlert('success',2500,'User successfully updated!','update')
         } else if(feed.includes("Added New")){
           onchangeItem(feed.replace(/.*\(|\).*/g, ''),'id')
-          showAlert('success',2500,'Account successfully added! ','add')
+          showAlert('success',2500,'User successfully added! ','add')
           setonAdd(true)
         } else {
           showAlert('warning',3000,feed,'none')
@@ -196,7 +171,7 @@ export  function AddingItem({receivedData,submittedResult}) {
       } catch (error) {
         setonAlertShow(true)
         setonSubmitLoad(false)
-        showAlert('error',3000,'Sorry! Something went wrong...','none')
+        showAlert('error',3000,'Failed! Something went wrong...','none')
       }
     }
 
@@ -252,39 +227,24 @@ export  function AddingItem({receivedData,submittedResult}) {
       <Grid container spacing={OnMobile ? 1 : 2} sx={{ padding: OnMobile ? '0rem' : '2rem' }}>
         <Grid item xs={12}>
           <Typography variant="h6" component="div">
-            ACCOUNT FORM
+            USER FORM
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Account ID"
-            name="Account ID"
-            size="small"
-            error={inputComplete(item.accountID)}
-            //InputLabelProps={{ style: { color: '#BA55D3' }, }}
-            inputProps={{ maxLength: 22 }}
-            value={item.accountID ? item.accountID : ''}
-            onChange={(e) => onchangeItem(Fnc.numberWhole(e.currentTarget.value), "accountID")}
-            fullWidth
-            required
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
             label="Nickname"
             name="Nickname"
             size="small"
-            error={inputComplete(item.accountNickname)}
-            //nputLabelProps={{ style: { color: '#BA55D3' }, }}
-            inputProps={{ maxLength: 18 }}
-            value={item.accountNickname ? item.accountNickname : ''}
-            onChange={(e) => onchangeItem(Fnc.wordNoSpace(e.currentTarget.value), "accountNickname")}
+            error={inputComplete(item.nickname)}
+            //InputLabelProps={{ style: { color: '#BA55D3' }, }}
+            inputProps={{ maxLength: 22 }}
+            value={item.nickname ? item.nickname : ''}
+            onChange={(e) => onchangeItem(Fnc.wordNoSpace(e.currentTarget.value), "nickname")}
             fullWidth
             required
           />
         </Grid>
-
-        <Grid item xs={6}>
+        <Grid item xs={12}>
                 <FormControl fullWidth size='small'>
                     <InputLabel 
                         id="filter-select-label" 
@@ -293,11 +253,11 @@ export  function AddingItem({receivedData,submittedResult}) {
                     <Select
                       labelId="filter-select-label"
                       id="filter-select"
-                      error={inputComplete(item.accountRole)}
-                      value={item.accountRole ? item.accountRole : ''}
+                      error={inputComplete(item.roleName)}
+                      value={item.roleName ? item.roleName : ''}
                       label="Role"
                       required
-                      onChange={(e) => onchangeItem(e.target.value, "accountRole")}
+                      onChange={(e) => onchangeItem(e.target.value, "roleName")}
                     >
                       {
                           rawRoles.map((i, index) => (
@@ -308,52 +268,64 @@ export  function AddingItem({receivedData,submittedResult}) {
                 </FormControl>
         </Grid>
 
-        <Grid item xs={12}>
-                <FormControl fullWidth size='small'>
-                    <InputLabel 
-                        id="filter-select-label" 
-                        //style={{color: '#BA55D3'}}
-                        >Application</InputLabel>
-                    <Select
-                      labelId="filter-select-label"
-                      id="filter-select"
-                      error={inputComplete(item.appName)}
-                      value={item.appName ? item.appName : ''}
-                      label="Application"
-                      onChange={(e) => onchangeItem(e.target.value, "appName")}
-                    >
-                      {
-                          rawApp.map((i, index) => (
-                            <MenuItem key={index} value={i.name} >{i.name}</MenuItem>
-                            ))
-                      }
-                    </Select>
-                </FormControl>
+        <Grid item xs={6}>
+          <TextField
+            label="Username"
+            name="Username"
+            size="small"
+            error={inputComplete(item.username)}
+            //nputLabelProps={{ style: { color: '#BA55D3' }, }}
+            inputProps={{ maxLength: 18 }}
+            value={item.username ? item.username : ''}
+            onChange={(e) => onchangeItem(Fnc.wordNoSpace(e.currentTarget.value), "username")}
+            fullWidth
+            required
+          />
         </Grid>
 
         <Grid item xs={6}>
-                <FormControl fullWidth size='small'>
-                    <InputLabel 
-                        id="filter-select-label" 
-                        //style={{color: '#BA55D3'}}
-                        >
-                          User
-                    </InputLabel>
-                    <Select
-                      labelId="filter-select-label"
-                      id="filter-select"
-                      error={inputComplete(item.userNickname)}
-                      value={item.userNickname ? item.userNickname : ''}
-                      label="User"
-                      onChange={(e) => onchangeItem(e.target.value, "userNickname")}
-                    >
-                      {
-                          rawUsers.map((i, index) => (
-                            <MenuItem key={index} value={i.nickname} >{i.nickname}</MenuItem>
-                            ))
-                      }
-                    </Select>
-                </FormControl>
+          <TextField
+            label="Password"
+            name="Password"
+            size="small"
+            error={inputComplete(item.password)}
+            //nputLabelProps={{ style: { color: '#BA55D3' }, }}
+            inputProps={{ maxLength: 18 }}
+            value={item.password ? item.password : ''}
+            onChange={(e) => onchangeItem(Fnc.wordNoSpace(e.currentTarget.value), "password")}
+            fullWidth
+            required
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            label="Email"
+            name="Email"
+            size="small"
+            error={inputComplete(item.email)}
+            //InputLabelProps={{ style: { color: '#BA55D3' }, }}
+            inputProps={{ maxLength: 22 }}
+            value={item.email ? item.email : ''}
+            onChange={(e) => onchangeItem(Fnc.wordNoSpace(e.currentTarget.value), "email")}
+            fullWidth
+            required
+          />
+        </Grid>
+
+        <Grid item xs={12}>
+          <TextField
+            label="Telegram"
+            name="Telegram"
+            size="small"
+            error={inputComplete(item.telegram)}
+            //InputLabelProps={{ style: { color: '#BA55D3' }, }}
+            inputProps={{ maxLength: 22 }}
+            value={item.telegram ? item.telegram : ''}
+            onChange={(e) => onchangeItem(Fnc.wordNoSpace(e.currentTarget.value), "telegram")}
+            fullWidth
+            required
+          />
         </Grid>
 
         <Grid item xs={12}>
@@ -378,7 +350,7 @@ export  function AddingItem({receivedData,submittedResult}) {
         <Grid item xs={12}>
           <Accordion expanded={expanded === 'panel1'} onChange={handleAccordionChange('panel1')}>
                 <AccordionSummary expandIcon={<Icon icon="solar:double-alt-arrow-up-bold-duotone" color='violet' width={22} sx={{ mr: 5 }}  />} aria-controls="panel1-content">
-                  View uplines
+                  View accounts
                 </AccordionSummary>
                 <AccordionDetails id="panel1-content">
                     <table>
@@ -413,7 +385,7 @@ export  function AddingItem({receivedData,submittedResult}) {
                   onSubmitLoad ?
                   <Button  color="secondary" >SUBMITTING...</Button>
                   :
-                  <Button onClick={()=>onSubmitting(item,'accounts')} color="secondary">SAVE</Button>
+                  <Button onClick={()=>onSubmitting(item,'users')} color="secondary">SAVE</Button>
                 }
                   
                 </Grid>

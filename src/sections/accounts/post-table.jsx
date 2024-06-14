@@ -55,8 +55,8 @@ export default function PostTable({data,upsertData}) {
 
                             return (
                               <Button size="small"  onClick={() => viewDetails(params)}
-                              endIcon={<Icon icon="eva:arrow-ios-forward-fill" color='purple' width={22} sx={{ mr: 0 }}  />} >
-                              <span style={{color: "purple"}}> View </span>
+                              endIcon={<Icon icon="eva:arrow-ios-forward-fill" color='purple' />} >
+                              <span style={{color: "violet"}}> View </span>
                             </Button>
                             );
 

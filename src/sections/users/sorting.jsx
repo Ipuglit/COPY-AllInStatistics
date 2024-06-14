@@ -4,16 +4,13 @@ import Menu from '@mui/material/Menu';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
-import IconButton from '@mui/material/IconButton';
 import { listClasses } from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 
 import Iconify from 'src/components/iconify';
 import { Icon } from '@iconify/react';
-import { RawApplications } from 'src/hooks/raw/applications';
 import { RawRoles } from 'src/hooks/raw/roles';
 
-import * as Func from 'src/utils/functions'
 // ----------------------------------------------------------------------
 
 const SORT_STATUS = [
@@ -30,36 +27,31 @@ const ORDER_BY = [
 ];
 
 const ORDER_BY_THIS = [
-  { id: 0, value: 'NONE', label: 'ID' },
-  { id: 1, value: 'app.name', label: 'Application' },
-  { id: 2, value: 'a.accountID', label: 'Account ID' },
-  { id: 3, value: 'a.accountNickname', label: 'Nickname' },
-  { id: 4, value: 'a.accountRole', label: 'Role' },
-  { id: 5, value: 'a.status', label: 'Status' },
+  { id: 0, value: 'u.id', label: 'ID' },
+  { id: 1, value: 'u.nickname', label: 'Nickname' },
+  { id: 2, value: 'r.name', label: 'Role' },
+  { id: 3, value: '(SELECT COUNT(id) FROM accounts WHERE userID=u.id AND status=0)', label: 'Active Accounts' },
+  { id: 4, value: 'u.status', label: 'Status' },
 ];
 
-export default function OnSorting({byRoles,byStatus,byApp,bySort,bySortBy}) {
+export default function OnSorting({byRoles,byStatus,bySort,bySortBy}) {
 
-  const SORT_APPS = RawApplications("ALL").data
 
   const SORT_ROLES = RawRoles("LOWERMID").data
 
   const [openRole, setopenRole] = useState(null);
   const [openStatus, setopenStatus] = useState(null);
-  const [openApp, setopenApp] = useState(null);
   const [openSort, setopenSort] = useState(null);
   const [openSortBy, setopenSortBy] = useState(null);
 
   const [filterRole, setfilterRole]       = useState(99999);
   const [filterStatus, setfilterStatus]   = useState(0);
-  const [filterApp, setfilterApp]         = useState(99999);
   const [filterSort, setfilterSort]       = useState(0);
   const [filterSortBy, setfilterSortBy]   = useState(0);
 
   const closeMenu = () => {
     setopenRole(null);
     setopenStatus(null);
-    setopenApp(null);
     setopenSort(null);
     setopenSortBy(null)
   };
@@ -85,17 +77,6 @@ export default function OnSorting({byRoles,byStatus,byApp,bySort,bySortBy}) {
       byStatus(SORT_STATUS[event.currentTarget.value].value)
   };
 
-  const itemsApps = (event) => {
-    if(event.currentTarget.value == 99999){
-      setfilterApp(event.currentTarget.value)
-      byApp("ALL")
-    } else {
-      setfilterApp(event.currentTarget.value)
-      byApp(SORT_APPS[event.currentTarget.value].id)
-    }
-    setopenApp(null);
-};
-
   const itemsSort = (event) => {
     setfilterSort(event.currentTarget.value)
     setopenSort(null);
@@ -115,11 +96,9 @@ export default function OnSorting({byRoles,byStatus,byApp,bySort,bySortBy}) {
   const resetSorting = (event) => {
     setfilterRole(99999)
     setfilterStatus(0)
-    setfilterApp(99999)
     setfilterSort(0)
     setfilterSortBy(0)
     byRoles("EVERYONE")
-    byApp("ALL")
     byStatus("ALL")
     bySort("ASC")
     bySortBy("NONE")
@@ -214,48 +193,6 @@ export default function OnSorting({byRoles,byStatus,byApp,bySort,bySortBy}) {
 
       </Menu>
 
-    {
-    // ------------------------------------------------------------ 
-    // ------------------------------------------------------------
-    }
-
-
-    <Button
-        disableRipple
-        color="inherit"
-        onClick={(event) => { filtering(event.currentTarget, setopenApp) }}
-        endIcon={<Iconify icon={openApp ? 'eva:chevron-up-fill' : 'eva:chevron-down-fill'} />}
-      >
-        <Typography component="span" variant="subtitle2" sx={{ color: 'text.secondary' }}>
-        {filterApp == 99999 ? "All" : SORT_APPS[filterApp].name}
-        </Typography>
-      </Button>
-
-      <Menu
-        open={!!openApp}
-        anchorEl={openApp}
-        onClose={closeMenu}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        slotProps={{
-          paper: {
-            sx: {
-              [`& .${listClasses.root}`]: {
-                p: 0,
-              },
-            },
-          },
-        }}
-      >
-          <MenuItem value={99999} name={"All"} onClick={itemsApps}>
-            All 
-          </MenuItem>
-        {SORT_APPS.map((i, index) => (
-          <MenuItem key={index} value={index} name={i.name} selected={index === filterApp} onClick={itemsApps}>
-            {i.name}
-          </MenuItem>
-        ))}
-      </Menu>
       </Stack>
 
     {

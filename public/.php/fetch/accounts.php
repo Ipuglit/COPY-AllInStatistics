@@ -123,7 +123,7 @@ if($Verified == "FOUND"){
         }
     echo json_encode($data, true);
  } else {
-    echo json_encode("Err");
+    echo json_encode("NOTFOUND");
  }
 
 ?>
