@@ -43,7 +43,7 @@
         }
 
         if ( !empty($Got['SEARCH']) ){
-            $Extend_Search = " WHERE CONCAT(a.name,' ',c.name,' ', a.details, ' ', IF(a.status = 0, 'Active', IF(a.status=1, 'Pending', 'Disabled')),' ',(SELECT COUNT(id) FROM accounts WHERE appID = a.id)) LIKE '%".$Got['SEARCH']."%' ";
+            $Extend_Search = " AND CONCAT(a.name,' ',c.name,' ', a.details, ' ', IF(a.status = 0, 'Active', IF(a.status=1, 'Pending', 'Disabled')),' ',(SELECT COUNT(id) FROM accounts WHERE appID = a.id)) LIKE '%".$Got['SEARCH']."%' ";
         } else {
             $Extend_Search = " ";
         }

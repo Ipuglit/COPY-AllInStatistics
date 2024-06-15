@@ -4,7 +4,7 @@ import { useState, useLayoutEffect } from 'react';
 import * as Imp from '../importants'
 import * as Fnc from '../functions'
 
-export const RawClubs = (i) => {
+export const RawClubs = (i,ii,iii,iiii,iiiii,iiiiii) => {
 
   const Token = JSON.parse( localStorage.getItem('slk-token') );
 
@@ -16,7 +16,12 @@ export const RawClubs = (i) => {
               B:    Token.token,
               C:    Token.gadget,
               D:    Imp.TimeZoned,
-              FOR:  i ? i : "ALL",
+              STATUS:     i ? i : 'ALL',
+              APP:        ii ? ii : 'ALL', 
+              UNION:      iii ? iii : 'ALL', 
+              SORT:       iiii ? iiii : 'DESC',
+              SORTBY:     iiiii ? iiiii : 'NONE',
+              SEARCH:     iiiiii ? iiiiii : '',
           }; 
 
   async function fetching() {
@@ -37,7 +42,7 @@ export const RawClubs = (i) => {
 
   useLayoutEffect(() => {
       fetching();
-    }, [i]);
+    }, [i,ii,iii,iiii,iiiii,iiiiii]);
 
   return ({load, data})
 }

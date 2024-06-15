@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { ClubsView } from 'src/sections/clubs/view/';
+import { Viewing } from 'src/sections/clubss/view/';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ export default function ClubsPage() {
         <title> Clubs | Poker Analytics </title>
       </Helmet>
 
-      <ClubsView />
+      <Viewing />
     </>
   );
 }

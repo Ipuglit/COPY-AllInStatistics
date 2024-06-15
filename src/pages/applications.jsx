@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { ApplicationsView } from 'src/sections/applicationss/view/';
+import { Viewing } from 'src/sections/applications/view/';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ export default function ApplicationsPage() {
         <title> Applications | Poker Analytics </title>
       </Helmet>
 
-      <ApplicationsView />
+      <Viewing />
     </>
   );
 }

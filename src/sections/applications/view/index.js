@@ -1,1 +1,1 @@
-export { default as ApplicationsView } from './view';
+export { default as Viewing } from './view';

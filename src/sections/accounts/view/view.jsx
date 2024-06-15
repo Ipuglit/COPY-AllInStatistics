@@ -8,7 +8,6 @@ import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import { RawAccounts } from 'src/hooks/raw/accounts';
-import { RawUsers } from 'src/hooks/raw/users';
 import Iconify from 'src/components/iconify';
 import { Icon } from '@iconify/react';
 import ToggleButton from '@mui/material/ToggleButton';
@@ -24,9 +23,10 @@ import OnSorting from '../sorting';
 import OnSearching from '../searching';
 import {AddingItem} from '../upsert/form';
 
+import {AlertSnack} from 'src/items/alert_snack'
 // ----------------------------------------------------------------------
 
-export default function Viewing() {
+export default function Viewing({TheFor,TheTitle}) {
 
     const dataView  = localStorage.getItem('slk-dataview')
 
@@ -34,11 +34,14 @@ export default function Viewing() {
 
     const [filterStatus,setfilterStatus]    = useState('ALL')
     const [filterRole,setfilterRole]        = useState('EVERYONE')
+    const [filterApp,setfilterApp]          = useState('ALL')
     const [filterSort,setfilterSort]        = useState('ASC')
     const [filterSortBy,setfilterSortBy]    = useState('NONE')
     const [filterSearch,setfilterSearch]    = useState('')
-    const rawItems                          = RawUsers  (   filterStatus ? filterStatus : "ALL",
+    const rawItems                          = RawAccounts(  TheFor,
+                                                            filterStatus ? filterStatus : "ALL",
                                                             filterRole ? filterRole : "EVERYONE",
+                                                            filterApp ? filterApp : "ALL",
                                                             filterSort ? filterSort : "DESC",
                                                             filterSortBy ? filterSortBy : "NONE",
                                                             filterSearch ? filterSearch : "",)
@@ -62,6 +65,9 @@ export default function Viewing() {
         setfilterStatus(i)
     }
 
+    const onByApp =(i)=>{
+        setfilterApp(i)
+    }
     
     const onBySort=(i)=>{
       setfilterSort(i)
@@ -113,6 +119,7 @@ export default function Viewing() {
           setlistFound(true)
         }
       }
+      console.log(TheFor)
     }, [listLoading]); 
 
 
@@ -121,7 +128,7 @@ export default function Viewing() {
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
 
-        <Typography variant="h3">USERS</Typography>
+        <Typography variant="h3">{TheTitle}</Typography>
 
         <Button variant="contained" color="inherit" startIcon={<Iconify icon="line-md:plus" />} onClick={addingNew}>
           NEW 
@@ -131,11 +138,8 @@ export default function Viewing() {
 
 
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-
           <Grid xs={6} sm={6} md={6}>
-
-              <OnSorting byRoles={onByRoles} byStatus={onByStatus} bySort={onBySort} bySortBy={onBySortBy}/>
-              
+              <OnSorting byRoles={onByRoles} byStatus={onByStatus} byApp={onByApp} bySort={onBySort} bySortBy={onBySortBy}/>
           </Grid>
 
       </Grid>
@@ -145,37 +149,27 @@ export default function Viewing() {
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 12, sm: 8, md: 12 }}>
 
             <Grid xs={7.5} sm={6} md={6}>
-
                 <Stack mb={1} direction="row" alignItems="right" justifyContent="flex-start">
-
                     <OnSearching bySearching={onBySearch} />
-
                 </Stack>
-
             </Grid>
 
             <Grid xs={4.5} sm={6} md={6}>
-
                 <Stack mb={1} direction="row" alignItems="right" justifyContent="flex-end">
 
                     <ToggleButtonGroup value={onview} onChange={onchangeView} exclusive size="small"  >
-
                           <ToggleButton value="table">
                                 <Icon icon="fluent-mdl2:table" color='gray' width={22} sx={{ mr: 5 }}  />
                           </ToggleButton>
-
                           <ToggleButton value="list">
                                 <Icon icon="cil:list" color='gray' width={22} sx={{ mr: 5 }}  />
                           </ToggleButton>
-
                           <ToggleButton value="card">
                                 <Icon icon="clarity:view-cards-line" color='gray' width={22} sx={{ mr: 5 }}  />
                           </ToggleButton>
-
                     </ToggleButtonGroup>
 
                 </Stack>
-
             </Grid>
 
       </Grid>
@@ -192,7 +186,7 @@ export default function Viewing() {
 
           {dataView == 'card' ? 
               listofData.map((i, index) => (
-                <LoadCards key={i.id}
+                <LoadCards key={i.increment}
                           upsertData={onupsertData}
                           data={i} />
                 ))

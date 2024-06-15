@@ -3,14 +3,16 @@ import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Unstable_Grid2';
-import Skeleton from '@mui/material/Skeleton';
 import Alert from '@mui/material/Alert';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
+
 import { RawAccounts } from 'src/hooks/raw/accounts';
-import { RawUsers } from 'src/hooks/raw/users';
-import Iconify from 'src/components/iconify';
+import { RawClubs } from 'src/hooks/raw/clubs';
 import { Icon } from '@iconify/react';
+
+import Iconify from 'src/components/iconify';
+
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
@@ -24,6 +26,7 @@ import OnSorting from '../sorting';
 import OnSearching from '../searching';
 import {AddingItem} from '../upsert/form';
 
+import {AlertSnack} from 'src/items/alert_snack'
 // ----------------------------------------------------------------------
 
 export default function Viewing() {
@@ -33,12 +36,14 @@ export default function Viewing() {
     const [onview, setonView]               = useState(dataView);
 
     const [filterStatus,setfilterStatus]    = useState('ALL')
-    const [filterRole,setfilterRole]        = useState('EVERYONE')
+    const [filterUnion,setfilterUnion]      = useState('ALL')
+    const [filterApp,setfilterApp]          = useState('ALL')
     const [filterSort,setfilterSort]        = useState('ASC')
     const [filterSortBy,setfilterSortBy]    = useState('NONE')
     const [filterSearch,setfilterSearch]    = useState('')
-    const rawItems                          = RawUsers  (   filterStatus ? filterStatus : "ALL",
-                                                            filterRole ? filterRole : "EVERYONE",
+    const rawItems                          = RawClubs(     filterStatus ? filterStatus : "ALL",
+                                                            filterApp ? filterApp : "ALL",
+                                                            filterUnion ? filterUnion : "ALL",
                                                             filterSort ? filterSort : "DESC",
                                                             filterSortBy ? filterSortBy : "NONE",
                                                             filterSearch ? filterSearch : "",)
@@ -54,14 +59,18 @@ export default function Viewing() {
         setlistLoading(rawItems.load)
     }, [rawItems.load == true]);
 
-    const onByRoles =(i)=>{
-        setfilterRole(i)
+    const onByUnions =(i)=>{
+        setfilterUnion(i)
+
     }
 
     const onByStatus =(i)=>{
         setfilterStatus(i)
     }
 
+    const onByApp =(i)=>{
+        setfilterApp(i)
+    }
     
     const onBySort=(i)=>{
       setfilterSort(i)
@@ -121,7 +130,7 @@ export default function Viewing() {
 
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
 
-        <Typography variant="h3">USERS</Typography>
+        <Typography variant="h3">CLUBS</Typography>
 
         <Button variant="contained" color="inherit" startIcon={<Iconify icon="line-md:plus" />} onClick={addingNew}>
           NEW 
@@ -131,11 +140,8 @@ export default function Viewing() {
 
 
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-
           <Grid xs={6} sm={6} md={6}>
-
-              <OnSorting byRoles={onByRoles} byStatus={onByStatus} bySort={onBySort} bySortBy={onBySortBy}/>
-              
+              <OnSorting byUnions={onByUnions} byStatus={onByStatus} byApp={onByApp} bySort={onBySort} bySortBy={onBySortBy}/>
           </Grid>
 
       </Grid>
@@ -145,37 +151,27 @@ export default function Viewing() {
       <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 12, sm: 8, md: 12 }}>
 
             <Grid xs={7.5} sm={6} md={6}>
-
                 <Stack mb={1} direction="row" alignItems="right" justifyContent="flex-start">
-
                     <OnSearching bySearching={onBySearch} />
-
                 </Stack>
-
             </Grid>
 
             <Grid xs={4.5} sm={6} md={6}>
-
                 <Stack mb={1} direction="row" alignItems="right" justifyContent="flex-end">
 
                     <ToggleButtonGroup value={onview} onChange={onchangeView} exclusive size="small"  >
-
                           <ToggleButton value="table">
                                 <Icon icon="fluent-mdl2:table" color='gray' width={22} sx={{ mr: 5 }}  />
                           </ToggleButton>
-
                           <ToggleButton value="list">
                                 <Icon icon="cil:list" color='gray' width={22} sx={{ mr: 5 }}  />
                           </ToggleButton>
-
                           <ToggleButton value="card">
                                 <Icon icon="clarity:view-cards-line" color='gray' width={22} sx={{ mr: 5 }}  />
                           </ToggleButton>
-
                     </ToggleButtonGroup>
 
                 </Stack>
-
             </Grid>
 
       </Grid>
@@ -192,9 +188,11 @@ export default function Viewing() {
 
           {dataView == 'card' ? 
               listofData.map((i, index) => (
+                <Grid key={i.id} xs={2} sm={3} md={3.3}>
                 <LoadCards key={i.id}
                           upsertData={onupsertData}
                           data={i} />
+                 </Grid>
                 ))
           : dataView == 'list' ?
               <LoadList data={listofData} upsertData={onupsertData} />

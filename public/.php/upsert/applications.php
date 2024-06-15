@@ -60,7 +60,7 @@
             } else {
 
                 if ($conx->query($update) === TRUE) {
-                        $feedback = "Updated";
+                        $feedback           = "Updated";
                         $historyAction      = "UPDATED";
                         $historyFor         = "APPLICATION";
                         $historyDetails     = "ID: ".$id.", Name: ".$name.", Company: ".$company.", Status: ".$status;

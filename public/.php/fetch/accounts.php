@@ -4,6 +4,12 @@
 
 if($Verified == "FOUND"){
 
+        if( $Got['FOR'] == "ALL"){
+            $Extend_For = " WHERE a.userID = ".$verifyID." ";
+        } else {
+            $Extend_For = " WHERE a.id IS NOT NULL ";
+        }
+
         if ( $Got['STATUS'] == "ALL" && $Got['ROLE'] == "EVERYONE" && $Got['APP'] == "ALL" ){
             
             if ( $Got['SORTBY'] != "NONE" ){
@@ -13,12 +19,12 @@ if($Verified == "FOUND"){
             }
 
             if ( !empty($Got['SEARCH']) ){
-                $Extend_Search = " WHERE CONCAT(a.accountID,' ',a.accountNickname,' ', r.name, ' ', app.name,' ',a.status) LIKE '%".$Got['SEARCH']."%' ";
+                $Extend_Search = " AND CONCAT(a.accountID,' ',a.accountNickname,' ', r.name, ' ', app.name,' ',a.status) LIKE '%".$Got['SEARCH']."%' ";
             } else {
                 $Extend_Search = " ";
             }
 
-            $Extend = " ".$Extend_Search." ".$Extend_Sort;
+            $Extend = " ".$Extend_For." ".$Extend_Search." ".$Extend_Sort;
 
         } else {
 
@@ -60,7 +66,7 @@ if($Verified == "FOUND"){
                 $Extend_Sort = " ORDER BY id ".$Got['SORT'];
             }
 
-            $Extend = " WHERE ".$Extend_Status. " ".$Extend_Role." ".$Extend_App." ".$Extend_Search." ".$Extend_Sort;
+            $Extend = " ".$Extend_For." AND ".$Extend_Status. " ".$Extend_Role." ".$Extend_App." ".$Extend_Search." ".$Extend_Sort;
         }
     
     $sql = "SELECT DISTINCT

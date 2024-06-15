@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { UsersView } from 'src/sections/users/view/';
+import { Viewing } from 'src/sections/users/view/';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ export default function UsersPage() {
         <title> Users | Poker Analytics </title>
       </Helmet>
 
-      <UsersView />
+      <Viewing />
     </>
   );
 }

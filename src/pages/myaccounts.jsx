@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { MyAccountsView } from 'src/sections/myaccounts/view/';
+import { Viewing } from 'src/sections/accounts/view/';
 
 // ----------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ export default function MyAccountsPage() {
         <title> My Accounts | Poker Analytics </title>
       </Helmet>
 
-      <MyAccountsView />
+      <Viewing TheFor="MINE" TheTitle="MY ACCOUNTS" />
     </>
   );
 }

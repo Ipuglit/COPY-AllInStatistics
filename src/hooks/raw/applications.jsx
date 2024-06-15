@@ -33,7 +33,7 @@ export const RawApplications = (i,ii,iii,iiii,iiiii) => {
           setData(response.data);
           setLoad(true)
       }
-      console.log("Applications items fetched..."+JSON.stringify(response.data,null,2))
+      //console.log("Applications items fetched..."+JSON.stringify(response.data,null,2))
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -41,7 +41,6 @@ export const RawApplications = (i,ii,iii,iiii,iiiii) => {
 
   useLayoutEffect(() => {
       fetching();
-      console.log(JSON.stringify(Auth,null,2))
     }, [i,ii,iii,iiii,iiiii]);
 
   return ({load, data})

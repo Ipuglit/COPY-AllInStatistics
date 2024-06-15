@@ -4,7 +4,7 @@ import { useState, useLayoutEffect } from 'react';
 import * as Imp from '../importants'
 import * as Fnc from '../functions'
 
-export const RawCompany = (i,ii,iii,iiii) => {
+export const RawUnions = (i,ii,iii,iiii,iiiii) => {
 
   const Token = JSON.parse( localStorage.getItem('slk-token') );
 
@@ -17,22 +17,23 @@ export const RawCompany = (i,ii,iii,iiii) => {
               C:    Token.gadget,
               D:    Imp.TimeZoned,
               STATUS:     i ? i : 'ALL',
-              SORT:       ii ? ii : 'DESC',
-              SORTBY:     iii ? iii : 'NONE',
-              SEARCH:     iiii ? iiii : '',
+              TYPE:       ii ? ii : 'ALL', 
+              SORT:       iii ? iii : 'DESC',
+              SORTBY:     iiii ? iiii : 'NONE',
+              SEARCH:     iiiii ? iiiii : '',
           }; 
 
   async function fetching() {
       setLoad(false)
     try {
-      const response = await axios.post(Imp.Fetch['company'], Auth);
+      const response = await axios.post(Imp.Fetch['unions'], Auth);
       if(response.data == "NOTFOUND"){
           Fnc.NotFound()
       } else {
           setData(response.data);
           setLoad(true)
       }
-      //console.log("Company items fetched..."+JSON.stringify(response.data,null,2))
+      //console.log("Unions items fetched..."+JSON.stringify(response.data,null,2))
     } catch (error) {
       console.error("Error fetching data: ", error);
     }
@@ -40,7 +41,7 @@ export const RawCompany = (i,ii,iii,iiii) => {
 
   useLayoutEffect(() => {
       fetching();
-    }, [i,ii,iii,iiii]);
+    }, [i,ii,iii,iiii,iiiii]);
 
   return ({load, data})
 }
