@@ -25,7 +25,7 @@ export default function PostCard({ data,upsertData }) {
           <Box
             component="img"
             alt={data.name}
-            src={data.imageFull ? data.imageFull : "public/images/clubs/default.png"}
+            src={data.imageFull ? data.imageFull : "/images/clubs/default.png"}
             style={data.statusLabel == "Disabled" ?  { filter: 'grayscale(100%)' } : null}
             sx={{
               top: 1,

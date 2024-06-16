@@ -49,7 +49,7 @@
         }
 
         if ( $Got['SORTBY'] != "NONE" ){
-            $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
+            $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT']; 
         } else {
             $Extend_Sort = " ORDER BY a.id ".$Got['SORT'];
         }
