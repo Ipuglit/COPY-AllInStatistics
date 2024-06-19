@@ -4,14 +4,14 @@
 
 if($Verified == "FOUND"){
 
-        if( $Got['FOR'] == "ALL"){
+        if( $Got['FOR'] == "MINE"){
             $Extend_For = " WHERE a.userID = ".$verifyID." ";
         } else {
             $Extend_For = " WHERE a.id IS NOT NULL ";
         }
 
         if ( $Got['STATUS'] == "ALL" && $Got['ROLE'] == "EVERYONE" && $Got['APP'] == "ALL" ){
-            
+
             if ( $Got['SORTBY'] != "NONE" ){
                 $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
             } else {
@@ -68,7 +68,7 @@ if($Verified == "FOUND"){
 
             $Extend = " ".$Extend_For." AND ".$Extend_Status. " ".$Extend_Role." ".$Extend_App." ".$Extend_Search." ".$Extend_Sort;
         }
-    
+
     $sql = "SELECT DISTINCT
                                 a.id AS id,
                                 a.accountID AS accountID,

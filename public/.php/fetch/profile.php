@@ -3,6 +3,7 @@
     include '../verify/verify.php';
 
 if($Verified == "FOUND"){
+
         $sql = "SELECT u.id AS id,
                     u.role AS role,
                     u.nickname AS nickname,
@@ -22,8 +23,11 @@ if($Verified == "FOUND"){
                 LEFT JOIN images AS i ON u.avatar = i.id
                 LEFT JOIN paths AS p ON i.type = p.type
                 WHERE u.id=$verifyID";
+
         $result = $conx->query($sql);
+
         if ($result->num_rows > 0) {
+
             while ($i = $result->fetch_assoc()) {
                 $feedback = array(
                                 "id" =>         $i['id'],
@@ -39,9 +43,11 @@ if($Verified == "FOUND"){
                                 "statusLabel" =>     $i['statusLabel'],
                                 );
             }
+            
         } else {
             $feedback = "Err";
         }
+
 }else {
     $feedback = "NOTFOUND";
 }

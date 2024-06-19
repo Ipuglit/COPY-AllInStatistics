@@ -4,8 +4,8 @@ import {Stack,Button,Container,Alert,Typography} from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import { RawApplications } from 'src/hooks/raw/applications';
-import { RawRoles } from 'src/hooks/raw/roles';
-import { RawAccounts } from 'src/hooks/raw/accounts';
+import { RawClubs } from 'src/hooks/raw/clubs';
+import { RawUplines } from 'src/hooks/raw/uplines';
 
 import { Icon } from '@iconify/react';
 
@@ -27,18 +27,18 @@ export default function Viewing({TheFor,TheTitle}) {
     var [onToggle, setonToggle]           = useState(dataView);
 
     const [filterStatus,setfilterStatus]    = useState('ALL')
-    const [filterRole,setfilterRole]        = useState('EVERYONE')
+    const [filterClub,setfilterClub]        = useState('ALL')
     const [filterApp,setfilterApp]          = useState('ALL')
     const [filterSort,setfilterSort]        = useState('ASC')
     const [filterSortBy,setfilterSortBy]    = useState('NONE')
     const [filterSearch,setfilterSearch]    = useState('')
 
     const rawApps                           = RawApplications("ALL").data
-    const rawRoles                          = RawRoles("LOWERMID").data
+    const rawClubs                          = RawClubs("ALL").data
 
-    const rawItems                          = RawAccounts(  TheFor,
+    const rawItems                          = RawUplines(  TheFor,
                                                             filterStatus ? filterStatus : "ALL",
-                                                            filterRole ? filterRole : "EVERYONE",
+                                                            filterClub ? filterClub : "ALL",
                                                             filterApp ? filterApp : "ALL",
                                                             filterSort ? filterSort : "DESC",
                                                             filterSortBy ? filterSortBy : "NONE",
@@ -63,7 +63,7 @@ export default function Viewing({TheFor,TheTitle}) {
     const onFilter_to =  [ 
                             //ITEMS,VALUE,IDD,OTHERS
                             [ FormattingSorting(Data.BY_STATUS,"STATUS",'value','label',"",true) ],
-                            [ FormattingSorting(rawRoles,"ROLES",'id','name',"",true) ],
+                            [ FormattingSorting(rawClubs,"CLUBS",'id','name',"",true) ],
                             [ FormattingSorting(rawApps,"APPS",'id','name',"",true) ],
                           ];
 
@@ -76,8 +76,8 @@ export default function Viewing({TheFor,TheTitle}) {
 
         if(i.what == "STATUS"){
           setfilterStatus(i.idd)
-        } else if(i.what == "ROLES"){
-          setfilterRole(i.idd)
+        } else if(i.what == "CLUBS"){
+          setfilterClub(i.idd)
         } else if(i.what == "APPS"){
           setfilterApp(i.idd)
         }
@@ -111,29 +111,32 @@ export default function Viewing({TheFor,TheTitle}) {
 
     const ENLISTED_CARDS = [{ 
                       id:       'increment',
-                      idd:      'accountID',
+                      idd:      'id',
                       status:   'statusLabel',
                       header:   'appName',
-                      title:    'accountNickname',
+                      title:    'playerNickname',
                       image:    'appImage',
-                      avatar:   'userAvatar',
+                      avatar:   'playerAvatar',
                       description:  [
-                                    { id: 1, label:  '', value: 'accountRole', count: ''},
-                                    { id: 2, label:  'ID: ', value: 'accountID', count: ''},
-                                    { id: 3, label:  'club', value: 'accountClubsCount', count: true},
+                                    { id: 1, label:  '', value: 'playerRole', count: ''},
+                                    { id: 2, label:  'ID: ', value: 'playerID', count: ''},
+                                    { id: 2, label:  'Upline: ', value: 'uplineID', count: ''},
+                                    { id: 2, label:  '', value: 'uplineNickname', count: ''},
                                     ],
                     }]
 
     const ENLISTED_TABLE = [ 
-                            { type:  'TEXT',    value: 'accountID', header: 'ID', altimage:''},
-                            { type:  'AVATAR',  value: 'userAvatar', header: 'Avatar', altimage:'accountID'},
-                            { type:  'TEXT',    value: 'accountNickname', header: 'Nickname', altimage:''},
-                            { type:  'TEXT',    value: 'accountRole', header: 'Role', altimage:''},
-                            { type:  'STATUS',  value: 'statusLabel', header: 'Status', altimage:''},
-                            { type:  'TEXT',    value: 'userNickname', header: 'User', altimage:''},
                             { type:  'TEXT',    value: 'appName', header: 'Application', altimage:''},
-                            { type:  'TEXT',    value: 'accountClubsCount', header: 'Clubs', altimage:''},
-                            { type:  'ACTION',  value: 'accountNickname', header: 'Action', altimage:''},
+                            { type:  'TEXT',    value: 'clubName', header: 'Club', altimage:''},
+                            { type:  'AVATAR',  value: 'playerAvatar', header: 'Avatar', altimage:'playerID'},
+                            { type:  'TEXT',    value: 'playerID', header: 'ID', altimage:''},
+                            { type:  'TEXT',    value: 'playerNickname', header: 'Nickname', altimage:''},
+                            { type:  'TEXT',    value: 'playerRole', header: 'Role', altimage:''},
+                            { type:  'STATUS',  value: 'statusLabel', header: 'Status', altimage:''},
+                            { type:  'TEXT',    value: 'uplineID', header: 'Upline ID', altimage:''},
+                            { type:  'TEXT',    value: 'uplineNickname', header: 'Upline Nickname', altimage:''},
+                            { type:  'TEXT',    value: 'uplineRole', header: 'Upline Role', altimage:''},
+                            { type:  'ACTION',  value: '', header: 'Action', altimage:''},
                           ]
 
 
@@ -144,11 +147,6 @@ export default function Viewing({TheFor,TheTitle}) {
     
     // =================== ++ UPSERT ++ ===============================
     // ==================================================
-
-
-    const onupsertData=(i)=>{
-      setupsertofData({...i,AddType:TheFor})
-    }
 
     const submittedResult=(i)=>{
 
@@ -177,9 +175,7 @@ export default function Viewing({TheFor,TheTitle}) {
           setlistFound(false)
         } else {
           setlistFound(true)
-
-                                      }
-                                      
+        }                
       }
      /// console.log(JSON.stringify(onFilter_to))
     }, [listLoading]); 
@@ -237,19 +233,9 @@ export default function Viewing({TheFor,TheTitle}) {
       </>
     }
 
-
-
-
-    
-        
-
     <AddingItem receivedData={upsertofData} submittedResult={submittedResult}/>
-
-
 
     </Container>
   );
 }
 
-
-//cover, title, view, comment, share, author, createdAt, index

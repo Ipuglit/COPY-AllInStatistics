@@ -35,10 +35,10 @@
             $duplicate_insert = $conx->query($check_insert);
 
             if ($duplicate_insert->num_rows > 0) {
-                
+
                     while ($i = $duplicate_insert->fetch_assoc()) {
-                            $gotID          = $i["id"];
-                            $gotNickname    = $i["id"];
+                            $gotID          = $i["accountID"];
+                            $gotNickname    = $i["accountNickname"];
                     }
                     $feedback = "Already taken! ".$gotID." (".$gotNickname.")";
 

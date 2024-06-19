@@ -22,10 +22,11 @@ export const RawProfile = () => {
                                                                 });
       const raw =  response.data
       setData(response.data);
-
+      //console.log("PRO "+JSON.stringify(response.data,null,2))
       Fnc.NotFound(response.data)
       
             localStorage.setItem('slk-user', JSON.stringify({
+                                                              roleID:     raw.role,
                                                               role:       raw.rolename,
                                                               nickname:   raw.nickname,
                                                               username:   raw.username,
@@ -33,7 +34,6 @@ export const RawProfile = () => {
                                                               email:      raw.email,
                                                               telegram:   raw.telegram,
                                                               status:     raw.statusLabel,
-                                                              status00:     raw.statusLabel,
                                                           }));
 
       setLoad(true)

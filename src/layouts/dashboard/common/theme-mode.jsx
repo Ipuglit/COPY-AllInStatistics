@@ -6,7 +6,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 
 import { Icon } from '@iconify/react';
-
+import * as Fnc from 'src/hooks/functions'
 // ----------------------------------------------------------------------
 
 const MODE = [
@@ -35,7 +35,7 @@ export default function ThemeMode() {
 
     localStorage.setItem("theme-mode",JSON.stringify({
                                                       id: MODE[0].id,
-                                                      theme: MODE[0].value,
+                                                      theme: Fnc.wordLowerCase(MODE[0].value),
                                                     }))
 
   }
@@ -55,7 +55,7 @@ export default function ThemeMode() {
     setSelected(event.target.value)
     localStorage.setItem("theme-mode",JSON.stringify({
                                                       id: MODE[event.target.value].id,
-                                                      theme: MODE[event.target.value].value,
+                                                      theme: Fnc.wordLowerCase(MODE[event.target.value].value),
                                                     }))
     setOpen(null);
     window.location.reload();

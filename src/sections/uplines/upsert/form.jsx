@@ -274,7 +274,7 @@ export function AddingItem({receivedData,submittedResult}) {
       <Grid container spacing={OnMobile ? 1 : 2} sx={{ padding: OnMobile ? '0rem' : '2rem' }}>
         <Grid item xs={12}>
           <Typography variant="h6" component="div">
-            ACCOUNT FORM
+            UPLINES FORM
           </Typography>
         </Grid>
         <Grid item xs={12}>

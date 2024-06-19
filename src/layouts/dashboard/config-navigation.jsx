@@ -18,11 +18,6 @@ export const navPublic  = [
     icon: icon('ic_accounts3'),
   },
   {
-    title: 'My clubs',
-    path: '/products',
-    icon: icon('ic_club2'),
-  },
-  {
     title: 'My history',
     path: '/blog',
     icon: icon('ic_history'),
@@ -46,7 +41,11 @@ export const navPrivate  = [
     path: '/accounts',
     icon: icon('ic_user'),
   },
-  
+  {
+    title: 'Uplines',
+    path: '/uplines',
+    icon: icon('ic_user'),
+  },
   {
     title: 'Applications',
     path: '/applications',
@@ -55,6 +54,11 @@ export const navPrivate  = [
   {
     title: 'Clubs',
     path: '/clubs',
+    icon: icon('ic_blog'),
+  },
+  {
+    title: 'FX Rates',
+    path: '/fxrates',
     icon: icon('ic_blog'),
   },
   {

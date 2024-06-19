@@ -5,17 +5,36 @@
 if($Verified == "FOUND"){
 
     if($Got['FOR'] == "LOWERMID" ){
-        $sql = "SELECT * FROM default_roles WHERE level = 'LOWER' OR level = 'MID' ";
+
+        $Extend = "  WHERE level = 'LOWER' OR level = 'MID' ";
+
+    } else if($Got['FOR'] == "UPPERMID" ){
+
+        $Extend = "  WHERE level = 'UPPER' OR level = 'MID' ";
+
+    } else if($Got['FOR'] == "MID" ){
+
+        $Extend = "  WHERE level = 'MID' ";
+
+    } else if($Got['FOR'] == "UPPER" ){
+
+        $Extend = "  WHERE level = 'UPPER' ";
+
     } else {
-        $sql = "SELECT * FROM default_roles";
+
+        $Extend = " ";
+
     }
+
+    $sql = "SELECT * FROM default_roles ".$Extend;
 
     $result = $conx->query($sql);
     $feedback = [];
+    $counted = 0;
 
         if ($result->num_rows > 0) {
             while ($i = $result->fetch_assoc()) {
-
+                $counted++;
                 if($i['status']==0){
                     $status = "Active";
                 } else {
@@ -24,6 +43,7 @@ if($Verified == "FOUND"){
 
                 $feedback[] = array(
                                 'id' =>             $i['id'],
+                                'increment'     =>  $counted,
                                 'name' =>           $i['name'],
                                 'details' =>        $i['details'],
                                 'level' =>          $i['level'],
@@ -36,7 +56,7 @@ if($Verified == "FOUND"){
         }
 
  } else {
-    $feedback = "Err";
+    $feedback = "NOTFOUND";
  }
 
  echo json_encode($feedback, true);

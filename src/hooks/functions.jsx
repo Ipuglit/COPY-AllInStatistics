@@ -1,3 +1,16 @@
+import useMediaQuery from '@mui/material/useMediaQuery';
+
+export const isMobile = () => {
+  const isTrue = useMediaQuery('(max-width:700px)');
+  
+  if(isTrue){
+    return true
+  } else {
+    return false
+  }
+
+} 
+
 export const NotFound = (i) => {
     if(i == "NOTFOUND"){
         window.location.replace("/login"); 
@@ -41,3 +54,10 @@ export const wordTitled = (i) => {
   return num
 }
 
+export const wordCapital = (i) => {
+  return i.charAt(0).toUpperCase() + i.slice(1).toLowerCase();
+};
+
+export const wordLowerCase = (i) => {
+  return i.toLowerCase();
+};

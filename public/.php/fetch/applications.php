@@ -5,7 +5,7 @@
  if($Verified == "FOUND"){
 
     if ( $Got['STATUS'] == "ALL" && $Got['COMPANY'] == "ALL" ){
-            
+
         if ( $Got['SORTBY'] != "NONE" ){
             $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
         } else {
@@ -49,7 +49,7 @@
         }
 
         if ( $Got['SORTBY'] != "NONE" ){
-            $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT']; 
+            $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
         } else {
             $Extend_Sort = " ORDER BY a.id ".$Got['SORT'];
         }
@@ -79,16 +79,18 @@
                 LEFT JOIN accounts AS ac ON ac.appID = a.id AND ac.status = 0
                 LEFT JOIN company AS c ON a.company = c.id
                 LEFT JOIN images AS i ON i.id = a.image
-                LEFT JOIN paths AS p ON p.type = i.type ".$Extend_Status;
+                LEFT JOIN paths AS p ON p.type = i.type ".$Extend;
 
     $result = $conx->query($sql);
     $data = [];
+    $counted = 0;
 
         if ($result->num_rows > 0) {
             while ($i = $result->fetch_assoc()) {
-
+                $counted++;
                 $data[] = array(
                     'id' =>                     $i['id'],
+                    'increment'             =>  $counted,
                     'name' =>                   $i['name'],
                     'imageID' =>                $i['imageID'],
                     'imagePath' =>              $i['imagePath'],
@@ -112,5 +114,3 @@
  } else {
     echo json_encode("NOTFOUND");
  }
-
-?>

@@ -10,6 +10,8 @@ import { overrides } from './overrides';
 import { typography } from './typography';
 import { customShadows } from './custom-shadows';
 
+import * as Fnc from 'src/hooks/functions'
+
 // ----------------------------------------------------------------------
 
 export default function ThemeProvider({ children }) {
@@ -18,7 +20,7 @@ export default function ThemeProvider({ children }) {
 
   const memoizedValue = useMemo(
     () => ({
-      palette: {mode: themeModed ? themeModed.theme : 'light'},
+      palette: {mode: themeModed ? Fnc.wordLowerCase(themeModed.theme) : 'light'},
       typography,
       shadows: shadows(),
       customShadows: customShadows(),

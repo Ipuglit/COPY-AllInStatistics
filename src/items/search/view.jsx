@@ -5,8 +5,7 @@ import { TextField, InputAdornment, IconButton } from '@mui/material';
 import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
-
-export default function OnSearching({bySearching,}) {
+export default function OnSearching({bySearching}) {
 
   const [searchValue, setsearchValue] = useState("");
   

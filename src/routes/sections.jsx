@@ -9,9 +9,12 @@ export const UserPage = lazy(() => import('src/pages/user'));
 export const UsersPage = lazy(() => import('src/pages/users'));
 export const AccountsPage = lazy(() => import('src/pages/accounts'));
 export const MyAccountsPage = lazy(() => import('src/pages/myaccounts'));
+export const UplinesPage = lazy(() => import('src/pages/uplines'));
+export const MyUplinesPage = lazy(() => import('src/pages/myuplines'));
 export const HistoryPage = lazy(() => import('src/pages/history'));
 export const ClubsPage = lazy(() => import('src/pages/clubs'));
 export const ApplicationsPage = lazy(() => import('src/pages/applications'));
+export const FXRatesPage = lazy(() => import('src/pages/fxrates'));
 export const LoginPage = lazy(() => import('src/pages/login'));
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
@@ -35,11 +38,12 @@ export default function Router() {
         { path: 'users', element: <UsersPage /> },
         { path: 'accounts', element: <AccountsPage /> },
         { path: 'myaccounts', element: <MyAccountsPage /> },
+        { path: 'uplines', element: <UplinesPage /> },
+        { path: 'myuplines', element: <MyUplinesPage /> },
         { path: 'history', element: <HistoryPage /> },
         { path: 'applications', element: <ApplicationsPage /> },
         { path: 'clubs', element: <ClubsPage /> },
-        { path: 'products', element: <ProductsPage /> },
-        { path: 'blog', element: <BlogPage /> },
+        { path: 'fxrates', element: <FXRatesPage /> },
       ],
     },
     {

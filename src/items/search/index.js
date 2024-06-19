@@ -1,0 +1,1 @@
+export { default as OnSearching } from './view';

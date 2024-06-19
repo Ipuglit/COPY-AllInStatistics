@@ -20,7 +20,7 @@ export const Login = (i,ii) => {
       const response = await axios.post(Imp.Fetch['login'], Auth);
 
       const feed =  response.data;
-
+      
       if(feed != "NONE" || feed != "INC" || (feed['status'] == 1 || feed['status'] == 2)){
 
         const Token = {
@@ -31,7 +31,8 @@ export const Login = (i,ii) => {
                         }
 
         const User = {
-                            role:       feed['role'],
+                            role:       feed['rolename'],
+                            roleID:     feed['role'],
                             nickname:   feed['nickname'],
                             username:   feed['username'],
                             avatar:     feed['avatar'],
@@ -42,7 +43,8 @@ export const Login = (i,ii) => {
 
         localStorage.setItem('slk-token', JSON.stringify(Token));
         localStorage.setItem('slk-user', JSON.stringify(User));
-        console.log("Success! Logging in...")
+        console.log("Success! Logging in..."+JSON.stringify(User))
+  
       } else {
         console.log("Failed Logging!")
       }

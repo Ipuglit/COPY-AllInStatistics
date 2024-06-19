@@ -96,8 +96,10 @@ export default function LoginView() {
                                                           token:      feed.token,
                                                           timezone:   Imp.TimeZoned,
                                                       }));
+                                                      
         localStorage.setItem('slk-user', JSON.stringify({
                                                           role:       feed.role,
+                                                          roleID:     feed.roleID,
                                                           nickname:   feed.nickname,
                                                           username:   feed.username,
                                                           avatar:     feed.avatar,
@@ -113,7 +115,7 @@ export default function LoginView() {
                                                           theme: 'light',
                                                         }))
         
-        console.log("Success! Logging in..."+response.data)
+        console.log("Success! Logging in... "+JSON.stringify(response.data,null,2))
 
         const Timed = setTimeout(() => {
             router.push('/');
