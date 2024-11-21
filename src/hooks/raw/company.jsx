@@ -34,7 +34,7 @@ export const RawCompany = (i,ii,iii,iiii) => {
       }
       //console.log("Company items fetched..."+JSON.stringify(response.data,null,2))
     } catch (error) {
-      console.error("Error fetching data: ", error);
+      console.error("Error fetching data");
     }
   }
 

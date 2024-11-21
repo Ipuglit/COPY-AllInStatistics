@@ -21,10 +21,10 @@ function onSelect(i){
     return i
 }
 
-export default function PostList({ data, upsertData, ...other }) {
+export default function PostList({ data, UpsertDATA, ...other }) {
 
     const onReturn =(e)=>{
-        upsertData(e)
+        UpsertDATA(e)
     }
 
   return (

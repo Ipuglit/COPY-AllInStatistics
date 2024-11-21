@@ -3,7 +3,7 @@ import axios from 'axios';
 import * as Imp from '../importants'
 import * as Fnc from '../functions'
 
-export const RawUplines = (f,i,ii,iii,iiii,iiiii,iiiiii) => {
+export const RawUplines = (f,i,ii,iii,iiii,iiiii,iiiiii,iiiiiii) => {
 
     const Token = JSON.parse( localStorage.getItem('slk-token') );
 
@@ -22,6 +22,7 @@ export const RawUplines = (f,i,ii,iii,iiii,iiiii,iiiiii) => {
                 SORT:       iiii ? iiii : 'DESC',
                 SORTBY:     iiiii ? iiiii : 'NONE',
                 SEARCH:     iiiiii ? iiiiii : '',
+                LIMIT:      iiiiiii ? iiiiiii : '300',
             }; 
 
     async function fetching() {
@@ -35,7 +36,7 @@ export const RawUplines = (f,i,ii,iii,iiii,iiiii,iiiiii) => {
                 setLoad(true)
             }
         
-            console.log("Uplines items fetched..."+JSON.stringify(response.data,null,2))
+            //console.log("Uplines items fetched..."+JSON.stringify(response.data,null,2))
         } catch (error) {
             console.error("Error fetching data");
         }
@@ -43,7 +44,7 @@ export const RawUplines = (f,i,ii,iii,iiii,iiiii,iiiiii) => {
 
     useLayoutEffect(() => {
         fetching();
-        }, [i,ii,iii,iiii,iiiii,iiiiii]);
+        }, [i,ii,iii,iiii,iiiii,iiiiii,iiiiiii]);
 
     return ({load, data})
 }

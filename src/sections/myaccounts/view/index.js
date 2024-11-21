@@ -1,1 +1,0 @@
-export { default as MyAccountsView } from './myaccounts-view';

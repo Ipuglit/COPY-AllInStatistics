@@ -9,7 +9,7 @@ import { RawApplications } from 'src/hooks/raw/applications'
 export default function Raws() {
 
   function viewDetails(i){
-    upsertData(i)
+    UpsertDATA(i)
 
   };
 

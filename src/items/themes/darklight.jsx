@@ -23,14 +23,14 @@ function MyApp() {
     >
 
       <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
-        {theme.palette.mode === 'dark' ? 'dark' : 'light'}
+        {theme?.palette.mode === 'light' ? 'light' : 'dark'}
       </IconButton>
     </Box>
   );
 }
 
 export default function ToggleColorMode() {
-  const [mode, setMode] = React.useState('light');
+  const [mode, setMode] = React.useState('dark');
   const colorMode = React.useMemo(
     () => ({
       toggleColorMode: () => {

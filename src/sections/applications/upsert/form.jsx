@@ -1,160 +1,72 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel, Divider } from '@mui/material';
 import {
   Dialog,
   DialogContent,
+  DialogActions,
   DialogTitle,
   TextField,
   Button,
   Grid,
   Typography,
-
+  Chip,
+  Box,
+  Avatar, Tooltip
 
 } from '@mui/material';
 
 import { Icon } from '@iconify/react';
+import Iconify from 'src/components/iconify';
 
 import * as Fnc from 'src/hooks/functions'
+import * as Cs from 'src/hooks/classes'
 
 
 import { RawRoles } from 'src/hooks/raw/roles'
-import { RawImages } from 'src/hooks/raw/images'
 import { RawCompany } from 'src/hooks/raw/company'
 
 import { AlertSnack } from 'src/items/alert_snack'
 
-import { UpsertData, UpsertLink } from 'src/hooks/upsert/upsert-data'
+import { UpsertDATA, LinkUPLOAD } from 'src/hooks/upsert/upsert-data'
+import { imagetoRESIZE, imageUPLOADS } from 'src/hooks/imageupload'
 
 import OnMobileScreen from 'src/items/screen/resize';
 
-export  function AddingItem({receivedData,submittedResult}) {
+
+export default function Upserting({receivedData, returnData}) {
+
+  const inputRefAvatar      = React.createRef();
+  const inputRefBackground  = React.createRef();
+
+  const OnMobile                          = OnMobileScreen();
+
+  const itemx                             = receivedData
+
+  const [open, setOpen]                   = useState(false);
+  const [onData, setonData]               = useState(itemx);
+  const [onSubmitLoad, setonSubmitLoad]   = useState(false);
+  const [onHover, setonHover]             = useState(false);
+
+  const handleAvatarClick = () => {
+    inputRefAvatar.current.click();
+  };
+
+  const onUploadImage = async (event) => {
+    const file            = event.target.files[0];
+    const imagePreview    = await imagetoRESIZE(file);
+    setonData({...onData, imagePreview: imagePreview })
+  };
+
+  const onChanging =(i,e,u)=>{
+
+    const ifStatus = e == 'statusLabel' ? {'status': u} : {}
+    const newArr = {...onData, ...ifStatus, [e]: i, }
+
+    setonData({...newArr })
   
-  const item        = receivedData
-
-  const rawRoles    = RawRoles("LOWERMID").data
-  const rawCompany  = RawCompany("ALL").data
-
-
-  const [dataList, setdataList] = useState(item);
-  const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-  
-  const [onAlertShow, setonAlertShow] = useState(false);
-  const [onAlertType, setonAlertType] = useState("");
-  const [onAlertMessage, setonAlertMessage] = useState("");
-  const [onSubmitLoad, setonSubmitLoad] = useState(false);
-
-  const [onEdit, setonEdit] = useState(false);
-  const [onAdd, setonAdd] = useState(false);
-
-  const OnMobile= OnMobileScreen();
-
-  const ondialogClose = () => {
-    if(onAdd){
-      setOpen(false);
-      //window.location.reload();
-    } else {
-      setOpen(false);
-    }
-  };
-
-  const handleAccordionChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
-  const onchangeItem = (val, x) => {
-
-      const newArray = [item];
-
-      if(!item.id || item.id == undefined || item.id == 0 || item.id == null){
-          item["status"]       = 2
-          newArray["status"]   = 2
-
-          item["imageID"]       = 20
-          newArray["imageID"]   = 20
-
-          item["image"]       = "default.jpg"
-          newArray["image"]   = "default.jpg"
-
-          item["imageFull"]       = "/images/applications/default.jpg"
-          newArray["imageFull"]   = "/images/applications/default.jpg"
-
-          item["activeAccounts"]       = 0
-          newArray["activeAccounts"]   = 0
-
-          item["pendingAccounts"]       = 0
-          newArray["pendingAccounts"]   = 0
-
-          item["allAccounts"]       = 0
-          newArray["allAccounts"]   = 0
-
-          item["activeClubs"]       = 0
-          newArray["activeClubs"]   = 0
-
-          item["pendingClubs"]       = 0
-          newArray["pendingClubs"]   = 0
-
-          item["modal"]       = 'Open'
-          newArray["modal"]   = 'Open'
-          console.log("NULLLLE")
-      }
-
-      if(x == "company"){
-          const z = rawCompany.find((o) => o.name == val);
-          item["companyID"]       = z.id
-          newArray["companyID"]   = z.id
-      }
-      
-      if(x == "statusLabel"){
-
-          if(val == "Active"){
-              item[x] = "Pending"
-              newArray[x] = "Pending";
-              item["status"]       = "1"
-              newArray["status"]   = "1"
-          } else if(val == "Pending"){
-              item[x] = "Disabled"
-              newArray[x] = "Disabled";
-              item["status"]       = "2"
-              newArray["status"]   = "2"
-          } else {
-              item[x] = "Active"
-              newArray[x] = "Active";
-              item["status"]       = "0"
-              newArray["status"]   = "0"
-          }
-
-      } else {
-        
-        item[x] = val
-        newArray[x] = val;
-
-        item["roleName"]       = x.name
-        newArray["roleName"]   = x.name
-      }
-
-      if(x == "imageID"){
-
-        item["imageID"]       = x.imageID
-        newArray["imageID"]   = x.imageID
-
-        item["image"]       = x.image
-        newArray["image"]   = x.image
-
-        item["imagePath"]       = x.imagePath
-        newArray["imagePath"]   = x.imagePath
-
-        item["imageFull"]       = x.imageFull
-        newArray["imageFull"]   = x.imageFull
-
-      }
-      console.log("Value: "+JSON.stringify(newArray,null,2))
-      setonEdit(true)
-      setdataList(newArray);
-  };
-
+  }
 
   const inputComplete = (i,ii) => {
     if(i == "" || i == null || i == undefined){
@@ -164,19 +76,29 @@ export  function AddingItem({receivedData,submittedResult}) {
     }
   };
 
-  const checkIfComplete = (i) => {
-    if(i.name == "" || i.name == undefined  || i.companyID == "" || i.companyID == undefined || i.status == "" || i.status == undefined ){
+  const checkIfComplete = () => {
+    if(onData.id != 0 && ( onData.name == itemx.appName &&  onData.status == itemx.appStatus && onData.details == itemx.appDetails && onData.imagePreview == '' )  ){
+      return true
+    } else if( onData.id == 0 && Fnc.isNull(onData.name) ) {
       return true
     } else {
       return false
     }
   };
 
-  const onSubmitting =(i,ii)=>{
+  const delayReturn =(i,e,a)=>{
+    const T = setTimeout(() => {
+      returnData( i, e )
+      setOpen(a)
+    }, 1500);
+    return () => clearTimeout(T);
+  }
 
-    if( checkIfComplete(i) ){
-      showAlert('warning',2000,"Please complete all details")
-      setonAlertShow(true)
+  const onSubmitting =()=>{
+
+    if( checkIfComplete() ){
+        returnData( 'error', 'Incomplete details' )
+        setonSubmitLoad(false)
     } else {
         setonSubmitLoad(true)
         proceedSubmit()
@@ -184,219 +106,298 @@ export  function AddingItem({receivedData,submittedResult}) {
 
     async function proceedSubmit() {
 
+      const newJSon = {
+                        ...onData, 
+                        name:      Fnc.textSanitize(onData?.name),
+                        details:   Fnc.textSanitize(onData?.details),
+                      }
+
       try {
-        const response = await axios.post(UpsertLink(ii),UpsertData(i));
+        const response = await axios.post(LinkUPLOAD('applications'),UpsertDATA({JSONData: [{...newJSon}]}));
         const feed =  response.data;
 
-        if(feed == "Updated"){
-          showAlert('success',2500,'User successfully updated!','update')
-        } else if(feed.includes("Added New")){
-          onchangeItem(feed.replace(/.*\(|\).*/g, ''),'id')
-          showAlert('success',2500,'User successfully added! ','add')
-          setonAdd(true)
-        } else {
-          showAlert('warning',3000,feed,'none')
-          setonEdit(true)
+        if(onData['imagePreview'] != ''){
+          imageUPLOADS('applications',onData['imagePreview'],feed.lastID);          
         }
-        setonAlertShow(true)
-        setonSubmitLoad(false)
+
+        if( feed.added >= 1 ){
+
+          delayReturn( 'success', 'Added', false )
+          
+        } else if( feed.updated >= 1 ){
+
+          delayReturn( 'success', 'Updated', false )
+
+        } else if( feed.duplicate >= 1 ){
+
+          delayReturn( 'warning', 'Duplicate', true )
+          setonSubmitLoad(false)
+          
+        } else {
+
+          delayReturn( 'error', 'Please try again', true )
+          setonSubmitLoad(false)
+
+        }
 
       } catch (error) {
-        setonAlertShow(true)
+        delayReturn( 'error', 'Please try again', true )
         setonSubmitLoad(false)
-        showAlert('error',3000,'Failed! Something went wrong...','none')
       }
     }
 
   }
 
-  const showAlert = (i,ii,iii,iiii) => {
-    setonAlertType(i)
-    setonAlertMessage(iii)
-    setonEdit(false)
-    submittedResult({
-                    status: true,
-                    alert: i,
-                    duration: ii,
-                    message: iii,
-                    items: item,
-                    type: iiii,
-                  })
-                  console.log("Dee "+JSON.stringify(item,null,2))
-    const T = setTimeout(() => {
-      setonAlertShow(false)
-    }, ii);
-    return () => clearTimeout(T);
-
-  };
-
-
   useEffect(() => {
 
-    if(item.modal == "Open"){
-        item.modal = "Openned";
-        setExpanded(false)
+    if(itemx.modal == "Open"){
+        itemx.modal = "Open";
         setOpen(true);
     } else {
         setOpen(false);
     }
-    setonAdd(false)
-    setonEdit(false)
-    setdataList(item);
-  }, [receivedData,item]);
+    setonSubmitLoad(false)
+    const reFill = itemx?.id ? 
+    {
+      id:           itemx?.id,
+      name:         itemx?.appName,
+      companyID:    itemx?.appCompanyID,
+      image:        itemx?.appImage,
+      imageFull:    itemx?.appImageFull,
+      details:      itemx?.appDetails,
+      status:       itemx?.appStatus,
+      statusLabel:  itemx?.appStatusLabel,
+      imagePreview: '',
+      referralID:   0,
+    } 
+    : 
+    {id: 0, name: '', companyID: '',companyName: '',imageFull:'',image:'', imagePreview: '', status: 0, statusLabel: 'Active', details:'', referralID: 0,}
+    
+    setonData(reFill);
+
+  }, [receivedData,itemx]);
 
   return (
 
       <Dialog open={open} >
 
-        <DialogTitle>
-             {
-              /// JSON.stringify(item,null,2)
-             }
+        <DialogTitle sx={{ m: 1, p: 1, marginBottom:'-10px' }}>
+            <Typography variant="h6" component="div" margin={1}>
+            APPLICATION FORM
+            </Typography>
+            <Divider />
         </DialogTitle>
 
         <DialogContent>
 
-
-      <Grid container spacing={OnMobile ? 1 : 2} sx={{ padding: OnMobile ? '0rem' : '2rem' }}>
+        <Grid container  padding={{ xs: 1, sm: 2, md: 3 }} spacing={{ xs: 2, sm: 2, md: 2 }}>
 
         <Grid item xs={12}>
-          <Typography variant="h6" component="div">
-            APPLICATION FORM
-          </Typography>
+
+              <Box  component="form"
+                    onMouseEnter={() => setonHover(true)}
+                    onMouseLeave={() => setonHover(false)}
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      padding: 4,
+                      marginBottom: '-30px',
+                      marginTop: '-30px',
+                    }} >
+
+                    <img alt="Profile Picture" variant="square"
+                                                key={Math.random()}
+                                                src={onData?.imagePreview ? onData?.imagePreview :  Fnc.ifImage(`${onData?.imageFull}?${new Date().getTime()}`,`${'https://www.all-in-statistics.pro/'+onData?.imageFull}?${new Date().getTime()}`)}
+                                                style={{  height: '100px', 
+                                                          minWidth:'100px', 
+                                                          mb: 0, 
+                                                          bgcolor: 'primary.main', 
+                                                          border: '2px dashed grey', 
+                                                          cursor: 'pointer', 
+                                                        }} 
+                                              onError={(e) => {
+                                                e.target.src = 'https://www.all-in-statistics.pro/images/applications/default.jpg';
+                                              }}
+                                              onClick={handleAvatarClick} />
+
+                <input type="file" hidden accept='.jpeg, .jpg, .png' ref={inputRefAvatar} onChange={onUploadImage} />
+
+              </Box>
         </Grid>
 
         <Grid item xs={12}>
           <TextField
             label="Name"
-            name="Name"
             size="small"
-            error={inputComplete(item.name)}
-            //InputLabelProps={{ style: { color: '#BA55D3' }, }}
-            inputProps={{ maxLength: 22 }}
-            value={item.name ? item.name : ''}
-            onChange={(e) => onchangeItem(Fnc.wordNoSpace(e.currentTarget.value), "name")}
+            error={inputComplete(onData.name)}
+            value={onData.name ? onData.name : ''}
+            onChange={(e) => onChanging(Fnc.wordNormal(e.currentTarget.value), "name")}
             fullWidth
+            InputProps={{  maxLength: 22, sx: { fontSize: OnMobile ? '12px' : '',  }, }}
+            InputLabelProps={{  sx: { fontSize: OnMobile ? '11px' : '',  }, }}
+            autoComplete='off'
             required
           />
         </Grid>
 
-        <Grid item xs={12}>
-          
-                <FormControl fullWidth size='small'>
-                    <InputLabel 
-                        id="filter-select-label" 
-                        //style={{color: '#BA55D3'}}
-                        >Company</InputLabel>
-                    <Select
-                      labelId="filter-select-label"
-                      id="filter-select"
-                      error={inputComplete(item.company)}
-                      value={item.company ? item.company : ''}
-                      label="Company"
-                      required
-                      onChange={(e) => onchangeItem(e.target.value, "company")}
-                    >
-                      {
-                          rawCompany.map((i, index) => (
-                            <MenuItem key={index} value={i.name} >{i.name}</MenuItem>
-                            ))
-                      }
-                    </Select>
-                </FormControl>
 
-        </Grid>
+
+
 
         <Grid item xs={12}>
           <TextField
             label="Details"
-            name="Details"
             multiline
             rows={2}
             variant="outlined"
-            error={inputComplete(item.details)}
-            //InputLabelProps={{ style: { color: '#BA55D3' }, }}
-            inputProps={{ maxLength: 100 }}
-            value={item.details ? item.details : ''}
-            onChange={(e) => onchangeItem(Fnc.wordNoSpace(e.currentTarget.value), "details")}
+            error={inputComplete(onData.details)}
+            value={onData.details ? onData.details : ''}
+            onChange={(e) => onChanging(Fnc.wordNormal(e.currentTarget.value), "details")}
             fullWidth
+            InputProps={{  maxLength: 100, sx: { fontSize: OnMobile ? '12px' : '',  }, }}
+            InputLabelProps={{  sx: { fontSize: OnMobile ? '11px' : '',  }, }}
             required
           />
 
         </Grid>
 
-      {
-        item.id ? 
         <Grid item xs={12}>
 
-                <Typography variant="subtitle1" fontSize="small" sx={{ color: 'text.secondary' }} noWrap style={{ marginTop: '-5px' }}>
-                    <span style={{fontSize:"12px"}}>
-                      {item.activeAccounts == 0 ? 'No active account' : item.activeAccounts == 1 ? '1 active account' : item.activeAccounts+' active accounts' }
-                    </span>
-                </Typography>
+                <Chip icon={<Icon icon="mdi:check-circle"/>} 
+                      label='Active' 
+                      variant={'contained'} size='small'
+                      color={onData.statusLabel =='Active' ? 'success' : 'default'}
+                      sx={{fontSize: OnMobile ? '11px' : '',}}
+                      onClick={()=>onChanging('Active',"statusLabel",0)}  />
+                &nbsp;
+                <Chip icon={<Icon icon="mdi:clock-outline"/>} 
+                      label='Pending' variant={'contained'}  size='small'
+                      color={onData.statusLabel =='Pending' ? 'warning' : 'default'} 
+                      sx={{fontSize: OnMobile ? '11px' : '',}}
+                      onClick={()=>onChanging('Pending',"statusLabel",1)} />
+                &nbsp;
+                <Chip icon={<Icon icon="mdi:close-circle"/>} 
+                      label='Disabled' variant={'contained'}  size='small'
+                      color={onData.statusLabel =='Disabled' ? 'error' : 'default'}
+                      sx={{fontSize: OnMobile ? '11px' : '',}} 
+                      onClick={()=>onChanging('Disabled',"statusLabel",2)} />
+              
+        </Grid>
 
-                <Typography variant="subtitle1" fontSize="small" sx={{ color: 'text.secondary' }} noWrap style={{ marginTop: '-5px' }}>
-                    <span style={{fontSize:"12px"}}>
-                      {item.pendingAccounts == 0 ? 'No active account' : item.pendingAccounts == 1 ? '1 pending account' : item.pendingAccounts+' pending accounts' }
-                    </span>
-                </Typography>
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
+
+      {
+        itemx.id ? 
+        <Grid item xs={12}>
+
+
+                <Chip label={
+                              <span style={{fontSize:"11px"}}>
+                                {itemx.count_accounts == 0 ? 'No account' : itemx.count_accounts == 1 ? '1 account' : itemx.count_accounts+' accounts' }
+                              </span>
+                            }  variant={'outlined'}  color={'default'} size='small' />
+                &nbsp;
+                <Chip label={
+                              <span style={{fontSize:"11px"}}>
+                                {itemx.count_clubs == 0 ? 'No clubs' : itemx.count_clubs == 1 ? '1 club' : itemx.count_clubs+' clubs' }
+                              </span>
+                            }  variant={'outlined'}  color={'default'} size='small' />
+                &nbsp;
+                <Chip label={
+                              <span style={{fontSize:"11px"}}>
+                                {itemx.recorded_last ? "Latest record: "+itemx.recorded_last : "No records found"}
+                              </span>
+                            }  variant={'outlined'}  color={'default'} size='small' />
+
+              {
+                itemx.recorded_last && !Fnc.isNull(itemx.total_agencybonus,0)
+                ?
+                <>
+                &nbsp;
+                <Chip label={
+                              <span style={{fontSize:"11px"}}>
+                                {itemx.total_agencybonus > 1 ? "Agency Bonus: "+itemx.total_agencybonus +' USD' : "No agency bonus"}
+                              </span>
+                            }  variant={'outlined'}  color={'default'} size='small' />
+                </>
+                :
+                null
+              }
+
+              {
+                itemx.recorded_last && !Fnc.isNull(itemx.total_agencyaction,0)
+                ?
+                <>
+                &nbsp;
+                <Chip label={
+                              <span style={{fontSize:"11px"}}>
+                                {itemx.total_agencyaction > 1 ? "Agency Action: "+itemx.total_agencyaction +' USD' : "No agency action"}
+                              </span>
+                            }  variant={'outlined'}  color={'default'} size='small' />
+                </>
+                :
+                null
+              }
+
+              {
+                itemx.recorded_last && !Fnc.isNull(itemx.total_playerresult,0)
+                ?
+                <>
+                &nbsp;
+                <Chip label={
+                              <span style={{fontSize:"11px"}}>
+                                {itemx.total_playerresult > 1 ? "Player Result: "+itemx.total_playerresult +' USD' : "No player result"}
+                              </span>
+                            }  variant={'outlined'}  color={'default'} size='small' />
+                </>
+                :
+                null
+              }
 
         </Grid>
         :
         null
       }
 
-
-        <Grid item xs={12}>
-                {
-                  item.statusLabel == "Active" ? 
-                    <Button onClick={(e) => onchangeItem("Active","statusLabel")} size='large'>
-                        <Icon icon="mdi:check-circle" color='green' width={22} sx={{ mr: 0 }}  /> 
-                        <span style={{color: "green"}}> Active </span>
-                    </Button>
-                  : item.statusLabel == "Pending" ? 
-                    <Button onClick={(e) =>onchangeItem("Pending","statusLabel")} size='large'>
-                        <Icon icon="mdi:clock-outline" color='orange' width={22} sx={{ mr: 0 }}  />
-                        <span style={{color: "orange"}}> Pending </span>
-                    </Button>
-                  :
-                    <Button onClick={(e) =>onchangeItem("Disabled","statusLabel")} size='large'>
-                        <Icon icon="mdi:close-circle" color='red' width={22} sx={{ mr: 5 }}  />
-                        <span style={{color: "red"}}> Disabled </span>
-                    </Button>
-                }
-        </Grid>
-
-
-
       </Grid>
-      { OnMobile ? <br/> : null}
-        <Grid container justifyContent="flex-end">
 
-              { 
-                onEdit ? 
-                <Grid item xs={OnMobile ? 4 : 2.7} >
-                {
-                  onSubmitLoad ?
-                  <Button  color="secondary" >SUBMITTING...</Button>
-                  :
-                  <Button onClick={()=>onSubmitting(item,'applications')} color="secondary">SAVE</Button>
-                }
-                  
-                </Grid>
-                : 
-                null
-              }
-            
-            <Grid item xs={2} >
-              <Button onClick={ondialogClose} sx={{ color: 'gray'}} >{onEdit ? "CANCEL" : "CLOSE" }</Button>
-            </Grid>
-        </Grid>
-                
+        {
+          Fnc.JSONS(onData,false)
+        }
+   
         </DialogContent>
+      
+        <DialogActions style={{padding:'20px', marginTop:'-15px',display: 'flex', justifyContent: 'center'}}>
+              { 
+                !onSubmitLoad ? 
 
-        {onAlertShow ? AlertSnack(onAlertType,onAlertMessage) : null}
+                  <>
+                  { !checkIfComplete() || onData.imagePreview != '' ?
+                  <Button onClick={()=>onSubmitting()} 
+                          disabled={onSubmitLoad}
+                          sx={{...Cs.buttonClass('contained','violet'), width:'50%',borderRadius:'0',fontSize: OnMobile ? '11px' : ''}} 
+                          startIcon={!onSubmitLoad ? '' : <Icon icon="eos-icons:loading"/>}
+                          variant='contained'>
+                          SUBMIT
+                  </Button>
+                  : null
+                  }
+                  <Button onClick={()=>setOpen(false)} sx={{borderRadius:'0',width:'50%',fontSize: OnMobile ? '11px' : ''}} variant='outlined' loading='true' >CANCEL</Button>
+                  </>
+                :
+                  <Button sx={{...Cs.buttonClass('outlined','violet'), width:'100%',borderRadius:'0',fontSize: OnMobile ? '11px' : ''}} 
+                          startIcon={!onSubmitLoad ? '' : <Icon icon="eos-icons:loading"/>}
+                          variant='outlined'>
+                            SUBMITTING
+                  </Button>
+              }
 
+
+
+        </DialogActions>
       </Dialog>
 
   );

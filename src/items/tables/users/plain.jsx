@@ -47,7 +47,7 @@ export default function PlainTableUsers() {
         rows={dataRows}
         columns={dataHeaders}
         pageSize={10}
-        rowsPerPageOptions={[10, 25, 50]}
+        rowsPerPageOptions={[5, 25, 50]}
         components={{ Toolbar: GridToolbar }}
     />
   );

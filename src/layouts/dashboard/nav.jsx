@@ -23,7 +23,8 @@ import Scrollbar from 'src/components/scrollbar';
 
 import { NAV } from './config-layout';
 import { navPublic, navPrivate } from './config-navigation';
-
+import  {GoTo}  from 'src/layouts/dashboard/control';
+import * as Fnc from 'src/hooks/functions'
 // ----------------------------------------------------------------------
 
 export default function Nav({ openNav, onCloseNav }) {
@@ -33,6 +34,8 @@ export default function Nav({ openNav, onCloseNav }) {
     window.location.href = "/login";
   }
 
+
+
   const account = JSON.parse( localStorage.getItem("slk-user") )
 
   const pathname = usePathname();
@@ -40,32 +43,38 @@ export default function Nav({ openNav, onCloseNav }) {
   const upLg = useResponsive('up', 'lg');
 
   useEffect(() => {
+    
     if (openNav) {
       onCloseNav();
     }
+    
   }, [pathname]);
+
+  useEffect(() => {
+    GoTo()
+  }, []);
 
   const renderAccount = (
     <Box
       sx={{
         my: 3,
-        mx: 2.5,
+        mx: 2.2,
         py: 4,
-        px: 2.5,
+        px: 2.2,
         display: 'flex',
-        borderRadius: 1.5,
+        borderRadius: 1,
+        border: '1px dashed mediumpurple',
         alignItems: 'center',
-        bgcolor: (theme) => alpha(theme.palette.grey[500], 0.12),
+        bgcolor: (theme) => alpha(theme.palette.grey[500], 0.15),
       }}
     >
-      <Avatar src={account.avatar} alt="photoURL" />
+      <Avatar src={Fnc.ifImage(`${account.avatar}?${new Date().getTime()}`,`${'https://www.all-in-statistics.pro/'+account.avatar}?${new Date().getTime()}`)} alt="photoURL" />
 
-      <Box sx={{ ml: 2 }}>
-        <Typography variant="subtitle1">{account.nickname}</Typography>
-        {
-        //rgba(255, 255, 255, 0.7)
-        }
-        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+      <Box sx={{ ml: 1.5, }}>
+        <Typography variant="subtitle1" sx={{fontSize:'14px'}}> 
+          {account.nickname.toUpperCase()}
+        </Typography>
+        <Typography variant="body2" sx={{ color: 'text.secondary', fontSize:'11px' }}>
           {account.role}
         </Typography>
       </Box>
@@ -73,17 +82,17 @@ export default function Nav({ openNav, onCloseNav }) {
   );
 
   const renderPublicMenu = (
-    <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-      {navPublic.map((item) => (
+    <Stack component="nav" spacing={0.1} sx={{ px: 3}}>
+      {navPublic()?.map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
     </Stack>
   );
 
   const renderPrivateMenu = (
-    <Stack component="nav" spacing={0} sx={{ px: 2 }}>
-      {navPrivate.map((item) => (
-        <NavItem key={item.title} item={item} />
+    <Stack component="nav" spacing={0.1} sx={{ px: 3 }}>
+      {navPrivate()?.map((item) => (
+        <NavItem key={item.title} item={item}/>
       ))}
     </Stack>
   );
@@ -135,7 +144,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
       {renderPublicMenu}
 
-      <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
+      <Divider sx={{ borderStyle: 'dashed', m: 0, marginBottom:'10px', marginTop:'12px' }} />
 
       {renderPrivateMenu}
 
@@ -176,6 +185,7 @@ export default function Nav({ openNav, onCloseNav }) {
           {renderContent}
         </Drawer>
       )}
+      
     </Box>
   );
 }
@@ -197,23 +207,24 @@ function NavItem({ item }) {
       component={RouterLink}
       href={item.path}
       sx={{
-        minHeight: 44,
-        borderRadius: 0.75,
+        minHeight: 30,
+        borderRadius: 0.40,
         typography: 'body2',
         color: 'text.secondary',
         textTransform: 'capitalize',
         fontWeight: 'fontWeightMedium',
+        fontSize:'12.5px',
         ...(active && {
-          color: 'primary.main',
+          color: '#191919',
           fontWeight: 'fontWeightSemiBold',
-          bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+          bgcolor: 'mediumpurple',
           '&:hover': {
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.56),
           },
         }),
       }}
     >
-      <Box component="span" sx={{ width: 24, height: 24, mr: 2 }}>
+      <Box component="span" sx={{ width: 22, height: 22, mr: 2 }}>
         {item.icon}
       </Box>
 

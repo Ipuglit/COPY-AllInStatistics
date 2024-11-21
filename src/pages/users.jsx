@@ -8,10 +8,10 @@ export default function UsersPage() {
   return (
     <>
       <Helmet>
-        <title> Users | Poker Analytics </title>
+        <title> Users | All In Statistics </title>
       </Helmet>
 
-      <Viewing />
+      <Viewing TheFor="ALL" TheTitle="USERS" />
     </>
   );
 }

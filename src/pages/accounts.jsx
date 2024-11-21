@@ -8,7 +8,7 @@ export default function AccountsPage() {
   return (
     <>
       <Helmet>
-        <title> Accounts | Poker Analytics </title>
+        <title> Accounts | All In Statistics </title>
       </Helmet>
 
       <Viewing TheFor="ALL" TheTitle="ACCOUNTS" />

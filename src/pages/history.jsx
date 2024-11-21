@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { HistoryView } from 'src/sections/history/view';
+import { Viewing } from 'src/sections/history/view/';
 
 // ----------------------------------------------------------------------
 
@@ -8,10 +8,10 @@ export default function HistoryPage() {
   return (
     <>
       <Helmet>
-        <title> History | Poker Analytics </title>
+        <title> History | All In Statistics </title>
       </Helmet>
 
-      <HistoryView />
+      <Viewing TheFor="ALL" TheTitle="HISTORY" />
     </>
   );
 }

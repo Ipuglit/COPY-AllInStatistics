@@ -6,7 +6,7 @@
 
 
         if ( $Got['STATUS'] == "ALL" && $Got['TYPE'] == "ALL" ){
-            
+
             if ( $Got['SORTBY'] != "NONE" ){
                 $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
             } else {
@@ -42,7 +42,7 @@
             } else {
                 $Extend_Type = " ";
             }
-            
+
             if ( !empty($Got['SEARCH']) ){
                 $Extend_Search = " AND CONCAT(u.name,' ',u.type,' ',IF(u.status = 0, 'Active', IF(u.status=1, 'Pending', 'Disabled')),' ',(SELECT COUNT(id) FROM clubs WHERE unionID = u.id) ) LIKE '%".$Got['SEARCH']."%' ";
             } else {
@@ -102,5 +102,5 @@
  }
 
 
- 
+
  echo json_encode($feedback, true);

@@ -35,6 +35,8 @@ export const Login = (i,ii) => {
                             roleID:     feed['role'],
                             nickname:   feed['nickname'],
                             username:   feed['username'],
+                            firstname:   feed['firstname'],
+                            lastname:   feed['lastname'],
                             avatar:     feed['avatar'],
                             email:      feed['email'],
                             telegram:   feed['telegram'],
@@ -54,7 +56,7 @@ export const Login = (i,ii) => {
       
     } catch (error) {
       setLoad("err")
-      console.error("Error fetching data: ", error);
+      console.error("Error fetching data");
     }
   }
 

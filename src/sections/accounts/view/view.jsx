@@ -1,251 +1,235 @@
 import { useState, useEffect } from 'react';
+import {
+          Stack,
+          Button,
+          Container,
+          Grid,
+          IconButton,
+          Alert,
+          Typography,
+          Tooltip,
+          Box,
+          ToggleButton,
+          ToggleButtonGroup
+        } from '@mui/material/';
 
-import {Stack,Button,Container,Alert,Typography} from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import OnMobileScreen from 'src/items/screen/resize';
 
-import { RawApplications } from 'src/hooks/raw/applications';
-import { RawRoles } from 'src/hooks/raw/roles';
-import { RawAccounts } from 'src/hooks/raw/accounts';
-
+import { RawFetch } from 'src/hooks/raw/';
+import Iconify from 'src/components/iconify';
 import { Icon } from '@iconify/react';
 
-import Loading_Skeletons from 'src/items/loaders/loadings'
+import { OnSearching, OnSorting, OnLoading } from 'src/items/menu'
 
-import * as Data from 'src/hooks/data';
+import { ViaTable,ViaList,ViaCards,ViaTableUplines,Upserting,UploadingExcel,} from './'
 
-import { ViaCardUser, ViaTable, ViaList } from 'src/items/records';
-import { OnSortings, FormattingSorting } from 'src/items/sorting';
+import {Alerting} from 'src/items/alert_snack/'
 
-import {AddingItem} from '../upsert/form';
+import * as Fnc from 'src/hooks/functions'
+import * as Cls from 'src/hooks/classes'
 
 // ----------------------------------------------------------------------
 
-export default function Viewing({TheFor,TheTitle}) {
+export default function Viewing({TheTitle}) {
 
     const dataView  = localStorage.getItem('slk-dataview')
-
-    var [onToggle, setonToggle]           = useState(dataView);
-
-    const [filterStatus,setfilterStatus]    = useState('ALL')
-    const [filterRole,setfilterRole]        = useState('EVERYONE')
-    const [filterApp,setfilterApp]          = useState('ALL')
-    const [filterSort,setfilterSort]        = useState('ASC')
-    const [filterSortBy,setfilterSortBy]    = useState('NONE')
-    const [filterSearch,setfilterSearch]    = useState('')
-
-    const rawApps                           = RawApplications("ALL").data
-    const rawRoles                          = RawRoles("LOWERMID").data
-
-    const rawItems                          = RawAccounts(  TheFor,
-                                                            filterStatus ? filterStatus : "ALL",
-                                                            filterRole ? filterRole : "EVERYONE",
-                                                            filterApp ? filterApp : "ALL",
-                                                            filterSort ? filterSort : "DESC",
-                                                            filterSortBy ? filterSortBy : "NONE",
-                                                            filterSearch ? filterSearch : "",)
+    const onMobile= OnMobileScreen();
     
+    const [onview, setonView]               = useState(dataView);
+    const [onSwitch, setonSwitch]           = useState('accounts');
+    const [onUpserting, setonUpserting]     = useState([])
+    const [onUploading, setonUploading]     = useState([])
+    const [onSearching, setonSearching]     = useState('')
+    const [onSorts, setonSorts]             = useState('asc')
+    const [onAlert, setonAlert]             = useState({onOpen: 0, severity: '', message: ''});
 
+    const [rawREFRESH,  setrawREFRESH]      = useState(0)
+    const [rawFETCH_ALL,  setrawFETCH_ALL]  = useState({
+                                                            FOR:            'ALL',
+                                                            STATUS:         'ALL',
+                                                            SEARCH:         'ALL',
+                                                            APP:            'ALL',
+                                                            CLUB:           'ALL',
+                                                            USER:           'ALL',
+                                                            ACCOUNT:        'ALL',
+                                                            ROLE:           'ALL',
+                                                            DATEFROM:       'ALL',
+                                                            DATEUNTIL:      'ALL',
+                                                            IFZERO:         'ALLs',
+                                                            LIMIT:          'ALL',
+                                                          });
 
-    const [listofDATA,setlistofDATA]        = useState([])
-    const [listLoading,setlistLoading]      = useState(false)
-    const [listFound,setlistFound]          = useState(true)
+    const fetchAPPS     = RawFetch(rawFETCH_ALL,rawREFRESH,'applications')
+    const fetchUSERS    = RawFetch(rawFETCH_ALL,rawREFRESH,'userz')
+    const fetchACCTS    = RawFetch(rawFETCH_ALL,rawREFRESH,'accountslist')
+    const fetchGAMES    = RawFetch(rawFETCH_ALL,rawREFRESH,'games')
 
-    const [upsertofData,setupsertofData]    = useState([])
-
-    useEffect(() => {
-        setlistofDATA(rawItems.data)
-        setlistLoading(rawItems.load)
-    }, [rawItems.load == true]);
-
-    // ==================================================
-    // =================== ++ FILTER ++ ===============================
-
-    const onFilter_to =  [ 
-                            //ITEMS,VALUE,IDD,OTHERS
-                            [ FormattingSorting(Data.BY_STATUS,"STATUS",'value','label',"",true) ],
-                            [ FormattingSorting(rawRoles,"ROLES",'id','name',"",true) ],
-                            [ FormattingSorting(rawApps,"APPS",'id','name',"",true) ],
-                          ];
-
-    const onSort_to =  [ 
-                            //ITEMS,VALUE,IDD,OTHERS
-                            [ FormattingSorting(Data.BY_ACCOUNTS,"STATUS",'value','label',"",false) ],
-                          ];
-
-    const onFilter_re =(i)=>{
-
-        if(i.what == "STATUS"){
-          setfilterStatus(i.idd)
-        } else if(i.what == "ROLES"){
-          setfilterRole(i.idd)
-        } else if(i.what == "APPS"){
-          setfilterApp(i.idd)
-        }
-
+    const onReturned =(i)=>{
+      setonUpserting(i)
     }
+   
+    const onUpserted =(severe,msg)=>{
 
-    const onSort_re =(i)=>{
+      setonAlert({onOpen: Fnc.numRandom(), severity:severe, message:msg})
 
-      if(i.arrange == 'ASC'){
-        setfilterSort('ASC')
-      } else {
-        setfilterSort('DESC')
+      if(severe == 'success'){
+        setrawREFRESH( Fnc.numRandom() )
       }
-      //console.log(JSON.stringify(i))
-      setfilterSortBy(i.by.x.idd ? i.by.x.idd : "NONE")
-
-  }
-
-  const onSearch_re =(i)=>{
-    setfilterSearch(i)
-  }
-
-  const onToggle_re =(i)=>{
-    localStorage.setItem('slk-dataview',i ? i : 'card')
-    setonToggle(i)
-  }
-
-    // =================== ++ FILTER ++ ===============================
-    // ==================================================
-    // =================== ++ UPSERT ++ ===============================
-
-    const ENLISTED_CARDS = [{ 
-                      id:       'increment',
-                      idd:      'accountID',
-                      status:   'statusLabel',
-                      header:   'appName',
-                      title:    'accountNickname',
-                      image:    'appImage',
-                      avatar:   'userAvatar',
-                      description:  [
-                                    { id: 1, label:  '', value: 'accountRole', count: ''},
-                                    { id: 2, label:  'ID: ', value: 'accountID', count: ''},
-                                    { id: 3, label:  'club', value: 'accountClubsCount', count: true},
-                                    ],
-                    }]
-
-    const ENLISTED_TABLE = [ 
-                            { type:  'TEXT',    value: 'accountID', header: 'ID', altimage:''},
-                            { type:  'AVATAR',  value: 'userAvatar', header: 'Avatar', altimage:'accountID'},
-                            { type:  'TEXT',    value: 'accountNickname', header: 'Nickname', altimage:''},
-                            { type:  'TEXT',    value: 'accountRole', header: 'Role', altimage:''},
-                            { type:  'STATUS',  value: 'statusLabel', header: 'Status', altimage:''},
-                            { type:  'TEXT',    value: 'userNickname', header: 'User', altimage:''},
-                            { type:  'TEXT',    value: 'appName', header: 'Application', altimage:''},
-                            { type:  'TEXT',    value: 'accountClubsCount', header: 'Clubs', altimage:''},
-                            { type:  'ACTION',  value: 'accountNickname', header: 'Action', altimage:''},
-                          ]
-
-
-
-    const listofUPSERT=(i)=>{
-      setupsertofData({...i,AddType:TheFor})
-    }
-    
-    // =================== ++ UPSERT ++ ===============================
-    // ==================================================
-
-
-    const onupsertData=(i)=>{
-      setupsertofData({...i,AddType:TheFor})
-    }
-
-    const submittedResult=(i)=>{
-
-      const items = i.items
-
-        if(i.type == "add"){
-          const newArray = [...listofDATA,items];
-          setlistofDATA(newArray)
-        } else if(i.type == "update"){
-          const x = listofDATA.findIndex((o) => o.id == items.id);
-          const newArray = [...listofDATA];
-          newArray[x] = items;
-          setlistofDATA(newArray)
-        }
 
     }
-    
 
-    const addingNew=()=>{
-      setupsertofData({modal:"Open",AddType:TheFor})
+    const onChangeView = (event, i) => {
+      setonView(i);
+      localStorage.setItem('slk-dataview',i)
+    };
+
+    const onAddNew=()=>{
+      setonUpserting({modal:"Open"})
     }
-
-    useEffect(() => {
-      if(listLoading == true){
-        if (!listofDATA.length) {
-          setlistFound(false)
-        } else {
-          setlistFound(true)
-
-                                      }
-                                      
-      }
-     /// console.log(JSON.stringify(onFilter_to))
-    }, [listLoading]); 
-
-
+ 
   return (
     <Container>
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-
-        <Typography variant="h3">{TheTitle}</Typography>
-
-        <Button variant="contained" color="inherit" startIcon={<Icon icon="line-md:plus" />} onClick={addingNew}>
-          NEW 
-        </Button>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} style={{marginTop:'20px'}}>
+ 
+        <Typography variant={onMobile ? "h5" :"h4"}>
+          {onSwitch == 'accounts' ? 'ACCOUNTS' : 'UPLINES'} 
+        </Typography>
 
       </Stack>
 
-       <OnSortings  FILTER_TO={onFilter_to} 
-                    FILTER_RE={onFilter_re} 
-                    SORT_TO={onSort_to} 
-                    SORT_RE={onSort_re}
-                    SEARCH_RE={onSearch_re}
-                    TOGGLE_RE={onToggle_re} />
+      <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+
+      <Grid item xs={6} sm={6} md={6}>
+          <Button variant={onSwitch == 'accounts' ?  "contained" : 'text'} 
+                  sx={{...Cls.buttonClass(onSwitch == 'accounts' ?  "contained" : 'outlined','violet'), fontSize:onMobile ? '11px' : '14px',borderRadius:'0', marginTop:'-12px'}} 
+                  onClick={()=>{setonSwitch('accounts'),setrawREFRESH(Fnc.numRandom())}}
+                  size='small' >
+              {onMobile ? 'ITEMS' : 'LIST OF ACCOUNTS '}
+          </Button>
+            &nbsp;
+          <Button variant={onSwitch == 'uplines' ?  "contained" : 'text'} 
+                  sx={{...Cls.buttonClass(onSwitch == 'uplines' ?  "contained" : 'outlined','violet'), display: 'none', fontSize:onMobile ? '11px' : '14px',borderRadius:'0', marginTop:'-12px'}} 
+                  onClick={()=>{setonSwitch('uplines'),setrawREFRESH(Fnc.numRandom())}}
+                  size='small' >
+              {onMobile ? 'ITEMS' : 'LIST OF UPLINES '}
+          </Button>
+
+      </Grid>
+      
+      <Grid item xs={6} sm={6} md={6} sx={{ display: 'flex', justifyContent: 'flex-end', }}>
+
+          <IconButton variant='standard' 
+                      size='small' 
+                      onClick={()=>setonUploading({modal: true})}
+                      disabled={!fetchACCTS.load}
+                      sx={{marginTop:'-8px', marginRight:'10px'}}>
+            <Tooltip title='Upload excel file'>
+            <Icon icon="line-md:file-upload-twotone" color={!fetchACCTS.load ? 'gray' : '#9370db'} width={23}/>
+            </Tooltip>
+          </IconButton>
+
+          <Button variant={onSwitch == 'adding' ?  "contained" : 'outlined'}  
+                  onClick={()=>( onAddNew() )}
+                  disabled={!fetchACCTS.load}
+                  sx={{...Cls.buttonClass(onSwitch == 'adding' ?  "contained" : 'outlined','violet'), fontSize:onMobile ? '11px' : '14px',borderRadius:'0', marginTop:'-12px'}} 
+                  size='small' >
+             {onMobile ? <Icon icon="line-md:plus" color={!fetchACCTS.load ? 'gray' : '#9370db'} width={21} /> : 'ADD NEW'}
+          </Button>
+      </Grid>
+
+
+      <Grid item xs={12} sm={12} md={12}>
+
+            <Box component="section" sx={{ p: 2, border: '1px dashed grey', marginTop:'15px' }}>
+
+                <Stack>
+                  <Grid container spacing={{ sm: 2, md:2 }} columns={{ xs: 12, sm: 12, md: 12 }} style={{padding:'7px'}}>
+
+                    <Grid item xs={9} sm={9} md={9}>
+                      <OnSearching byLabel={'Search...'} bySearching={setonSearching} />
+                      {dataView == 'card' &&
+                      <OnSorting RETURN={(e)=>setonSorts(e)} /> }
+                    </Grid>
+
+                    <Grid item xs={3} sm={3} md={3}>
+                      <Stack mb={1} direction="row" alignItems="right" justifyContent="flex-end">
+
+                          <ToggleButtonGroup value={onview} onChange={onChangeView} exclusive size="small"  >
+
+                                <ToggleButton value="table">
+                                      <Icon icon="fluent-mdl2:table" color='gray' width={22} sx={{ mr: 5 }}  />
+                                </ToggleButton>
+
+                                <ToggleButton value="card">
+                                      <Icon icon="clarity:view-cards-line" color='gray' width={22} sx={{ mr: 5 }}  />
+                                </ToggleButton>
+
+                          </ToggleButtonGroup>
+
+                      </Stack>
+                    </Grid>
+                    
+                    <Grid item xs={12} sm={12} md={12} >
+                      { fetchACCTS.load == false ? 
+                         <OnLoading type={'table'}  />
+                        :
+                        fetchACCTS?.tally == 0 ?
+                            <Alert variant="outlined" severity="info" width="100%">
+                                  Nothing found..
+                            </Alert>
+                        :
+                        <>
+
+                        {dataView == 'card' || dataView == 'list' ? 
+                          <>
+                          {
+                            onSwitch == 'accounts'
+                            ?
+                            <ViaCards DATA={fetchACCTS} RETURN={onReturned} SEARCH={onSearching} SORT={onSorts} />
+                            :
+                            <ViaCards DATA={fetchACCTS} RETURN={onReturned} SEARCH={onSearching} SORT={onSorts} />
+                          }
+                          </>
+                        : 
+                        <>
+                        {
+                          onSwitch == 'accounts'
+                          ?
+                          <ViaTable DATA={fetchACCTS} ITEMS={{GAMES: fetchGAMES.data}} RETURN={onReturned} SEARCH={onSearching} />
+                          :
+                          <ViaTableUplines DATA={fetchACCTS} ITEMS={{GAMES: fetchGAMES.data}} RETURN={onReturned} SEARCH={onSearching} />
+                        }
+                        </>
+                        }
+
+                      </>
+                      }
+                    </Grid>
+
+                  </Grid>
+
+                </Stack>
+
+            </Box>
+
+        </Grid>
+
+      </Grid>
+
+    <Upserting  receivedData={onUpserting} 
+                receivedItems={{APPS: fetchAPPS.data, USERS: fetchUSERS.data}} 
+                returnData={onUpserted}/>
+
+    <UploadingExcel DATA={onUploading} ALERT={onUpserted} ITEMS={{APPS: fetchAPPS.data, USERS: fetchUSERS.data, UNIONS: [], }}/>
+
+    <Alerting onOpen={onAlert.onOpen} severity={onAlert.severity} title={onAlert.title} message={onAlert.message} />
 
 
 
-    { listLoading == false ? 
-        <Loading_Skeletons type={dataView} />
-      :
-      <>
-
-        {listFound == true ?
-          <>
-
-            {dataView == 'card' ? 
-                <ViaCardUser DATA_TO={listofDATA} DATA_EN={ENLISTED_CARDS} DATA_RE={listofUPSERT} />
-            :dataView == 'table' ? 
-                <ViaTable DATA_TO={listofDATA} DATA_EN={ENLISTED_TABLE} DATA_RE={listofUPSERT} />
-            :dataView == 'list' ? 
-                <ViaList DATA_TO={listofDATA} DATA_EN={ENLISTED_CARDS} DATA_RE={listofUPSERT} />
-            : 
-                null
-            }
-            
-          </>
-        :
-            <Grid xs={22} sm={22} md={22}>
-              <Alert variant="outlined" severity="info" width="100%">
-                  Nothing found..
-              </Alert>
-            </Grid>
-        }
-
-      </>
+    {
+      Fnc.JSONS(fetchACCTS,false)
     }
-
-
-
-
-    
-        
-
-    <AddingItem receivedData={upsertofData} submittedResult={submittedResult}/>
-
-
 
     </Container>
   );

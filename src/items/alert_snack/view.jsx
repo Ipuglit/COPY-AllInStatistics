@@ -8,7 +8,7 @@ export default function AlertSnack(i,ii) {
   return (
 
       <Snackbar open={true} autoHideDuration={3500} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
-        <Alert severity={i} sx={{ width: '100%' }} >
+        <Alert severity={i} sx={{ minWidth: '200px' }} >
             {ii}
         </Alert>
       </Snackbar>

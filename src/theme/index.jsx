@@ -16,11 +16,12 @@ import * as Fnc from 'src/hooks/functions'
 
 export default function ThemeProvider({ children }) {
   
-  const themeModed    = JSON.parse(localStorage.getItem("theme-mode"))
+  const themeModed    = JSON.parse(localStorage.getItem("slk-theme"))
+  const themecolor = themeModed && Fnc.wordLowerCase(themeModed.theme) == 'light' ? 'light' : 'dark'
 
   const memoizedValue = useMemo(
     () => ({
-      palette: {mode: themeModed ? Fnc.wordLowerCase(themeModed.theme) : 'light'},
+      palette: {mode: themecolor},
       typography,
       shadows: shadows(),
       customShadows: customShadows(),

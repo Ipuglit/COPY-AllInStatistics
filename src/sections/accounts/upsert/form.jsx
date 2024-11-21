@@ -1,460 +1,415 @@
 
-import { useState, useEffect } from 'react';
+import React,{ useState, useEffect } from 'react';
 import axios from 'axios';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel, Divider } from '@mui/material';
 import {
   Dialog,
   DialogContent,
+  DialogActions,
   DialogTitle,
   TextField,
   Button,
   Grid,
   Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Autocomplete,
+  Chip,
+  Box,
+  Avatar,
+  Autocomplete
+
 } from '@mui/material';
 
 import { Icon } from '@iconify/react';
 
 import * as Fnc from 'src/hooks/functions'
+import * as Cs from 'src/hooks/classes'
 
-import { RawApplications } from 'src/hooks/raw/applications'
-import { RawRoles } from 'src/hooks/raw/roles'
-import { RawUsers } from 'src/hooks/raw/users'
 
-import {AlertSnack} from 'src/items/alert_snack'
+import { AlertSnack } from 'src/items/alert_snack'
 
-import { UpsertData, UpsertLink } from 'src/hooks/upsert/upsert-data'
+import { UpsertDATA, LinkUPLOAD } from 'src/hooks/upsert/upsert-data'
+import { imagetoRESIZE, imageUPLOADS } from 'src/hooks/imageupload'
 
 import OnMobileScreen from 'src/items/screen/resize';
 
-export function AddingItem({receivedData,submittedResult}) {
+export default function Upserting({receivedData, receivedItems, returnData}) {
   
-  const item        = receivedData
+  const itemx                             = receivedData
 
-  const rawApp      = RawApplications().data
-  const rawRoles    = RawRoles("LOWERMID").data
-  const rawUsers    = RawUsers().data
+  const [open, setOpen]                   = useState(false);
+  const [onData, setonData]               = useState({id: 0});
+  const [onSubmitLoad, setonSubmitLoad]   = useState(false);
 
-  const [dataList, setdataList] = useState(item);
-  const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-  
-  const [onAlertShow, setonAlertShow] = useState(false);
-  const [onAlertType, setonAlertType] = useState("");
-  const [onAlertMessage, setonAlertMessage] = useState("");
-  const [onSubmitLoad, setonSubmitLoad] = useState(false);
+  const [appsID, setappsID]               = useState(null);
+  const [userID, setuserID]               = useState(null);
 
-  const [onEdit, setonEdit] = useState(false);
-  const [onAdd, setonAdd] = useState(false);
+  const onMobile= OnMobileScreen();
 
-  const OnMobile= OnMobileScreen();
+    const seeAPPS = receivedItems?.APPS.map( (e, index)=> { 
+                                                          return {  id:                   e.id,  
+                                                                    value:                e.appName, 
+                                                                    label:                e.appName, 
+                                                                    description:          e.appName, 
+                                                                    ...e
+                                                                  } 
+                                                      } 
+                                        )
 
-  const dataUsers = rawUsers.map(i => {
-    return {
-              label:                        i.nickname,
-              value:                        i.nickname,
-            };
-            })
+    const seeUSERS = receivedItems?.USERS.map( (e, index)=> { 
+                                                          return {  id:                   e.id,  
+                                                                    value:                e.firstname ? e.firstname+' '+e.lastname : e.nickname, 
+                                                                    label:                e.firstname ? e.firstname+' '+e.lastname : e.nickname, 
+                                                                    description:          e.userNickname, 
+                                                                    ...e
+                                                                  } 
+                                                      } 
+                                        )
 
+    const ndx_app   = seeAPPS.find((e)=> e.id == itemx.appID)
+    const ndx_user  = seeUSERS.find((e)=> e.id == itemx.accountUserID)
 
-  const ondialogClose = () => {
-    if(onAdd){
-      setOpen(false);
-      //window.location.reload();
+  const onChanging =(i,e,u)=>{
+
+    const ifStatus = e == 'accountStatusLabel' ? {'status': u} : {}
+    const newArr = {...onData, ...ifStatus, [e]: i, }
+    setonData({...newArr })
+
+  }
+
+  const onDropDown =(i,e)=>{
+
+    if(i == null || i == undefined){
+      e(null)
     } else {
-      setOpen(false);
+      e(i)
     }
-  };
 
-  const onLocalStorage = (i,ii) => {
-    if(i == "T"){
-      return JSON.parse(localStorage.getItem('slk-token'))[ii]
-    } else if(i == "U"){
-      return JSON.parse(localStorage.getItem('slk-user'))[ii]
+    if( e == setuserID){
+      setonData({...onData, accountUserID: i ? i.id : '0'  })
+    } else if ( e == setappsID ){
+      setonData({...onData, appID: i ? i.appID : '0'  })
     }
-  };
-
-  const handleAccordionChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
-  const onchangeItem = (val, x) => {
 
 
-      const newArray = [item];
-
-      if(!newArray[0].status){
-        item["status"]       = 2
-        newArray["status"]   = 2
-        item["accountClubsCount"]       = 0
-        newArray["accountClubsCount"]   = 0
-        item["accountAsUpline"]       = 0
-        newArray["accountAsUpline"]   = 0
-        item["accountAsDownline"]       = 0
-        newArray["accountAsDownline"]   = 0
-        item["modal"]       = 'Open'
-        newArray["modal"]   = 'Open'
-        
-        if(item.AddType == "MINE"){
-          item["userID"]              = onLocalStorage('T','id')
-          newArray["userID"]          = onLocalStorage('T','id')
-          item["userNickname"]        = onLocalStorage('U','username')
-          newArray["userNickname"]    = onLocalStorage('U','username')
-          item["userRole"]            = onLocalStorage('U','roleID')
-          newArray["userRole"]        = onLocalStorage('U','roleID')
-          item["userAvatar"]          = onLocalStorage('U','avatar')
-          newArray["userAvatar"]      = onLocalStorage('U','avatar')
-        }
-
-      }
-
-      if(x == "statusLabel"){
-
-          if(val == "Active"){
-              item[x] = "Pending"
-              newArray[x] = "Pending";
-              item["status"]       = 1
-              newArray["status"]   = 1
-          } else if(val == "Pending"){
-              item[x] = "Disabled"
-              newArray[x] = "Disabled";
-              item["status"]       = 2
-              newArray["status"]   = 2
-          } else {
-              item[x] = "Active"
-              newArray[x] = "Active";
-              item["status"]       = 0
-              newArray["status"]   = 0
-          }
-
-      } else {
-        
-        item[x] = val
-        newArray[x] = val;
-
-      }
-
-      if(x == "appName"){
-        const x = rawApp.find((o) => o.name == val);
-        item["appID"]       = x.id
-        newArray["appID"]   = x.id
-        item["appImage"]       = x.imageFull
-        newArray["appImage"]   = x.imageFull
-      }
-
-      if(x == "accountRole"){
-        const x = rawRoles.find((o) => o.name == val);
-        item["accountRoleID"]       = x.id
-        newArray["accountRoleID"]   = x.id
-        item["accountRole"]       = x.name
-        newArray["accountRole"]   = x.name
-      }
-
-      if(x == "userNickname"){
-        const x = rawUsers.find((o) => o.nickname == val);
-        item["userID"]       = x.id
-        newArray["userID"]   = x.id
-        item["userNickname"]       = x.nickname
-        newArray["userNickname"]   = x.nickname
-        item["userAvatar"]       = x.avatarFull
-        newArray["userAvatar"]   = x.avatarFull
-        item["userRole"]          = x.roleID
-        newArray["userRole"]      = x.roleID
-      }
-
-      setonEdit(true)
-      setdataList(newArray);
-  };
-
+  }
 
   const inputComplete = (i,ii) => {
+
     if(i == "" || i == null || i == undefined){
       return true
     } else {
       return false
     }
+
   };
 
-  const checkIfComplete = (i) => {
-    if(i.accountID == "" || i.accountID == undefined  || i.accountNickname == "" || i.accountNickname == undefined || i.accountRole == "" || i.accountRole == undefined || i.userNickname == "" || i.userNickname == undefined || i.appName == "" || i.appName == undefined || i.statusLabel == "" || i.statusLabel == undefined  || i.userID == "" || i.userID == undefined){
+  const editableID = onData?.id == 0 || onData?.count_asPlayer == 0 && onData?.count_asUpline == 0 && onData?.count_asAgency == 0 && onData?.count_asDownline == 0 ? false : true
+
+  const checkIfComplete = () => {
+    if(onData.id != 0 && ( onData.appID == itemx.appID && onData.accountID == itemx.accountID && onData.accountNick == itemx.accountNick && onData.accountUserID == itemx.accountUserID &&  onData.accountStatusLabel == itemx.accountStatusLabel && onData.accountUserNick == itemx.accountUserNick)  ){
+      return true
+    } else if( ( Fnc.isNull(onData.accountID) || Fnc.isNull(onData.accountNick) || Fnc.isNull(onData.appID,0) || Fnc.isNull(onData.accountStatusLabel,0) || onData?.accountID.length < 5 || onData?.accountNick.length < 5 ) ) {
       return true
     } else {
       return false
     }
   };
 
-  const onSubmitting =(i,ii)=>{
-    if( checkIfComplete(i) ){
-      showAlert('warning',2000,"Please complete all details")
-      setonAlertShow(true)
+  const delayReturn =(i,e,a)=>{
+    const T = setTimeout(() => {
+      returnData( i, e )
+      setOpen(a)
+    }, 1500);
+    return () => clearTimeout(T);
+  }
+
+  const onSubmitting =()=>{
+
+    setonSubmitLoad(true)
+
+    if( checkIfComplete() ){
+        returnData( 'error', 'Incomplete details' )
+        setonSubmitLoad(false)
     } else {
-        setonSubmitLoad(true)
         proceedSubmit()
     }
 
     async function proceedSubmit() {
-
+      var addNick = 0
+      const JSONData = String(onData?.accountID).split(',').map(i => {
+        if(String(i).length > 4){
+          addNick++
+          return {
+                    id:               onData.id ? onData.id : '0',
+                    accountID:        Fnc.textSanitize(i), // Trim any whitespace
+                    accountNickname:  Fnc.textSanitize(onData.accountNick) + (addNick  == 1 ? '' : addNick),
+                    userID:           onData.accountUserID ? onData.accountUserID : 0,
+                    appID:            onData.appID,
+                    status:           onData.accountStatusLabel == 'Active' ? '0' : onData.accountStatusLabel == 'Pending' ? '1' : '2',
+                    oldaccountID:     onData.oldaccountID ? onData.oldaccountID : '0',
+                  }
+        } else {
+          returnData( 'error', 'Each ID should be atleast 5 characters' )
+        }
+      })
+                      
       try {
-        const response = await axios.post(UpsertLink(ii),UpsertData(i));
+
+        const response = await axios.post(LinkUPLOAD('accounts'),UpsertDATA({JSONData}));
         const feed =  response.data;
 
-        if(feed == "Updated"){
-          showAlert('success',2500,'Account successfully updated!','update')
-        } else if(feed.includes("Added New")){
-          onchangeItem(feed.replace(/.*\(|\).*/g, ''),'id')
-          showAlert('success',2500,'Account successfully added! ','add')
-          setonAdd(true)
+        if( feed.added >= 1 ){
+
+          delayReturn( 'success', 'Added', false )
+          
+        } else if( feed.updated >= 1 ){
+
+          delayReturn( 'success', 'Updated', false )
+
+        } else if( feed.duplicate >= 1 ){
+
+          delayReturn( 'warning', 'Duplicate', true )
+          setonSubmitLoad(false)
+
+        } else if( feed.record >= 1 ){
+
+          delayReturn( 'warning', 'Unable to change account with existing record!', true )
+          setonSubmitLoad(false)
+
         } else {
-          showAlert('warning',3000,feed,'none')
-          setonEdit(true)
+
+          delayReturn( 'error', 'Please try again', true )
+          setonSubmitLoad(false)
+
         }
-        setonAlertShow(true)
-        setonSubmitLoad(false)
 
       } catch (error) {
-        setonAlertShow(true)
+
+        delayReturn( 'error', 'Please try again', true )
         setonSubmitLoad(false)
-        showAlert('error',3000,'Sorry! Something went wrong...','none')
+
       }
     }
 
   }
 
-  const showAlert = (i,ii,iii,iiii) => {
-    setonAlertType(i)
-    setonAlertMessage(iii)
-    setonEdit(false)
-    submittedResult({
-                    status: true,
-                    alert: i,
-                    duration: ii,
-                    message: iii,
-                    items: item,
-                    type: iiii,
-                  })
-    const T = setTimeout(() => {
-      setonAlertShow(false)
-    }, ii);
-    return () => clearTimeout(T);
-
-  };
-
-
   useEffect(() => {
 
-    if(item.modal == "Open"){
-        item.modal = "Openned";
-        setExpanded(false)
+    if(itemx.modal == "Open"){
+        itemx.modal = "Open";
         setOpen(true);
     } else {
         setOpen(false);
     }
-    setonAdd(false)
-    setonEdit(false)
-    setdataList(item);
+    setonSubmitLoad(false)
 
-  }, [receivedData,item]);
+    setappsID(ndx_app ? ndx_app : null)
+    setuserID(ndx_user ? ndx_user : null)
+
+    setonData({...itemx, id: itemx?.id ? itemx?.id : 0, oldaccountID: itemx?.accountID})
+  }, [receivedData,itemx]);
 
   return (
 
       <Dialog open={open} >
 
-        <DialogTitle>
-             {
-              /// JSON.stringify(item,null,2)
-             }
+        <DialogTitle sx={{ m: 1, p: 1 }} id="customized-dialog-title">
+            <Typography variant="h6" component="div" margin={1}>
+              ACCOUNT FORM
+            </Typography>
+            <Divider />
         </DialogTitle>
 
         <DialogContent>
 
+        <Grid container padding={{ xs: 1, sm: 2, md: 3 }} spacing={{ xs: 2, sm: 2, md: 2 }}>
 
-      <Grid container spacing={OnMobile ? 1 : 2} sx={{ padding: OnMobile ? '0rem' : '2rem' }}>
-        <Grid item xs={12}>
-          <Typography variant="h6" component="div">
-            ACCOUNT FORM
-          </Typography>
+        <Grid item xs={12} sm={12} md={12}>
+        <Autocomplete
+                value={appsID} 
+                onChange={(event, newValue) =>onDropDown(newValue,setappsID)}
+                options={seeAPPS}
+                getOptionLabel={(option) => option.value ? option.value : ''}
+                isOptionEqualToValue={(option, value) => option.id === appsID?.id}
+                filterOptions={Fnc.filterOptions}
+                renderOption={(props, option) => (
+                  <React.Fragment key={option.id}>
+                    <span {...props} style={{ fontSize: '12px'}}>{option.label}</span>
+                  </React.Fragment>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    error={Fnc.isNull(appsID) ? true : false}
+                    label={ 'Application'}
+                    variant="outlined"
+                    fullWidth  size='small'
+                    sx={{ '& .MuiInputBase-input': { fontSize: onMobile ? '11px' : '', }, '& .MuiInputLabel-root': { fontSize: onMobile ? '12px' : '',   }, }}
+                  />
+                )}
+              />
         </Grid>
-        <Grid item xs={12}>
+
+        <Grid item xs={12} sm={12} md={12}>
+        <Autocomplete
+                value={userID}  
+                onChange={(event, newValue) =>onDropDown(newValue,setuserID)}
+                options={seeUSERS}
+                getOptionLabel={(option) => option.value ? option.value : ''}
+                isOptionEqualToValue={(option, value) => option.id === userID?.id}
+                filterOptions={Fnc.filterOptions}
+                renderOption={(props, option) => (
+                  <React.Fragment key={option.id}>
+                    <span {...props} style={{ fontSize: '12px'}}>{option.label}</span>
+                  </React.Fragment>
+                )}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    error={Fnc.isNull(userID) ? true : false}
+                    label={ <>User <span style={{fontSize:'12px'}}>(if user exist)</span></>}
+                    variant="outlined"
+                    fullWidth size='small'
+                    sx={{ '& .MuiInputBase-input': { fontSize: onMobile ? '11px' : '', }, '& .MuiInputLabel-root': { fontSize: onMobile ? '12px' : '',   }, }}
+                  />
+                )}
+              />
+        </Grid>
+
+        <Grid item xs={12} sm={12} md={12}>
           <TextField
-            label="Account ID"
-            name="Account ID"
-            size="small"
-            error={inputComplete(item.accountID)}
-            //InputLabelProps={{ style: { color: '#BA55D3' }, }}
-            inputProps={{ maxLength: 22 }}
-            value={item.accountID ? item.accountID : ''}
-            onChange={(e) => onchangeItem(Fnc.numberWhole(e.currentTarget.value), "accountID")}
-            fullWidth
-            required
+            label={(onData?.accountID?.includes(',') ? 'ID (atleast 5 characters each)' : editableID ? <span style={{color:'#ff4554',fontWeight:'700'}}>ID's with records cannot be changed</span> : 'ID (atleast 5 characters)' )}
+            error={inputComplete(onData.accountID,'id') || onData?.accountID?.length < 5 }
+            disabled={editableID}
+            InputProps={{  sx: { fontSize: onMobile ? '12px' : '',  }, }}
+            InputLabelProps={{  sx: { fontSize: onMobile ? '11px' : '',  }, }}
+            value={onData.accountID ? onData.accountID : ''}
+            onChange={(e) => onChanging( onData?.id > 0 ? Fnc.wordAlphaID(e.currentTarget.value) :  Fnc.wordAlphaIDs(e.currentTarget.value), "accountID")}
+            fullWidth variant='outlined'
+            autoComplete='off'
+            required size='small'
           />
         </Grid>
-        <Grid item xs={6}>
+
+        <Grid item xs={12} sm={12} md={12}>
           <TextField
-            label="Nickname"
-            name="Nickname"
-            size="small"
-            error={inputComplete(item.accountNickname)}
-            //nputLabelProps={{ style: { color: '#BA55D3' }, }}
-            inputProps={{ maxLength: 18 }}
-            value={item.accountNickname ? item.accountNickname : ''}
-            onChange={(e) => onchangeItem(Fnc.wordNoSpace(e.currentTarget.value), "accountNickname")}
-            fullWidth
-            required
+            label={"Nickname "+(onData?.accountNick?.length < 5 ? '(atleast 5 characters)' : '' )}
+            error={inputComplete(onData.accountNick) || onData?.accountNick.length < 5 }
+            inputProps={{  sx: { fontSize: onMobile ? '12px' : '',  }, }}
+            InputLabelProps={{  sx: { fontSize: onMobile ? '11px' : '',  }, }}
+            value={onData.accountNick ? onData.accountNick : ''}
+            onChange={(e) => onChanging(Fnc.wordNormal(e.currentTarget.value), "accountNick")}
+            fullWidth variant='outlined'
+            autoComplete='off'
+            required size='small'
           />
         </Grid>
 
-        <Grid item xs={6}>
-                <FormControl fullWidth size='small'>
-                    <InputLabel 
-                        id="filter-select-label" 
-                        //style={{color: '#BA55D3'}}
-                        >Role</InputLabel>
-                    <Select
-                      labelId="filter-select-label"
-                      id="filter-select"
-                      error={inputComplete(item.accountRole)}
-                      value={item.accountRole ? item.accountRole : ''}
-                      label="Role"
-                      required
-                      onChange={(e) => onchangeItem(e.target.value, "accountRole")}
-                    >
-                      {
-                          rawRoles.map((i, index) => (
-                            <MenuItem key={index} value={i.name} >{i.name}</MenuItem>
-                            ))
-                      }
-                    </Select>
-                </FormControl>
+
+        <Grid item xs={12} sm={12} md={12}>
+
+                <Chip icon={<Icon icon="mdi:check-circle"/>} 
+                      label='Active'  size='small'
+                      variant={'contained'} 
+                      sx={{fontSize: onMobile ? '11px' : ''}}
+                      color={onData.accountStatusLabel =='Active' ? 'success' : 'default'}
+                      onClick={()=>onChanging('Active',"accountStatusLabel",0)}  />
+                &nbsp;
+                <Chip icon={<Icon icon="mdi:clock-outline"/>} 
+                      label='Pending' variant={'contained'}  size='small' 
+                      sx={{fontSize: onMobile ? '11px' : ''}}
+                      color={onData.accountStatusLabel =='Pending' ? 'warning' : 'default'} 
+                      onClick={()=>onChanging('Pending',"accountStatusLabel",1)} />
+                &nbsp;
+                <Chip icon={<Icon icon="mdi:close-circle"/>} 
+                      label='Disabled' variant={'contained'}   size='small'
+                      sx={{fontSize: onMobile ? '11px' : ''}}
+                      color={onData.accountStatusLabel =='Disabled' ? 'error' : 'default'} 
+                      onClick={()=>onChanging('Disabled',"accountStatusLabel",2)} />
+              
         </Grid>
 
+
+      {
+        itemx.id ? 
         <Grid item xs={12}>
-                <FormControl fullWidth size='small'>
-                    <InputLabel 
-                        id="filter-select-label" 
-                        //style={{color: '#BA55D3'}}
-                        >Application</InputLabel>
-                    <Select
-                      labelId="filter-select-label"
-                      id="filter-select"
-                      error={inputComplete(item.appName)}
-                      value={item.appName ? item.appName : ''}
-                      label="Application"
-                      onChange={(e) => onchangeItem(e.target.value, "appName")}
-                    >
-                      {
-                          rawApp.map((i, index) => (
-                            <MenuItem key={index} value={i.name} >{i.name}</MenuItem>
-                            ))
-                      }
-                    </Select>
-                </FormControl>
-        </Grid>
-        {
-          item.AddType == "ALL" ? 
-        <Grid item xs={6}>
-                <FormControl fullWidth size='small'>
-                    <InputLabel 
-                        id="filter-select-label" 
-                        //style={{color: '#BA55D3'}}
-                        >
-                          User
-                    </InputLabel>
-                    <Select
-                      labelId="filter-select-label"
-                      id="filter-select"
-                      error={inputComplete(item.userNickname)}
-                      value={item.userNickname ? item.userNickname : ''}
-                      label="User"
-                      onChange={(e) => onchangeItem(e.target.value, "userNickname")}
-                    >
-                      {
-                          rawUsers.map((i, index) => (
-                            <MenuItem key={index} value={i.nickname} >{i.nickname}</MenuItem>
-                            ))
-                      }
-                    </Select>
-                </FormControl>
-        </Grid>
-        : null }
+
+                <Chip label={
+                              <span style={{fontSize:"11px"}}>
+                                {itemx.recorded_last ? "Latest record: "+itemx.recorded_last : "No records found"}
+                              </span>
+                            }  variant={'outlined'}  color={'default'} size='small'  />
 
 
-        <Grid item xs={12}>
-                {
-                  item.statusLabel == "Active" ? 
-                    <Button onClick={(e) => onchangeItem("Active","statusLabel")} size='large'>
-                        <Icon icon="mdi:check-circle" color='green' width={22} sx={{ mr: 0 }}  /> 
-                        <span style={{color: "green"}}> Active </span>
-                    </Button>
-                  : item.statusLabel == "Pending" ? 
-                    <Button onClick={(e) =>onchangeItem("Pending","statusLabel")} size='large'>
-                        <Icon icon="mdi:clock-outline" color='orange' width={22} sx={{ mr: 0 }}  />
-                        <span style={{color: "orange"}}> Pending </span>
-                    </Button>
-                  :
-                    <Button onClick={(e) =>onchangeItem("Disabled","statusLabel")} size='large'>
-                        <Icon icon="mdi:close-circle" color='red' width={22} sx={{ mr: 5 }}  />
-                        <span style={{color: "red"}}> Disabled </span>
-                    </Button>
-                }
-        </Grid>
-        <Grid item xs={12}>
-          <Accordion expanded={expanded === 'panel1'} onChange={handleAccordionChange('panel1')}>
-                <AccordionSummary expandIcon={<Icon icon="solar:double-alt-arrow-up-bold-duotone" color='violet' width={22} sx={{ mr: 5 }}  />} aria-controls="panel1-content">
-                  View uplines
-                </AccordionSummary>
-                <AccordionDetails id="panel1-content">
-                    <table>
-                      <tbody>
-                        <tr>
-                          <td>
-                            None
-                          </td>
-                          <td>
-                            Yet
-                          </td>
-                          <td>
-                            For now
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                </AccordionDetails>
-              </Accordion>
-        </Grid>
-
-
-
-      </Grid>
-      { OnMobile ? <br/> : null}
-        <Grid container justifyContent="flex-end">
-
-              { 
-                onEdit ? 
-                <Grid item xs={OnMobile ? 4 : 2.7} >
-                {
-                  onSubmitLoad ?
-                  <Button  color="secondary" >SUBMITTING...</Button>
-                  :
-                  <Button onClick={()=>onSubmitting(item,'accounts')} color="secondary">SAVE</Button>
-                }
-                  
-                </Grid>
-                : 
+              {
+                itemx.recorded_last && !Fnc.isNull(itemx.total_playerresult,0)
+                ?
+                <>
+                &nbsp;
+                <Chip label={
+                              <span style={{fontSize:"11px"}}>
+                                {itemx.total_playerresult > 1 ? "Player Result: "+itemx.total_playerresult +' USD' : "No player result"}
+                              </span>
+                            }  variant={'outlined'}  color={'default'} size='small'  />
+                </>
+                :
                 null
               }
-            
-            <Grid item xs={2} >
-              <Button onClick={ondialogClose} sx={{ color: 'gray'}} >{onEdit ? "CANCEL" : "CLOSE" }</Button>
-            </Grid>
+
+
+              {
+                itemx.count_clubs
+                ?
+                <>
+                &nbsp;
+                <Chip label={
+                              <span style={{fontSize:"11px"}}>
+                                {itemx.list_clubNames ? "Clubs: "+itemx.list_clubNames : "No clubs"}
+                              </span>
+                            }  variant={'outlined'}  color={'default'} size='small'  />
+                </>
+                :
+                null
+              }
+
         </Grid>
-                
+        :
+        null
+      }
+
+      </Grid>
+
+
+      {Fnc.JSONS(onData,false)}
+   
         </DialogContent>
+        
+        <DialogActions style={{padding:'20px', marginTop:'-15px',display: 'flex', justifyContent: 'center'}}>
 
-        {onAlertShow ? AlertSnack(onAlertType,onAlertMessage) : null}
+        { 
+                !onSubmitLoad ? 
 
+                  <>
+                  { !checkIfComplete() ?
+                  <Button onClick={()=>onSubmitting()} 
+                          disabled={onSubmitLoad}
+                          sx={{...Cs.buttonClass('contained','violet'), width:'50%',borderRadius:'0',fontSize: onMobile ? '11px' : ''}} 
+                          startIcon={!onSubmitLoad ? '' : <Icon icon="eos-icons:loading"/>}
+                          variant='contained'>
+                          SUBMIT
+                  </Button>
+                  : null
+                  }
+                  <Button onClick={()=>setOpen(false)} sx={{borderRadius:'0',width:'50%',fontSize: onMobile ? '11px' : ''}} variant='outlined' loading='true' >CANCEL</Button>
+                  </>
+                :
+                  <Button sx={{...Cs.buttonClass('outlined','violet'), width:'100%',borderRadius:'0',fontSize: onMobile ? '11px' : ''}} 
+                          startIcon={!onSubmitLoad ? '' : <Icon icon="eos-icons:loading"/>}
+                          variant='outlined'>
+                            SUBMITTING
+                  </Button>
+              }
+
+        </DialogActions>
       </Dialog>
 
   );

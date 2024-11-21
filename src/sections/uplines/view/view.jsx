@@ -1,7 +1,11 @@
 import { useState, useEffect } from 'react';
 
-import {Stack,Button,Container,Alert,Typography} from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Alert from '@mui/material/Alert';
+import Typography from '@mui/material/Typography';
 
 import { RawApplications } from 'src/hooks/raw/applications';
 import { RawClubs } from 'src/hooks/raw/clubs';
@@ -13,8 +17,8 @@ import Loading_Skeletons from 'src/items/loaders/loadings'
 
 import * as Data from 'src/hooks/data';
 
-import { ViaCardUser, ViaTable, ViaList } from 'src/items/records';
-import { OnSortings, FormattingSorting } from 'src/items/sorting';
+import { ViaCardUser, ViaTable, ViaList } from 'src/items/fetched';
+import { OnSortings, FormattingSorting } from 'src/items/sortingFilter';
 
 import {AddingItem} from '../upsert/form';
 
@@ -69,7 +73,7 @@ export default function Viewing({TheFor,TheTitle}) {
 
     const onSort_to =  [ 
                             //ITEMS,VALUE,IDD,OTHERS
-                            [ FormattingSorting(Data.BY_ACCOUNTS,"STATUS",'value','label',"",false) ],
+                            [ FormattingSorting(Data.BY_UPLINES,"STATUS",'value','label',"",false) ],
                           ];
 
     const onFilter_re =(i)=>{
@@ -199,7 +203,8 @@ export default function Viewing({TheFor,TheTitle}) {
                     SORT_TO={onSort_to} 
                     SORT_RE={onSort_re}
                     SEARCH_RE={onSearch_re}
-                    TOGGLE_RE={onToggle_re} />
+                    TOGGLE_RE={onToggle_re}
+                    ITEMS='table-list-card' />
 
 
 

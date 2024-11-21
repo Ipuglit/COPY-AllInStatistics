@@ -29,9 +29,9 @@ export const RawImages = (i) => {
           setData(response.data);
           setLoad(true)
       }
-      console.log("Images items fetched..."+JSON.stringify(response.data,null,2))
+      //console.log("Images items fetched..."+JSON.stringify(response.data,null,2))
     } catch (error) {
-      console.error("Error fetching data: ", error);
+      console.error("Error fetching data: ");
     }
   }
 

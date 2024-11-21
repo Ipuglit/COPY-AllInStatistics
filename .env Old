@@ -1,0 +1,58 @@
+GENERATE_SOURCEMAP  = false
+
+VITE_GO_LOGIN          		= https://13.211.65.106/pokerapp/verify/logging.php
+VITE_GET_AUTHENTICATE		= https://13.211.65.106/pokerapp/verify/authenticate.php
+
+VITE_GET_VERIFY		        = https://13.211.65.106/pokerapp/verify/verify.php
+
+VITE_GET_USERS          	= https://13.211.65.106/pokerapp/fetch/users.php
+VITE_GET_ACCOUNTS			= https://13.211.65.106/pokerapp/fetch/accounts.php
+VITE_GET_ACCOUNTS_UPLINE    = https://13.211.65.106/pokerapp/fetch/fetch_accounts_upline.php
+VITE_GET_APPS          		= https://13.211.65.106/pokerapp/fetch/applications.php
+VITE_GET_CLUBS          	= https://13.211.65.106/pokerapp/fetch/clubs.php
+VITE_GET_HISTORY			= https://13.211.65.106/pokerapp/fetch/history.php
+VITE_GET_NOTIFICATION 		= https://13.211.65.106/pokerapp/fetch/fetch_notification.php
+VITE_GET_NOTIFICATION_COUNT = https://13.211.65.106/pokerapp/fetch/fetch_notification_count.php
+VITE_GET_PROFILE            = https://13.211.65.106/pokerapp/fetch/fetch_profile.php
+VITE_GET_IMAGES             = https://13.211.65.106/pokerapp/fetch/images.php
+VITE_GET_UNIONS             = https://13.211.65.106/pokerapp/fetch/unions.php
+VITE_GET_COMPANY            = https://13.211.65.106/pokerapp/fetch/company.php
+VITE_GET_ROLES              = https://13.211.65.106/pokerapp/fetch/roles.php
+VITE_GET_ROLEUSERS          = https://13.211.65.106/pokerapp/fetch/roles_users.php
+VITE_GET_UPLINES            = https://13.211.65.106/pokerapp/fetch/uplines.php
+VITE_GET_UPLINES2           = https://13.211.65.106/pokerapp/fetch/fetch_upline_accounts.php
+VITE_GET_EXCHANGERATE       = https://13.211.65.106/pokerapp/fetch/fetch_exchangerates.php
+VITE_GET_FXRATES            = https://13.211.65.106/pokerapp/fetch/fxrates.php
+
+VITE_URL_FXUSD1             = https://v6.exchangerate-api.com/v6/61b370327f102d95c5f30e60/latest/USD 
+VITE_URL_FXUSD2             = https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_3eWhXPMnNdgcR6DMhuo2lPBiRYZXMbfp99qVbGY1
+VITE_URL_FXUSD3             = https://api.exchangeratesapi.net/v1/exchange-rates/latest?access_key=q90PT0aOUSVUf8iW 
+
+VITE_API_FXUSD1             = 61b370327f102d95c5f30e60
+VITE_API_FXUSD3             = q90PT0aOUSVUf8iW
+
+VITE_UPSERT_USERS           = https://13.211.65.106/pokerapp/upsert/users.php
+VITE_UPSERT_ACCOUNTS        = https://13.211.65.106/pokerapp/upsert/accounts.php
+VITE_UPSERT_APPS            = https://13.211.65.106/pokerapp/upsert/applications.php
+VITE_UPSERT_CLUBS           = https://13.211.65.106/pokerapp/upsert/clubs.php
+VITE_UPSERT_UNIONS          = https://13.211.65.106/pokerapp/upsert/unions.php
+VITE_UPSERT_UPLINES         = https://13.211.65.106/pokerapp/upsert/uplines.php
+VITE_UPSERT_PROFILE         = https://13.211.65.106/pokerapp/upsert/profile.php
+VITE_UPSERT_EXCHANGERATE    = https://13.211.65.106/pokerapp/upsert/exchangerates.php
+
+
+VITE_UPSERTS_USERS           = https://13.211.65.106/pokerapp/upserting/users.php
+VITE_UPSERTS_ACCOUNTS        = https://13.211.65.106/pokerapp/upserting/accounts.php
+VITE_UPSERTS_APPS            = https://13.211.65.106/pokerapp/upserting/applications.php
+VITE_UPSERTS_CLUBS           = https://13.211.65.106/pokerapp/upserting/clubs.php
+VITE_UPSERTS_UNIONS          = https://13.211.65.106/pokerapp/upserting/unions.php
+VITE_UPSERTS_UPLINES         = https://13.211.65.106/pokerapp/upserting/uplines.php
+VITE_UPSERTS_PROFILE         = https://13.211.65.106/pokerapp/upserting/profile.php
+VITE_UPSERTS_EXCHANGERATE    = https://13.211.65.106/pokerapp/upserting/exchangerates.php
+
+
+VITE_UPLOADS_CLUBS           = https://13.211.65.106/pokerapp/uploads/clubs.php
+VITE_UPLOADS_APPS            = https://13.211.65.106/pokerapp/uploads/applications.php
+VITE_UPLOADS_IMAGES          = https://13.211.65.106/pokerapp/uploads/images.php
+
+VITE_GET_AUTH           	= https://13.211.65.106/pokerapp/verify/authenticate.php

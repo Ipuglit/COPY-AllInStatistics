@@ -26,6 +26,10 @@ export default function Header({ onOpenNav }) {
 
   const lgUp = useResponsive('up', 'lg');
 
+  const onAnnounce =(i)=>{
+    console.log(i)
+  }
+
   const renderContent = (
     <>
 
@@ -39,8 +43,10 @@ export default function Header({ onOpenNav }) {
 
       <Stack direction="row" alignItems="center" spacing={1}>
         <ThemeMode />
-        <NotificationsPopover />
-        <ProfilePopover />
+        {
+        //  <NotificationsPopover />
+        }
+        <ProfilePopover openAnnounce={onAnnounce} />
       </Stack>
 
     </>
@@ -50,7 +56,7 @@ export default function Header({ onOpenNav }) {
     <AppBar
       sx={{
         boxShadow: 'none',
-        height: HEADER.H_MOBILE,
+        height: '50px',
         zIndex: theme.zIndex.appBar + 1,
         ...bgBlur({
           color: theme.palette.background.default,
@@ -60,7 +66,7 @@ export default function Header({ onOpenNav }) {
         }),
         ...(lgUp && {
           width: `calc(100% - ${NAV.WIDTH + 1}px)`,
-          height: HEADER.H_DESKTOP,
+          height: '50px',
         }),
       }}
     >
@@ -68,8 +74,14 @@ export default function Header({ onOpenNav }) {
         sx={{
           height: 1,
           px: { lg: 5 },
+          marginTop:'-6px',
         }}
       >
+
+      {lgUp && (
+        <span style={{letterSpacing: '2.5px', fontSize:'14px'}}>ALL IN STATISTICS</span>
+      )}
+
         {renderContent}
       </Toolbar>
     </AppBar>

@@ -5,7 +5,7 @@
 if($Verified == "FOUND"){
 
     if ( $Got['STATUS'] == "ALL" ){
-            
+
         if ( $Got['SORTBY'] != "NONE" ){
             $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
         } else {
@@ -64,7 +64,7 @@ if($Verified == "FOUND"){
                     (SELECT COUNT(id) FROM applications WHERE company = c.id) AS appsCount
             FROM company as c
             LEFT JOIN images AS img ON c.logo = img.id
-            LEFT JOIN paths AS p ON img.type = p.type 
+            LEFT JOIN paths AS p ON img.type = p.type
             ".$Extend;
 
     $result = $conx->query($sql);
@@ -101,3 +101,4 @@ if($Verified == "FOUND"){
  echo json_encode($feedback, true);
 
 ?>
+~

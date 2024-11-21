@@ -31,7 +31,7 @@ export const RawRoles = (i) => {
         }
         //console.log("Roles items fetched..."+JSON.stringify(response.data,null,2))
         } catch (error) {
-        console.error("Error fetching data: ", error);
+        console.error("Error fetching data ");
         }
     }
 

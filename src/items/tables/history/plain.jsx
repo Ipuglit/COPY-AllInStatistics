@@ -46,7 +46,7 @@ export default function PlainTableHistory() {
         <DataGrid
             rows={dataRows}
             columns={dataHeaders}
-            pageSizeOptions={[10, 25, 50]}
+            pageSizeOptions={[5, 25, 50]}
             initialState={{
               pagination: {
                 paginationModel: { pageSize: 10}

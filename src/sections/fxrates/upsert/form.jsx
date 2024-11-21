@@ -1,459 +1,130 @@
 
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel, Divider } from '@mui/material';
 import {
   Dialog,
   DialogContent,
+  DialogActions,
   DialogTitle,
   TextField,
   Button,
   Grid,
   Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
-  Autocomplete,
+  Chip,
+  Box,
+  Avatar 
+
 } from '@mui/material';
 
 import { Icon } from '@iconify/react';
 
 import * as Fnc from 'src/hooks/functions'
-
-import { RawApplications } from 'src/hooks/raw/applications'
-import { RawRoles } from 'src/hooks/raw/roles'
-import { RawUsers } from 'src/hooks/raw/users'
-
-import {AlertSnack} from 'src/items/alert_snack'
-
-import { UpsertData, UpsertLink } from 'src/hooks/upsert/upsert-data'
+import * as Cs from 'src/hooks/classes'
 
 import OnMobileScreen from 'src/items/screen/resize';
 
-export function AddingItem({receivedData,submittedResult}) {
-  
-  const item        = receivedData
 
-  const rawApp      = RawApplications().data
-  const rawRoles    = RawRoles("LOWERMID").data
-  const rawUsers    = RawUsers().data
+export  function Upserting({receivedData, returnData}) {
 
-  const [dataList, setdataList] = useState(item);
-  const [open, setOpen] = useState(false);
-  const [expanded, setExpanded] = useState(false);
-  
-  const [onAlertShow, setonAlertShow] = useState(false);
-  const [onAlertType, setonAlertType] = useState("");
-  const [onAlertMessage, setonAlertMessage] = useState("");
-  const [onSubmitLoad, setonSubmitLoad] = useState(false);
-
-  const [onEdit, setonEdit] = useState(false);
-  const [onAdd, setonAdd] = useState(false);
+  const itemx                               = receivedData
+  const rates                               = itemx.length > 0 ? JSON.parse(itemx?.fxRates) : []
+  const [open, setOpen]                     = useState(false);
+  const [onData, setonData]                 = useState([]);
+  const [onDataRates, setonDataonDataRates] = useState([]);
+  const [searching, setSearching]           = useState("");
 
   const OnMobile= OnMobileScreen();
 
-  const dataUsers = rawUsers.map(i => {
-    return {
-              label:                        i.nickname,
-              value:                        i.nickname,
-            };
-            })
+  const filterSearch =(val)=>{
 
-
-  const ondialogClose = () => {
-    if(onAdd){
-      setOpen(false);
-      //window.location.reload();
-    } else {
-      setOpen(false);
-    }
-  };
-
-  const onLocalStorage = (i,ii) => {
-    if(i == "T"){
-      return JSON.parse(localStorage.getItem('slk-token'))[ii]
-    } else if(i == "U"){
-      return JSON.parse(localStorage.getItem('slk-user'))[ii]
-    }
-  };
-
-  const handleAccordionChange = (panel) => (event, isExpanded) => {
-    setExpanded(isExpanded ? panel : false);
-  };
-
-  const onchangeItem = (val, x) => {
-
-
-      const newArray = [item];
-
-      if(!newArray[0].status){
-        item["status"]       = 2
-        newArray["status"]   = 2
-        item["accountClubsCount"]       = 0
-        newArray["accountClubsCount"]   = 0
-        item["accountAsUpline"]       = 0
-        newArray["accountAsUpline"]   = 0
-        item["accountAsDownline"]       = 0
-        newArray["accountAsDownline"]   = 0
-        item["modal"]       = 'Open'
-        newArray["modal"]   = 'Open'
-        
-        if(item.AddType == "MINE"){
-          item["userID"]              = onLocalStorage('T','id')
-          newArray["userID"]          = onLocalStorage('T','id')
-          item["userNickname"]        = onLocalStorage('U','username')
-          newArray["userNickname"]    = onLocalStorage('U','username')
-          item["userRole"]            = onLocalStorage('U','roleID')
-          newArray["userRole"]        = onLocalStorage('U','roleID')
-          item["userAvatar"]          = onLocalStorage('U','avatar')
-          newArray["userAvatar"]      = onLocalStorage('U','avatar')
-        }
-
-      }
-
-      if(x == "statusLabel"){
-
-          if(val == "Active"){
-              item[x] = "Pending"
-              newArray[x] = "Pending";
-              item["status"]       = 1
-              newArray["status"]   = 1
-          } else if(val == "Pending"){
-              item[x] = "Disabled"
-              newArray[x] = "Disabled";
-              item["status"]       = 2
-              newArray["status"]   = 2
-          } else {
-              item[x] = "Active"
-              newArray[x] = "Active";
-              item["status"]       = 0
-              newArray["status"]   = 0
-          }
-
-      } else {
-        
-        item[x] = val
-        newArray[x] = val;
-
-      }
-
-      if(x == "appName"){
-        const x = rawApp.find((o) => o.name == val);
-        item["appID"]       = x.id
-        newArray["appID"]   = x.id
-        item["appImage"]       = x.imageFull
-        newArray["appImage"]   = x.imageFull
-      }
-
-      if(x == "accountRole"){
-        const x = rawRoles.find((o) => o.name == val);
-        item["accountRoleID"]       = x.id
-        newArray["accountRoleID"]   = x.id
-        item["accountRole"]       = x.name
-        newArray["accountRole"]   = x.name
-      }
-
-      if(x == "userNickname"){
-        const x = rawUsers.find((o) => o.nickname == val);
-        item["userID"]       = x.id
-        newArray["userID"]   = x.id
-        item["userNickname"]       = x.nickname
-        newArray["userNickname"]   = x.nickname
-        item["userAvatar"]       = x.avatarFull
-        newArray["userAvatar"]   = x.avatarFull
-        item["userRole"]          = x.roleID
-        newArray["userRole"]      = x.roleID
-      }
-
-      setonEdit(true)
-      setdataList(newArray);
-  };
-
-
-  const inputComplete = (i,ii) => {
-    if(i == "" || i == null || i == undefined){
-      return true
-    } else {
-      return false
-    }
-  };
-
-  const checkIfComplete = (i) => {
-    if(i.accountID == "" || i.accountID == undefined  || i.accountNickname == "" || i.accountNickname == undefined || i.accountRole == "" || i.accountRole == undefined || i.userNickname == "" || i.userNickname == undefined || i.appName == "" || i.appName == undefined || i.statusLabel == "" || i.statusLabel == undefined  || i.userID == "" || i.userID == undefined){
-      return true
-    } else {
-      return false
-    }
-  };
-
-  const onSubmitting =(i,ii)=>{
-    if( checkIfComplete(i) ){
-      showAlert('warning',2000,"Please complete all details")
-      setonAlertShow(true)
-    } else {
-        setonSubmitLoad(true)
-        proceedSubmit()
-    }
-
-    async function proceedSubmit() {
-
-      try {
-        const response = await axios.post(UpsertLink(ii),UpsertData(i));
-        const feed =  response.data;
-
-        if(feed == "Updated"){
-          showAlert('success',2500,'Account successfully updated!','update')
-        } else if(feed.includes("Added New")){
-          onchangeItem(feed.replace(/.*\(|\).*/g, ''),'id')
-          showAlert('success',2500,'Account successfully added! ','add')
-          setonAdd(true)
+        setSearching(val)
+        const z = onData.filter((o) => String(o.curr).toLowerCase().includes(val.toLowerCase()) || o.usd == val);
+        if(val == ""){
+          setonDataonDataRates(onData)
         } else {
-          showAlert('warning',3000,feed,'none')
-          setonEdit(true)
+          setonDataonDataRates(z)
         }
-        setonAlertShow(true)
-        setonSubmitLoad(false)
-
-      } catch (error) {
-        setonAlertShow(true)
-        setonSubmitLoad(false)
-        showAlert('error',3000,'Sorry! Something went wrong...','none')
-      }
-    }
 
   }
 
-  const showAlert = (i,ii,iii,iiii) => {
-    setonAlertType(i)
-    setonAlertMessage(iii)
-    setonEdit(false)
-    submittedResult({
-                    status: true,
-                    alert: i,
-                    duration: ii,
-                    message: iii,
-                    items: item,
-                    type: iiii,
-                  })
-    const T = setTimeout(() => {
-      setonAlertShow(false)
-    }, ii);
-    return () => clearTimeout(T);
-
-  };
-
-
   useEffect(() => {
+    setOpen(receivedData.modal ? true : false)
 
-    if(item.modal == "Open"){
-        item.modal = "Openned";
-        setExpanded(false)
-        setOpen(true);
-    } else {
-        setOpen(false);
+    if(receivedData.modal){
+
+      const arr = JSON.parse(itemx.fxRates)
+      const FXValues = Object.values(arr);
+      const FXKeys   = Object.keys(arr);
+  
+      const FXs = FXKeys.map((i,c) => ({curr:i, usd:FXValues[c]}));
+  
+      setonData(FXs)
+      setonDataonDataRates(FXs)
+
     }
-    setonAdd(false)
-    setonEdit(false)
-    setdataList(item);
 
-  }, [receivedData,item]);
+  }, [itemx]);
+
 
   return (
 
       <Dialog open={open} >
 
-        <DialogTitle>
-             {
-              /// JSON.stringify(item,null,2)
-             }
-        </DialogTitle>
 
         <DialogContent>
 
 
-      <Grid container spacing={OnMobile ? 1 : 2} sx={{ padding: OnMobile ? '0rem' : '2rem' }}>
+      <Grid container spacing={OnMobile ? 1 : 2} sx={{ padding: OnMobile ? '0rem' : '.5rem' }}>
+        
         <Grid item xs={12}>
           <Typography variant="h6" component="div">
-            UPLINES FORM
+            FX RATE     {itemx.length}
           </Typography>
         </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label="Account ID"
-            name="Account ID"
-            size="small"
-            error={inputComplete(item.accountID)}
-            //InputLabelProps={{ style: { color: '#BA55D3' }, }}
-            inputProps={{ maxLength: 22 }}
-            value={item.accountID ? item.accountID : ''}
-            onChange={(e) => onchangeItem(Fnc.numberWhole(e.currentTarget.value), "accountID")}
-            fullWidth
-            required
-          />
-        </Grid>
-        <Grid item xs={6}>
-          <TextField
-            label="Nickname"
-            name="Nickname"
-            size="small"
-            error={inputComplete(item.accountNickname)}
-            //nputLabelProps={{ style: { color: '#BA55D3' }, }}
-            inputProps={{ maxLength: 18 }}
-            value={item.accountNickname ? item.accountNickname : ''}
-            onChange={(e) => onchangeItem(Fnc.wordNoSpace(e.currentTarget.value), "accountNickname")}
-            fullWidth
-            required
-          />
-        </Grid>
-
-        <Grid item xs={6}>
-                <FormControl fullWidth size='small'>
-                    <InputLabel 
-                        id="filter-select-label" 
-                        //style={{color: '#BA55D3'}}
-                        >Role</InputLabel>
-                    <Select
-                      labelId="filter-select-label"
-                      id="filter-select"
-                      error={inputComplete(item.accountRole)}
-                      value={item.accountRole ? item.accountRole : ''}
-                      label="Role"
-                      required
-                      onChange={(e) => onchangeItem(e.target.value, "accountRole")}
-                    >
-                      {
-                          rawRoles.map((i, index) => (
-                            <MenuItem key={index} value={i.name} >{i.name}</MenuItem>
-                            ))
-                      }
-                    </Select>
-                </FormControl>
-        </Grid>
-
-        <Grid item xs={12}>
-                <FormControl fullWidth size='small'>
-                    <InputLabel 
-                        id="filter-select-label" 
-                        //style={{color: '#BA55D3'}}
-                        >Application</InputLabel>
-                    <Select
-                      labelId="filter-select-label"
-                      id="filter-select"
-                      error={inputComplete(item.appName)}
-                      value={item.appName ? item.appName : ''}
-                      label="Application"
-                      onChange={(e) => onchangeItem(e.target.value, "appName")}
-                    >
-                      {
-                          rawApp.map((i, index) => (
-                            <MenuItem key={index} value={i.name} >{i.name}</MenuItem>
-                            ))
-                      }
-                    </Select>
-                </FormControl>
-        </Grid>
-        {
-          item.AddType == "ALL" ? 
-        <Grid item xs={6}>
-                <FormControl fullWidth size='small'>
-                    <InputLabel 
-                        id="filter-select-label" 
-                        //style={{color: '#BA55D3'}}
-                        >
-                          User
-                    </InputLabel>
-                    <Select
-                      labelId="filter-select-label"
-                      id="filter-select"
-                      error={inputComplete(item.userNickname)}
-                      value={item.userNickname ? item.userNickname : ''}
-                      label="User"
-                      onChange={(e) => onchangeItem(e.target.value, "userNickname")}
-                    >
-                      {
-                          rawUsers.map((i, index) => (
-                            <MenuItem key={index} value={i.nickname} >{i.nickname}</MenuItem>
-                            ))
-                      }
-                    </Select>
-                </FormControl>
-        </Grid>
-        : null }
 
 
         <Grid item xs={12}>
-                {
-                  item.statusLabel == "Active" ? 
-                    <Button onClick={(e) => onchangeItem("Active","statusLabel")} size='large'>
-                        <Icon icon="mdi:check-circle" color='green' width={22} sx={{ mr: 0 }}  /> 
-                        <span style={{color: "green"}}> Active </span>
-                    </Button>
-                  : item.statusLabel == "Pending" ? 
-                    <Button onClick={(e) =>onchangeItem("Pending","statusLabel")} size='large'>
-                        <Icon icon="mdi:clock-outline" color='orange' width={22} sx={{ mr: 0 }}  />
-                        <span style={{color: "orange"}}> Pending </span>
-                    </Button>
-                  :
-                    <Button onClick={(e) =>onchangeItem("Disabled","statusLabel")} size='large'>
-                        <Icon icon="mdi:close-circle" color='red' width={22} sx={{ mr: 5 }}  />
-                        <span style={{color: "red"}}> Disabled </span>
-                    </Button>
-                }
-        </Grid>
-        <Grid item xs={12}>
-          <Accordion expanded={expanded === 'panel1'} onChange={handleAccordionChange('panel1')}>
-                <AccordionSummary expandIcon={<Icon icon="solar:double-alt-arrow-up-bold-duotone" color='violet' width={22} sx={{ mr: 5 }}  />} aria-controls="panel1-content">
-                  View uplines
-                </AccordionSummary>
-                <AccordionDetails id="panel1-content">
-                    <table>
-                      <tbody>
-                        <tr>
-                          <td>
-                            None
-                          </td>
-                          <td>
-                            Yet
-                          </td>
-                          <td>
-                            For now
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                </AccordionDetails>
-              </Accordion>
+          <p style={{fontSize:'13px',color:'lightgray'}}>Date: {itemx.fxDateFormat}</p>
+          <p style={{fontSize:'13px',color:'lightgray', marginTop:'-10px'}}>Provider: {itemx.fxProvider}</p>
         </Grid>
 
+        <Grid item xs={12}>
+        <TextField
+                label="Search"
+                name="Search"
+                size="small"
+                InputProps={{ maxLength: 6 }}
+                value={searching}
+                onChange={(e)=>filterSearch(e.target.value)}
+                fullWidth
+                required
+              />
+        </Grid>
+
+        <Grid item xs={12} sx={{maxHeight: '300px', overflow: 'auto',marginTop:'10px'}}>
+          {onDataRates.map((i, index) => (
+                <Chip key={index} size='small' label={i.curr+": "+i.usd}  sx={{ backgroundColor: 'transparent', border: '1px solid violet', color: 'violet', margin: '5px' }} variant="outlined" />
+               ))}
+        </Grid>
+
+
+        <Grid item xs={12}>
+          <Divider />
+        </Grid>
 
 
       </Grid>
-      { OnMobile ? <br/> : null}
-        <Grid container justifyContent="flex-end">
 
-              { 
-                onEdit ? 
-                <Grid item xs={OnMobile ? 4 : 2.7} >
-                {
-                  onSubmitLoad ?
-                  <Button  color="secondary" >SUBMITTING...</Button>
-                  :
-                  <Button onClick={()=>onSubmitting(item,'accounts')} color="secondary">SAVE</Button>
-                }
-                  
-                </Grid>
-                : 
-                null
-              }
-            
-            <Grid item xs={2} >
-              <Button onClick={ondialogClose} sx={{ color: 'gray'}} >{onEdit ? "CANCEL" : "CLOSE" }</Button>
-            </Grid>
-        </Grid>
-                
+        {
+          Fnc.JSONS(onData,false)
+        }
+   
         </DialogContent>
-
-        {onAlertShow ? AlertSnack(onAlertType,onAlertMessage) : null}
+      
+        <DialogActions style={{paddingBottom:'30px',paddingRight:'30px',display: 'flex', justifyContent: 'center'}}>
+          <Button onClick={()=>setOpen(false)} sx={{borderRadius:'0',width:'50%'}} variant='outlined' loading='true' >CANCEL</Button>
+        </DialogActions>
 
       </Dialog>
 

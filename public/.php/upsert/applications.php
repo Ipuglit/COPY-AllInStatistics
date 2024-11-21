@@ -4,12 +4,12 @@
 
  if($Verified == "FOUND"){
 
-    $id =               $Got['id'];
-    $name =             $Got['name'];
-    $company =          $Got['companyID'];
-    $details =          $Got['details'];
-    $image =            $Got['imageID'];
-    $status =           $Got['status'];
+    $id =               $Got['appID'];
+    $name =             $Got['appName'];
+    $company =          $Got['appCompany'];
+    $details =          $Got['appDetails'];
+    $image =            $Got['appImage'];
+    $status =           $Got['appStatus'];
 
     $insert = "INSERT INTO applications (name, company, details, image, status ) VALUES ('$name','$company','$details','$image',0) ";
     $check_insert = "SELECT * FROM applications WHERE name='$name' ";
@@ -24,27 +24,25 @@
 
             if ($duplicate_insert->num_rows > 0) {
                     while ($i = $duplicate_insert->fetch_assoc()) {
-                            $gotID      = $i["id"];
-                            $gotName    = $i["name"];
+                            $gotID = $i["id"];
                     }
-                    $feedback = "Already taken! ID: ".$gotID." (".$gotName.")";
+                $feedback = "Duplicate: ".$gotID;
             } else {
 
                 if ($conx->query($insert) === TRUE) {
-                        $last_id            = mysqli_insert_id($conx);
-                        $feedback           = "Added New (".$last_id.")";
+                        $feedback = "Added";
                         $historyAction      = "ADDED";
                         $historyFor         = "APPLICATION";
                         $historyDetails     = "Name: ".$name.", Company: ".$company.", Status: ".$status;
                         include './history.php';
                 } else {
-                    $feedback = "Err Add";
+                    $feedback = "Err";
                 }
 
             }
 
         } catch (Exception $e) {
-            $feedback = "Err Catch: Add ".$e;
+            $feedback = "Err";
         }
     } else {
         //IF WITH ID THEN UPDATE
@@ -52,31 +50,30 @@
             $duplicate_update = $conx->query($check_update);
 
             if ($duplicate_update->num_rows > 0) {
-                    while ($i = $duplicate_insert->fetch_assoc()) {
-                            $gotID      = $i["id"];
-                            $gotName    = $i["name"];
+                    while ($i = $duplicate_update->fetch_assoc()) {
+                            $gotID = $i["id"];
                     }
-                    $feedback = "Already taken! ID: ".$gotID." (".$gotName.")";
+                $feedback = "Duplicate: ".$gotID;
             } else {
 
                 if ($conx->query($update) === TRUE) {
-                        $feedback           = "Updated";
+                        $feedback = "Updated";
                         $historyAction      = "UPDATED";
                         $historyFor         = "APPLICATION";
                         $historyDetails     = "ID: ".$id.", Name: ".$name.", Company: ".$company.", Status: ".$status;
                         include './history.php';
                 } else {
-                    $feedback = "Err Update";
+                    $feedback = "Err";
                 }
 
             }
 
         } catch (Exception $e) {
-            $feedback = "Err Catch: Duplicate ".$e;
+            $feedback = "Err";
         }
     }
 } else {
-    $feedback = "NOTFOUND";
+    $feedback = "Err";
 }
 
 echo json_encode($feedback);

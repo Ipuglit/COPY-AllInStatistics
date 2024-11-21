@@ -1,0 +1,42 @@
+
+.hellodiv {
+    display:inline-block;
+    overflow:hidden;
+    white-space:nowrap;
+  }
+  
+  .hellodiv:first-of-type {  animation: showup 14s infinite; }
+  
+  .hellodiv:last-of-type {
+
+    animation: reveal 7s infinite;
+  }
+  
+  .hellodiv:last-of-type .hellospan {
+    text-align: center;
+    animation: slidein 7s infinite;
+    
+  }
+  
+  @keyframes showup {
+      0% {opacity:0;}
+      20% {opacity:1;}
+      80% {opacity:1;}
+      100% {opacity:0;}
+  }
+  
+  @keyframes slidein {
+      0% { margin-left:-185px; }
+      20% { margin-left:-185px; }
+      35% { margin-left:0px; }
+      100% { margin-left:0px; }
+  }
+  
+  @keyframes reveal {
+      0% {opacity:0;width:0px;}
+      20% {opacity:1;width:0px;}
+      30% {width:100%;}
+      80% {opacity:1;}
+      100% {opacity:0;width:100%;}
+  }
+  

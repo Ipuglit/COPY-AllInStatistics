@@ -10,6 +10,12 @@ if($Verified == "FOUND"){
             $Extend_For = " WHERE a.id IS NOT NULL ";
         }
 
+        if( !empty($Got['LIMIT']) ){
+            $Extend_Limit = " LIMIT ".$Got['LIMIT']." ";
+        } else {
+            $Extend_Limit = " LIMIT 350 ";
+        }
+
         if ( $Got['STATUS'] == "ALL" && $Got['ROLE'] == "EVERYONE" && $Got['APP'] == "ALL" ){
 
             if ( $Got['SORTBY'] != "NONE" ){
@@ -24,7 +30,7 @@ if($Verified == "FOUND"){
                 $Extend_Search = " ";
             }
 
-            $Extend = " ".$Extend_For." ".$Extend_Search." ".$Extend_Sort;
+            $Extend = " ".$Extend_For." ".$Extend_Search." ".$Extend_Sort." ".$Extend_Limit;
 
         } else {
 
@@ -66,7 +72,7 @@ if($Verified == "FOUND"){
                 $Extend_Sort = " ORDER BY id ".$Got['SORT'];
             }
 
-            $Extend = " ".$Extend_For." AND ".$Extend_Status. " ".$Extend_Role." ".$Extend_App." ".$Extend_Search." ".$Extend_Sort;
+            $Extend = " ".$Extend_For." AND ".$Extend_Status. " ".$Extend_Role." ".$Extend_App." ".$Extend_Search." ".$Extend_Sort." ".$Extend_Limit;
         }
 
     $sql = "SELECT DISTINCT
@@ -121,7 +127,7 @@ if($Verified == "FOUND"){
                     'userAvatar' =>         $i['avatar'],
                     'appID' =>              $i['appID'],
                     'appName' =>            $i['appName'],
-                    'appImage' =>            $i['appImage'],
+                    'appImage' =>           $i['appImage'],
                     'statusLabel' =>        $i['statusLabel'],
                     'status' =>             $i['status'],
                 );

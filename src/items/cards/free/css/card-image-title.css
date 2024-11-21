@@ -1,0 +1,53 @@
+
+figure {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 10px;
+	box-shadow: 
+		0 1px 3px rgba(0,0,0,0.12), 
+		0 1px 2px rgba(0,0,0,0.24);
+	transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+	overflow: hidden;
+	&:hover {
+		box-shadow: 
+			0 14px 28px rgba(0,0,0,0.25), 
+			0 10px 10px rgba(0,0,0,0.22);
+		h1 {
+			opacity: 0;
+			transform: scale(0.7);
+		}
+		img {
+			transform: scale(1.25);
+		}
+		figcaption {
+			bottom: 0;
+		}
+	}
+	h1 {
+		position: absolute;
+		margin: 0;
+		padding: 0;
+		font-weight: 300;
+		line-height: 1;
+		opacity: 1;
+		transform: scale(1);
+		transition: 0.25s ease;
+		z-index: 999;
+	}
+	img {
+		height: 100%;
+		transition: 0.4s;
+	}
+	figcaption {
+		position: absolute;
+		bottom: -210%;
+		width: 100%;
+		margin: 0;
+		padding: 10px;
+		background-color: rgba(black,0.85);
+		box-shadow: 0 0 20px rgba(black,0.4);
+		transition: 0.25s;
+	}
+}

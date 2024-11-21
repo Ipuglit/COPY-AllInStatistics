@@ -38,35 +38,16 @@ export default function LoginView() {
   useEffect(() => {
 
     localStorage.removeItem('slk-token');
-    localStorage.removeItem('slk-user');
 
     const T = setTimeout(() => {
       localStorage.removeItem('slk-user');
       localStorage.removeItem('slk-token');
+      localStorage.removeItem('slk-route');
+      sessionStorage.setItem('slk-announce', 'false');
     }, 200);
     return () => clearTimeout(T);
 
   },[]);
-
-
-  const [isWorking, setIsWorking] = useState(true);
-
-  const checkUrl = async () => {
-  
-    try {
-      const response = await axios.get("https://13.211.65.106/pokerapp/relocate.php");
-      if(response.data == "Yes"){
-        setIsWorking(true);
-      } else {
-        setIsWorking(false);
-      }
-      
-    } catch (error) {
-      setIsWorking(false);
-
-    }
-
-  };
 
 
   async function logging() {
@@ -102,20 +83,43 @@ export default function LoginView() {
                                                           roleID:     feed.roleID,
                                                           nickname:   feed.nickname,
                                                           username:   feed.username,
+                                                          firstname:  feed.firstname,
+                                                          lastname:   feed.lastname,
                                                           avatar:     feed.avatar,
                                                           email:      feed.email,
                                                           telegram:   feed.telegram,
                                                           status:     feed.status,
                                                       }));
-                                                      
+
+        localStorage.setItem('slk-route', JSON.stringify({
+                                                          apps:         feed.forApp,
+                                                          clubs:        feed.forClubs,
+                                                          clubpercent:  feed.forClubPercent,
+                                                          unions:       feed.forUnions,
+                                                          users:        feed.forUsers,
+                                                          deals:        feed.forDeals,
+                                                          accounts:     feed.forAccounts,
+                                                          uplines:      feed.forUplines,
+                                                          uppercent:    feed.forUpPercent,
+                                                          notification: feed.forNotification,
+                                                          records:      feed.forRecords,
+                                                          formula:      feed.forFormula,
+                                                          history:      feed.forHistory,
+                                                          fxrates:      feed.forFXRates,
+                                                          csvup:        feed.forCSVUp,
+                                                          announce:     feed.forAnnounce,
+                                                      }));    
+
         localStorage.setItem('slk-dataview', 'card');    
 
         localStorage.setItem("slk-theme",JSON.stringify({
-                                                          id: 0,
-                                                          theme: 'light',
+                                                          id: 1,
+                                                          theme: 'dark',
                                                         }))
         
-        console.log("Success! Logging in... "+JSON.stringify(response.data,null,2))
+        sessionStorage.setItem('slk-announce', 'false');              
+
+       console.log("Success! Logging in...")
 
         const Timed = setTimeout(() => {
             router.push('/');
@@ -127,7 +131,7 @@ export default function LoginView() {
 
 
     } catch (error) {
-      console.error("Error fetching data: ", error);
+      console.error("Cannot login!");
     }
   }
 
@@ -139,7 +143,7 @@ export default function LoginView() {
 
   const handleClick = () => {
     if(username && password){
-      setshowRed(false)
+      setshowRed(false) 
       setShowAlert(false)
       logging()
     } else {
@@ -148,17 +152,7 @@ export default function LoginView() {
     }
   };
 
-  const checkSite = () => {
-    window.location.href = "https://13.211.65.106/pokerapp/reload.php";
-    window.open(url, "https://13.211.65.106/pokerapp/reload.php")
-  };
-  
-
   const thatClick = () => {
-    setshowRed(false)
-  };
-
-  const thatLogin = () => {
     setshowRed(false)
   };
 
@@ -173,10 +167,6 @@ export default function LoginView() {
     return () => clearTimeout(T);
   };
 
-  useEffect(() => {
-    checkUrl()
-
-  }, []);
 
   const renderForm = (
     <>
@@ -218,9 +208,7 @@ export default function LoginView() {
       </Stack>
 
 
-    {
-      isWorking ?
-        <LoadingButton
+      <LoadingButton
           fullWidth
           size="large"
           type="submit"
@@ -230,20 +218,6 @@ export default function LoginView() {
         >
           Login
         </LoadingButton>
-    :
-        <LoadingButton
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        color="inherit"
-        onClick={checkSite}
-      >
-          Verify your device
-        </LoadingButton>
-
-    }
-
 
       {
         showAlert ?
@@ -288,15 +262,14 @@ export default function LoginView() {
 
           <Typography variant="body2" sx={{ mt: 2, mb: 5 }}>
             Don’t have an account?
-            <Link variant="subtitle2" sx={{ ml: 0.5 }} style={{cursor:"pointer"}}>
-              Request it!
+            <Link variant="subtitle2" sx={{ ml: 0.5 }} href='./register' style={{cursor:"pointer"}}>
+              Register!
             </Link>
           </Typography>
 
           {renderForm}
         </Card>
       </Stack>
-          <a href="https://13.211.65.106/pokerapp/reload.php">{String(isWorking)}</a>
     </Box>
   );
 }

@@ -36,7 +36,7 @@ export const RawClubs = (i,ii,iii,iiii,iiiii,iiiiii) => {
       }
       //console.log("Clubs items fetched..."+JSON.stringify(response.data,null,2))
     } catch (error) {
-      console.error("Error fetching data: ", error);
+      console.error("Error fetching data");
     }
   }
 

@@ -35,7 +35,7 @@ export const RawUnions = (i,ii,iii,iiii,iiiii) => {
       }
       //console.log("Unions items fetched..."+JSON.stringify(response.data,null,2))
     } catch (error) {
-      console.error("Error fetching data: ", error);
+      console.error("Error fetching data");
     }
   }
 

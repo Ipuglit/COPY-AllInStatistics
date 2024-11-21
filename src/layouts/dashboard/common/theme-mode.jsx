@@ -29,13 +29,13 @@ const MODE = [
 
 export default function ThemeMode() {
 
-  const themeModed    = JSON.parse(localStorage.getItem("theme-mode"))
+  const themeModed    = JSON.parse(localStorage.getItem("slk-theme"))
   
   if(!themeModed || !themeModed.theme){
 
-    localStorage.setItem("theme-mode",JSON.stringify({
-                                                      id: MODE[0].id,
-                                                      theme: Fnc.wordLowerCase(MODE[0].value),
+    localStorage.setItem("slk-theme",JSON.stringify({
+                                                      id: MODE[1].id,
+                                                      theme: Fnc.wordLowerCase(MODE[1].value),
                                                     }))
 
   }
@@ -53,7 +53,7 @@ export default function ThemeMode() {
 
   const itemSelected = (event) => {
     setSelected(event.target.value)
-    localStorage.setItem("theme-mode",JSON.stringify({
+    localStorage.setItem("slk-theme",JSON.stringify({
                                                       id: MODE[event.target.value].id,
                                                       theme: Fnc.wordLowerCase(MODE[event.target.value].value),
                                                     }))

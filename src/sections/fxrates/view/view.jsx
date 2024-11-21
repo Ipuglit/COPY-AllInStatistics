@@ -1,241 +1,187 @@
 import { useState, useEffect } from 'react';
+import {
+          Stack,
+          Button,
+          Container,
+          Grid,
+          Skeleton,
+          Alert,
+          Typography,
+          Divider,
+          Box,
+          ToggleButton,
+          ToggleButtonGroup
+        } from '@mui/material/';
 
-import {Stack,Button,Container,Alert,Typography} from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
 
-import { RawApplications } from 'src/hooks/raw/applications';
-import { RawClubs } from 'src/hooks/raw/clubs';
-import { RawUplines } from 'src/hooks/raw/uplines';
-
+import { RawFetch } from 'src/hooks/raw/';
+import Iconify from 'src/components/iconify';
 import { Icon } from '@iconify/react';
 
 import Loading_Skeletons from 'src/items/loaders/loadings'
 
-import * as Data from 'src/hooks/data';
+import { OnSearching, OnLoading, OnSorting } from 'src/items/menu'
 
-import { ViaCardUser, ViaTable, ViaList } from 'src/items/records';
-import { OnSortings, FormattingSorting } from 'src/items/sorting';
+import {Upserting} from '../upsert/form';
 
-import {AddingItem} from '../upsert/form';
+import {Alerting} from 'src/items/alert_snack/'
+
+import { ViaTable,ViaList,ViaCards,ViaItems } from './'
+
+import * as Fnc from 'src/hooks/functions'
+import * as Cls from 'src/hooks/classes'
 
 // ----------------------------------------------------------------------
 
-export default function Viewing({TheFor,TheTitle}) {
+export default function Viewing({TheTitle}) {
 
     const dataView  = localStorage.getItem('slk-dataview')
 
-    var [onToggle, setonToggle]           = useState(dataView);
+    const [onview, setonView]               = useState(dataView);
+    const [onSwitch, setonSwitch]           = useState('lists');
+    const [onUpserting, setonUpserting]     = useState([])
+    const [onSearching, setonSearching]     = useState('')
+    const [onSorts, setonSorts]             = useState('desc')
+    const [onAlert, setonAlert]             = useState({onOpen: 0, severity: '', title:'', message: ''});
 
-    const [filterStatus,setfilterStatus]    = useState('ALL')
-    const [filterClub,setfilterClub]        = useState('ALL')
-    const [filterApp,setfilterApp]          = useState('ALL')
-    const [filterSort,setfilterSort]        = useState('ASC')
-    const [filterSortBy,setfilterSortBy]    = useState('NONE')
-    const [filterSearch,setfilterSearch]    = useState('')
+    const [rawREFRESH,  setrawREFRESH]      = useState(0)
+    const [rawFETCH_ALL,  setrawFETCH_ALL]  = useState({
+                                                            FOR:            'ALL',
+                                                            STATUS:         'ALL',
+                                                            SEARCH:         'ALL',
+                                                            APP:            'ALL',
+                                                            CLUB:           'ALL',
+                                                            USER:           'ALL',
+                                                            ROLE:           'ALL',
+                                                            IFZERO:         'ALL',
+                                                            DATEFROM:       'ALL',
+                                                            DATEUNTIL:      'ALL',
+                                                            LIMIT:          'ALL',
+                                                          });
 
-    const rawApps                           = RawApplications("ALL").data
-    const rawClubs                          = RawClubs("ALL").data
+    const fetchFXUSD = RawFetch(rawFETCH_ALL,rawREFRESH,'fxUSDlist')
 
-    const rawItems                          = RawUplines(  TheFor,
-                                                            filterStatus ? filterStatus : "ALL",
-                                                            filterClub ? filterClub : "ALL",
-                                                            filterApp ? filterApp : "ALL",
-                                                            filterSort ? filterSort : "DESC",
-                                                            filterSortBy ? filterSortBy : "NONE",
-                                                            filterSearch ? filterSearch : "",)
-    
-
-
-    const [listofDATA,setlistofDATA]        = useState([])
-    const [listLoading,setlistLoading]      = useState(false)
-    const [listFound,setlistFound]          = useState(true)
-
-    const [upsertofData,setupsertofData]    = useState([])
-
-    useEffect(() => {
-        setlistofDATA(rawItems.data)
-        setlistLoading(rawItems.load)
-    }, [rawItems.load == true]);
-
-    // ==================================================
-    // =================== ++ FILTER ++ ===============================
-
-    const onFilter_to =  [ 
-                            //ITEMS,VALUE,IDD,OTHERS
-                            [ FormattingSorting(Data.BY_STATUS,"STATUS",'value','label',"",true) ],
-                            [ FormattingSorting(rawClubs,"CLUBS",'id','name',"",true) ],
-                            [ FormattingSorting(rawApps,"APPS",'id','name',"",true) ],
-                          ];
-
-    const onSort_to =  [ 
-                            //ITEMS,VALUE,IDD,OTHERS
-                            [ FormattingSorting(Data.BY_ACCOUNTS,"STATUS",'value','label',"",false) ],
-                          ];
-
-    const onFilter_re =(i)=>{
-
-        if(i.what == "STATUS"){
-          setfilterStatus(i.idd)
-        } else if(i.what == "CLUBS"){
-          setfilterClub(i.idd)
-        } else if(i.what == "APPS"){
-          setfilterApp(i.idd)
-        }
-
+    const onReturned =(i)=>{
+      setonUpserting(i)
     }
+    
+    const onUpserted =(severe,msg)=>{
 
-    const onSort_re =(i)=>{
+      setonAlert({onOpen: Fnc.numRandom(), severity:severe, message:msg})
 
-      if(i.arrange == 'ASC'){
-        setfilterSort('ASC')
-      } else {
-        setfilterSort('DESC')
+      if(severe == 'success'){
+        setrawREFRESH( Fnc.numRandom() )
       }
-      //console.log(JSON.stringify(i))
-      setfilterSortBy(i.by.x.idd ? i.by.x.idd : "NONE")
-
-  }
-
-  const onSearch_re =(i)=>{
-    setfilterSearch(i)
-  }
-
-  const onToggle_re =(i)=>{
-    localStorage.setItem('slk-dataview',i ? i : 'card')
-    setonToggle(i)
-  }
-
-    // =================== ++ FILTER ++ ===============================
-    // ==================================================
-    // =================== ++ UPSERT ++ ===============================
-
-    const ENLISTED_CARDS = [{ 
-                      id:       'increment',
-                      idd:      'id',
-                      status:   'statusLabel',
-                      header:   'appName',
-                      title:    'playerNickname',
-                      image:    'appImage',
-                      avatar:   'playerAvatar',
-                      description:  [
-                                    { id: 1, label:  '', value: 'playerRole', count: ''},
-                                    { id: 2, label:  'ID: ', value: 'playerID', count: ''},
-                                    { id: 2, label:  'Upline: ', value: 'uplineID', count: ''},
-                                    { id: 2, label:  '', value: 'uplineNickname', count: ''},
-                                    ],
-                    }]
-
-    const ENLISTED_TABLE = [ 
-                            { type:  'TEXT',    value: 'appName', header: 'Application', altimage:''},
-                            { type:  'TEXT',    value: 'clubName', header: 'Club', altimage:''},
-                            { type:  'AVATAR',  value: 'playerAvatar', header: 'Avatar', altimage:'playerID'},
-                            { type:  'TEXT',    value: 'playerID', header: 'ID', altimage:''},
-                            { type:  'TEXT',    value: 'playerNickname', header: 'Nickname', altimage:''},
-                            { type:  'TEXT',    value: 'playerRole', header: 'Role', altimage:''},
-                            { type:  'STATUS',  value: 'statusLabel', header: 'Status', altimage:''},
-                            { type:  'TEXT',    value: 'uplineID', header: 'Upline ID', altimage:''},
-                            { type:  'TEXT',    value: 'uplineNickname', header: 'Upline Nickname', altimage:''},
-                            { type:  'TEXT',    value: 'uplineRole', header: 'Upline Role', altimage:''},
-                            { type:  'ACTION',  value: '', header: 'Action', altimage:''},
-                          ]
-
-
-
-    const listofUPSERT=(i)=>{
-      setupsertofData({...i,AddType:TheFor})
-    }
-    
-    // =================== ++ UPSERT ++ ===============================
-    // ==================================================
-
-    const submittedResult=(i)=>{
-
-      const items = i.items
-
-        if(i.type == "add"){
-          const newArray = [...listofDATA,items];
-          setlistofDATA(newArray)
-        } else if(i.type == "update"){
-          const x = listofDATA.findIndex((o) => o.id == items.id);
-          const newArray = [...listofDATA];
-          newArray[x] = items;
-          setlistofDATA(newArray)
-        }
 
     }
-    
 
-    const addingNew=()=>{
-      setupsertofData({modal:"Open",AddType:TheFor})
+    const onChangeView = (event, i) => {
+      setonView(i);
+      localStorage.setItem('slk-dataview',i)
+    };
+
+    const onAddNew=()=>{
+      setonUpserting({modal:true})
     }
-
-    useEffect(() => {
-      if(listLoading == true){
-        if (!listofDATA.length) {
-          setlistFound(false)
-        } else {
-          setlistFound(true)
-        }                
-      }
-     /// console.log(JSON.stringify(onFilter_to))
-    }, [listLoading]); 
-
-
+ 
   return (
     <Container>
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-
-        <Typography variant="h3">{TheTitle}</Typography>
-
-        <Button variant="contained" color="inherit" startIcon={<Icon icon="line-md:plus" />} onClick={addingNew}>
-          NEW 
-        </Button>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5} style={{marginTop:'20px'}}>
+ 
+        <Typography variant="h4">
+          {TheTitle}
+        </Typography>
 
       </Stack>
 
-       <OnSortings  FILTER_TO={onFilter_to} 
-                    FILTER_RE={onFilter_re} 
-                    SORT_TO={onSort_to} 
-                    SORT_RE={onSort_re}
-                    SEARCH_RE={onSearch_re}
-                    TOGGLE_RE={onToggle_re} />
+      <Grid container columns={{ xs: 12, sm: 12, md: 12 }}>
+
+      <Grid item xs={6} sm={6} md={6}>
+          <Button variant={onSwitch == 'lists' ?  "contained" : 'text'} 
+                  sx={{...Cls.buttonClass(onSwitch == 'lists' ?  "contained" : 'outlined','violet'), fontSize:'14px',borderRadius:'0', marginTop:'-12px'}} 
+                  onClick={()=>{setonSwitch('lists'),setrawREFRESH(Fnc.numRandom())}}
+                  size='small' >
+              LIST OF ITEMS 
+          </Button>
+      </Grid>
+      
+      <Grid item xs={6} sm={6} md={6} sx={{ display: 'flex', justifyContent: 'flex-end', }}>
+
+      </Grid>
+
+      <Grid item xs={12} sm={12} md={12}>
 
 
+            <Box component="section" sx={{ p: 2, border: '1px dashed grey', marginTop:'15px' }}>
 
-    { listLoading == false ? 
-        <Loading_Skeletons type={dataView} />
-      :
-      <>
+                <Stack >
+                  <Grid container spacing={{ sm: 2, md:2 }} columns={{ xs: 12, sm: 12, md: 12 }} style={{padding:'7px'}}>
 
-        {listFound == true ?
-          <>
+                    <Grid item xs={6} sm={6} md={6}>
+                      <OnSearching byLabel={'Search...'} bySearching={setonSearching} />
+                      {dataView == 'card' &&
+                      <OnSorting RETURN={(e)=>setonSorts(e)} /> }
+                    </Grid>
 
-            {dataView == 'card' ? 
-                <ViaCardUser DATA_TO={listofDATA} DATA_EN={ENLISTED_CARDS} DATA_RE={listofUPSERT} />
-            :dataView == 'table' ? 
-                <ViaTable DATA_TO={listofDATA} DATA_EN={ENLISTED_TABLE} DATA_RE={listofUPSERT} />
-            :dataView == 'list' ? 
-                <ViaList DATA_TO={listofDATA} DATA_EN={ENLISTED_CARDS} DATA_RE={listofUPSERT} />
-            : 
-                null
-            }
-            
-          </>
-        :
-            <Grid xs={22} sm={22} md={22}>
-              <Alert variant="outlined" severity="info" width="100%">
-                  Nothing found..
-              </Alert>
-            </Grid>
-        }
+                    <Grid item xs={6} sm={6} md={6}>
+                      <Stack mb={1} direction="row" alignItems="right" justifyContent="flex-end">
 
-      </>
+                          <ToggleButtonGroup value={onview} onChange={onChangeView} exclusive size="small"  >
+
+                                <ToggleButton value="table">
+                                      <Icon icon="fluent-mdl2:table" color='gray' width={22} sx={{ mr: 5 }}  />
+                                </ToggleButton>
+
+                                <ToggleButton value="card">
+                                      <Icon icon="clarity:view-cards-line" color='gray' width={22} sx={{ mr: 5 }}  />
+                                </ToggleButton>
+
+                          </ToggleButtonGroup>
+
+                      </Stack>
+                    </Grid>
+                    
+                    <Grid item xs={12} sm={12} md={12} >
+                      { fetchFXUSD.load == false ? 
+                          <OnLoading type={'table'}  />
+                        :
+                        fetchFXUSD?.tally == 0 ?
+                            <Alert variant="outlined" severity="info" width="100%">
+                                  Nothing found..
+                            </Alert>
+                        :
+                        <>
+
+                        {
+                          dataView == 'card' ? 
+                          <ViaList DATA={fetchFXUSD} RETURN={onReturned} SEARCH={onSearching} SORT={onSorts}/>
+                        : 
+                          <ViaTable DATA={fetchFXUSD} RETURN={onReturned} SEARCH={onSearching} />
+                        }
+
+                      </>
+                      }
+                    </Grid>
+                  </Grid>
+
+                </Stack>
+
+            </Box>
+
+        </Grid>
+
+      </Grid>
+
+      <Alerting onOpen={onAlert.onOpen} severity={onAlert.severity} title={onAlert.title} message={onAlert.message} />
+
+      <Upserting receivedData={onUpserting} returnData={onUpserted}/>
+    {
+      Fnc.JSONS(fetchFXUSD,false)
     }
-
-    <AddingItem receivedData={upsertofData} submittedResult={submittedResult}/>
-
     </Container>
   );
 }
 
+
+//cover, title, view, comment, share, author, createdAt, index

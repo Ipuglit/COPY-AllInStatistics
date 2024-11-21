@@ -1,1 +1,3 @@
-export { default as HistoryView } from './history-view';
+export { default as Viewing } from './view';
+export { default as ViaTable } from '../data/table';
+

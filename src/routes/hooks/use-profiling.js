@@ -22,8 +22,8 @@ export function useProfiling() {
 
       setProfile(rawprofile.data)
 
-      if(rawprofile.load == true){
-        if (token !== null && user !== null) {
+      if(rawprofile?.load == true){
+        if (token?.length > 0 && user?.length > 0) {
 
             const stored = JSON.parse(token);
             const raw = rawprofile.data

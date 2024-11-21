@@ -8,7 +8,7 @@ export default function MyUplinesPage() {
   return (
     <>
       <Helmet>
-        <title> My Uplines | Poker Analytics </title>
+        <title> My Uplines | All In Statistics </title>
       </Helmet>
 
       <Viewing TheFor="ALL" TheTitle="MY UPLINES" />

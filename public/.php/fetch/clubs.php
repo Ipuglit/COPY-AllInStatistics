@@ -4,30 +4,23 @@
 
     if($Verified == "FOUND"){
 
-        if( $Got['FOR'] == "MINE"){
-            $Extend_For = " WHERE ";
-        } else {
-            $Extend_For = " WHERE ";
-        }
-
         if ( $Got['STATUS'] == "ALL" && $Got['APP'] == "ALL" && $Got['UNION'] == "ALL"  ){
-            
+
             if ( $Got['SORTBY'] != "NONE" ){
                 $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
             } else {
-                $Extend_Sort = " ORDER BY c.id ".$Got['SORT'];
-            }
-    
+                $Extend_Sort = " ORDER BY c.id ".$Got['SORT'];            }
+
             if ( !empty($Got['SEARCH']) ){
                 $Extend_Search = " WHERE CONCAT(c.idd,' ',c.name,' ',c.details,' ',c.type,' ',uni.name,' ',app.name,' ', IF(c.status = 0, 'Active', IF(c.status=1, 'Pending', 'Disabled')),' ',(SELECT COUNT(id) FROM applications WHERE company = c.id)) LIKE '%".$Got['SEARCH']."%' ";
             } else {
                 $Extend_Search = " ";
             }
-    
+
             $Extend = " ".$Extend_Search." ".$Extend_Sort;
-    
+
         } else {
-    
+
             if ( $Got['STATUS'] == "ACTIVE"){
                 $Extend_Status = " c.status=0 ";
             } else if ( $Got['STATUS'] == "ACTIVEPENDING"){
@@ -41,7 +34,7 @@
             } else {
                 $Extend_Status = " c.status IN (0, 1, 2) ";
             }
-    
+
             if ( $Got['APP'] != "ALL"){
                 $Extend_App = " AND c.appID = ".$Got['APP']." ";
             } else {
@@ -55,22 +48,21 @@
             } else {
                 $Extend_Union = " ";
             }
-
             if ( !empty($Got['SEARCH']) ){
-                $Extend_Search = " AND CONCAT(c.idd,' ',c.name,' ',c.details,' ',c.type,' ',uni.name,' ',app.name,' ', IF(c.status = 0, 'Active', IF(c.status=1, 'Pending', 'Disabled')),' ',(SELECT COUNT(id) FROM applications WHERE company = c.id)) LIKE '%".$Got['SEARCH']."%' ";
+                $Extend_Search = " AND CONCAT(c.idd,' ',c.name,' ',c.details,' ',c.type,' ',app.name,' ', IF(c.status = 0, 'Active', IF(c.status=1, 'Pending', 'Disabled')),' ',(SELECT COUNT(id) FROM applications WHERE company = c.id)) LIKE '%".$Got['SEARCH']."%' ";
             } else {
                 $Extend_Search = " ";
             }
-    
+
             if ( $Got['SORTBY'] != "NONE" ){
                 $Extend_Sort = " ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
             } else {
                 $Extend_Sort = " ORDER BY c.id ".$Got['SORT'];
             }
-    
+
             $Extend = " WHERE ".$Extend_Status. " ".$Extend_App. " ".$Extend_Union." ".$Extend_Search." ".$Extend_Sort;
         }
-    
+
             $sql = "SELECT DISTINCT (SELECT COUNT(id) FROM uplines WHERE clubID = c.idd AND status=0) AS upcountActive,
                             (SELECT COUNT(id) FROM uplines WHERE clubID = c.idd AND status=1) AS upcountPending,
                             (SELECT COUNT(id) FROM uplines WHERE clubID = c.idd AND status=2) AS upcountInactive,
@@ -79,7 +71,7 @@
                             CONCAT(pa.path,img.file) AS imageFull,
                             c.id AS clubID,
                             c.idd AS clubIDD,
-                            COALESCE(pe.percent,0) AS clubPercent,
+                            COALESCE(pe.percent,0) AS uplineRake,
                             c.name AS clubName,
                             c.details AS clubDetails,
                             c.type AS clubType,
@@ -113,9 +105,9 @@
                     'increment'         =>  $counted,
                     'idd'               => $i['clubIDD'],
                     'name'              => $i['clubName'],
-                    'image'             => $i['clubImage'],
+                    'image'             => $i['image'],
                     'details'           => $i['clubDetails'],
-                    'percent'           => $i['clubPercent'],
+                    'percent'           => $i['uplineRake'],
                     'type'              => $i['clubType'],
                     'unionID'           => $i['clubUnion'],
                     'unionName'         => $i['unionName'],
@@ -123,8 +115,8 @@
                     'usersActive'       => $i['upcountActive'],
                     'usersPending'      => $i['upcountPending'],
                     'usersInactive'     => $i['upcountInactive'],
-                    'imageID'           => $i['imageID'], 
-                    'imageFull'         => $i['imageFull'], 
+                    'imageID'           => $i['imageID'],
+                    'imageFull'         => $i['imageFull'],
                     'appID'             => $i['appID'],
                     'appName'           => $i['appName'],
                     'appImage'          => $i['appImage'],

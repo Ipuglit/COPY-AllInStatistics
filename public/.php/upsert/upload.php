@@ -7,7 +7,7 @@ header("Access-Control-Allow-Methods: PUT, GET, POST");
 
 $response = array();
 $upload_dir = '/';
-$server_url = 'https://13.211.65.106/pokerapp/upserting/';
+$server_url = 'https://54.252.185.246/poker/upserting/';
 
 if($_FILES['avatar'])
 {

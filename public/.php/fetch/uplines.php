@@ -22,10 +22,10 @@ if($Verified == "FOUND"){
             if ( !empty($Got['SEARCH']) ){
                 $Extend_Search = " AND CONCAT(c.name,' ',c.id,' ',app.name, ' ',up.downlineID,' ',up.uplineID,' ',up.percentage,
                                                 ' ',IF(up.status = 0, 'Active', IF(up.status=1, 'Pending', 'Disabled')),
-                                                ' ',(SELECT rr.name FROM accounts AS aa 
+                                                ' ',(SELECT rr.name FROM accounts AS aa
                                                                 LEFT JOIN default_roles AS rr ON aa.accountRole = rr.id
                                                                     WHERE aa.accountID = up.downlineID),
-                                                ' ',(SELECT rr.name FROM accounts AS aa 
+                                                ' ',(SELECT rr.name FROM accounts AS aa
                                                                 LEFT JOIN default_roles AS rr ON aa.accountRole = rr.id
                                                                     WHERE aa.accountID = up.uplineID),
                                                 ' ',(SELECT aa.accountNickname FROM accounts AS aa WHERE aa.accountID = up.downlineID),
@@ -68,10 +68,10 @@ if($Verified == "FOUND"){
             if ( !empty($Got['SEARCH']) ){
                 $Extend_Search = " AND CONCAT(c.name,' ',c.id,' ',app.name, ' ',up.downlineID,' ',up.uplineID,' ',up.percentage,
                                                 ' ',IF(up.status = 0, 'Active', IF(up.status=1, 'Pending', 'Disabled')),
-                                                ' ',(SELECT rr.name FROM accounts AS aa 
+                                                ' ',(SELECT rr.name FROM accounts AS aa
                                                                 LEFT JOIN default_roles AS rr ON aa.accountRole = rr.id
                                                                     WHERE aa.accountID = up.downlineID),
-                                                ' ',(SELECT rr.name FROM accounts AS aa 
+                                                ' ',(SELECT rr.name FROM accounts AS aa
                                                                 LEFT JOIN default_roles AS rr ON aa.accountRole = rr.id
                                                                     WHERE aa.accountID = up.uplineID),
                                                 ' ',(SELECT aa.accountNickname FROM accounts AS aa WHERE aa.accountID = up.downlineID),
@@ -90,54 +90,54 @@ if($Verified == "FOUND"){
             $Extend = " ".$Extend_For." AND ".$Extend_Status. " ".$Extend_Club." ".$Extend_App." ".$Extend_Search." ".$Extend_Sort;
         }
 
-    $sql = "SELECT up.id AS id,
+$sql = "SELECT up.id AS id,
                     up.clubID AS clubIDD,
                     c.id AS clubID,
                     c.name AS clubName,
                     up.downlineID AS playerID,
                     (SELECT aa.accountNickname FROM accounts AS aa WHERE aa.accountID = up.downlineID) AS playerNickname,
                     (SELECT aa.accountRole FROM accounts AS aa WHERE aa.accountID = up.downlineID) AS playerRoleID,
-                    (SELECT rr.name FROM accounts AS aa 
-                    									LEFT JOIN default_roles AS rr ON aa.accountRole = rr.id
-						  									WHERE aa.accountID = up.downlineID) AS playerRole,
-						  (SELECT IF(aa.status = 0, 'Active', IF(aa.status=1, 'Pending', 'Disabled')) FROM accounts AS aa WHERE aa.accountID = up.downlineID) AS playerStatusLabel,
-                    (SELECT uu.id FROM accounts AS aa 
-                    									LEFT JOIN users AS uu ON aa.userID = uu.id
-						  									WHERE aa.accountID = up.downlineID) AS playerUserID,
-                    (SELECT uu.nickname FROM accounts AS aa 
-                    									LEFT JOIN users AS uu ON aa.userID = uu.id
-						  									WHERE aa.accountID = up.downlineID) AS playerUserNickname,
-                    (SELECT rr.name FROM accounts AS aa 
-                    									LEFT JOIN users AS uu ON aa.userID = uu.id
-                    									LEFT JOIN default_roles AS rr ON uu.role = rr.id
-						  									WHERE aa.accountID = up.downlineID) AS playerUserRole,
-                    (SELECT CONCAT(pp.path,ii.file) FROM accounts AS aa 
-                    									LEFT JOIN users AS uu ON aa.userID = uu.id
-											            LEFT JOIN images AS ii ON uu.avatar = ii.id
-											            LEFT JOIN paths AS pp ON ii.type = pp.type
-						  									WHERE aa.accountID = up.downlineID) AS playerUserAvatar,
+                    (SELECT rr.name FROM accounts AS aa
+                                                                                        LEFT JOIN default_roles AS rr ON aa.accountRole = rr.id
+                                                                                                                        WHERE aa.accountID = up.downlineID) AS playerRole,
+                                                  (SELECT IF(aa.status = 0, 'Active', IF(aa.status=1, 'Pending', 'Disabled')) FROM accounts AS aa WHERE aa.accountID = up.downlineID) AS playerStatusLabel,
+                    (SELECT uu.id FROM accounts AS aa
+                                                                                        LEFT JOIN users AS uu ON aa.userID = uu.id
+                                                                                                                        WHERE aa.accountID = up.downlineID) AS playerUserID,
+                    (SELECT uu.nickname FROM accounts AS aa
+                                                                                        LEFT JOIN users AS uu ON aa.userID = uu.id
+                                                                                                                        WHERE aa.accountID = up.downlineID) AS playerUserNickname,
+                    (SELECT rr.name FROM accounts AS aa
+                                                                                        LEFT JOIN users AS uu ON aa.userID = uu.id
+                                                                                        LEFT JOIN default_roles AS rr ON uu.role = rr.id
+                                                                                                                        WHERE aa.accountID = up.downlineID) AS playerUserRole,
+                    (SELECT CONCAT(pp.path,ii.file) FROM accounts AS aa
+                                                                                        LEFT JOIN users AS uu ON aa.userID = uu.id
+                                                                                                    LEFT JOIN images AS ii ON uu.avatar = ii.id
+                                                                                                    LEFT JOIN paths AS pp ON ii.type = pp.type
+                                                                                                                        WHERE aa.accountID = up.downlineID) AS playerUserAvatar,
                     up.uplineID AS uplineID,
                     (SELECT aa.accountNickname FROM accounts AS aa WHERE aa.accountID = up.uplineID) AS uplineNickname,
                     (SELECT aa.accountRole FROM accounts AS aa WHERE aa.accountID = up.uplineID) AS uplineRoleID,
-                    (SELECT rr.name FROM accounts AS aa 
-                    									LEFT JOIN default_roles AS rr ON aa.accountRole = rr.id
-						  									WHERE aa.accountID = up.uplineID) AS uplineRole,
-						  	(SELECT IF(aa.status = 0, 'Active', IF(aa.status=1, 'Pending', 'Disabled')) FROM accounts AS aa WHERE aa.accountID = up.uplineID) AS uplineStatusLabel,
-                    (SELECT uu.id FROM accounts AS aa 
-                    									LEFT JOIN users AS uu ON aa.userID = uu.id
-						  									WHERE aa.accountID = up.uplineID) AS uplineUserID,
-                    (SELECT uu.nickname FROM accounts AS aa 
-                    									LEFT JOIN users AS uu ON aa.userID = uu.id
-						  									WHERE aa.accountID = up.uplineID) AS uplineUserNickname,
-                    (SELECT rr.name FROM accounts AS aa 
-                    									LEFT JOIN users AS uu ON aa.userID = uu.id
-                    									LEFT JOIN default_roles AS rr ON uu.role = rr.id
-						  									WHERE aa.accountID = up.downlineID) AS uplineUserRole,
-                    (SELECT CONCAT(pp.path,ii.file) FROM accounts AS aa 
-                    									LEFT JOIN users AS uu ON aa.userID = uu.id
-											            LEFT JOIN images AS ii ON uu.avatar = ii.id
-											            LEFT JOIN paths AS pp ON ii.type = pp.type
-						  									WHERE aa.accountID = up.uplineID) AS uplineUserAvatar,
+                    (SELECT rr.name FROM accounts AS aa
+                                                                                        LEFT JOIN default_roles AS rr ON aa.accountRole = rr.id
+                                                                                                                        WHERE aa.accountID = up.uplineID) AS uplineRole,
+                                                        (SELECT IF(aa.status = 0, 'Active', IF(aa.status=1, 'Pending', 'Disabled')) FROM accounts AS aa WHERE aa.accountID = up.uplineID) AS uplineStatusLabel,
+                    (SELECT uu.id FROM accounts AS aa
+                                                                                        LEFT JOIN users AS uu ON aa.userID = uu.id
+                                                                                                                        WHERE aa.accountID = up.uplineID) AS uplineUserID,
+                    (SELECT uu.nickname FROM accounts AS aa
+                                                                                        LEFT JOIN users AS uu ON aa.userID = uu.id
+                                                                                                                        WHERE aa.accountID = up.uplineID) AS uplineUserNickname,
+                    (SELECT rr.name FROM accounts AS aa
+                                                                                        LEFT JOIN users AS uu ON aa.userID = uu.id
+                                                                                        LEFT JOIN default_roles AS rr ON uu.role = rr.id
+                                                                                                                        WHERE aa.accountID = up.downlineID) AS uplineUserRole,
+                    (SELECT CONCAT(pp.path,ii.file) FROM accounts AS aa
+                                                                                        LEFT JOIN users AS uu ON aa.userID = uu.id
+                                                                                                    LEFT JOIN images AS ii ON uu.avatar = ii.id
+                                                                                                    LEFT JOIN paths AS pp ON ii.type = pp.type
+                                                                                                                        WHERE aa.accountID = up.uplineID) AS uplineUserAvatar,
                     up.status AS status,
                     IF(up.status = 0, 'Active', IF(up.status=1, 'Pending', 'Disabled')) AS statusLabel,
                     FROM_UNIXTIME(up.stated, '%M %D, %Y %h:%i:%s') AS stated,
@@ -146,7 +146,7 @@ if($Verified == "FOUND"){
                     app.id as appID,
                     app.name AS appName,
                     CONCAT(p.path,i.file) AS appImage
-                    
+
             FROM uplines AS up
             LEFT JOIN accounts AS a ON up.downlineID = a.accountID
             LEFT JOIN users AS u ON a.userID = u.id

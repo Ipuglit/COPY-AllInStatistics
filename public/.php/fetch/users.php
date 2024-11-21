@@ -6,7 +6,7 @@
 
 
     if ( $Got['STATUS'] == "ALL" && $Got['ROLE'] == "EVERYONE"  ){
-            
+
         if ( $Got['SORTBY'] != "NONE" ){
             $Extend_Sort = " GROUP BY u.id ORDER BY ".$Got['SORTBY']." ".$Got['SORT'];
         } else {
@@ -14,7 +14,7 @@
         }
 
         if ( !empty($Got['SEARCH']) ){
-            $Extend_Search = " WHERE CONCAT(u.nickname,' ',u.email,' ', u.telegram, ' ', u.username,' ',r.name) LIKE '%".$Got['SEARCH']."%' ";
+            $Extend_Search = " WHERE CONCAT(u.nickname,' ',u.email,' ', u.telegram, ' ', u.username,' ',r.name, ' ',(SELECT COUNT(id) FROM accounts WHERE userID=u.id AND status=0)) LIKE '%".$Got['SEARCH']."%' ";
         } else {
             $Extend_Search = " ";
         }
@@ -44,7 +44,7 @@
         }
 
         if ( !empty($Got['SEARCH']) ){
-            $Extend_Search = " WHERE CONCAT(u.nickname,' ',u.email,' ', u.telegram, ' ', u.username,' ',r.name, ' ',(SELECT COUNT(id) FROM accounts WHERE userID=u.id AND status=0)) LIKE '%".$Got['SEARCH']."%' ";
+            $Extend_Search = " WHERE CONCAT(u.nickname,' ',u.email,' ', u.telegram, ' ', u.username,' ',r.name) LIKE '%".$Got['SEARCH']."%' ";
         } else {
             $Extend_Search = " ";
         }

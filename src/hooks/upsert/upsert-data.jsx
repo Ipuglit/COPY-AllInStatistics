@@ -5,11 +5,37 @@ import * as Fnc from '../functions'
 
 // -------------------------------
 
-export function UpsertLink(i) {
+export function UpsertLINK(i,ii) {
+    
+    if(ii == 'upload'){
+
+        return Imp.Uploads[i]
+
+    } else if(ii == 'upsert'){
+
+        return Imp.Upserts[i]
+
+    } else if(ii == 'image'){
+
+        return Imp.Images[i]
+
+    }
+
+}
+
+export function LinkUPLOAD(i) {
+    return Imp.Uploads[i]
+}
+
+export function ImageLink(i) {
+    return Imp.Images[i]
+}
+
+export function LinkUPSERTS(i) {
     return Imp.Upserts[i]
 }
 
-export function UpsertData(i) {
+export function UpsertDATA(i) {
 
     const Token = JSON.parse( localStorage.getItem('slk-token') );
 

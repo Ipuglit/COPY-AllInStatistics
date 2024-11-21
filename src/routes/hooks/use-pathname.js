@@ -11,7 +11,7 @@ export function usePathname() {
   const crown = useProfiling();
 
   useEffect(() => {
-      console.log(crown)
+      //console.log(crown )
   }, [pathname]);
 
   return useMemo(() => pathname, [pathname]);

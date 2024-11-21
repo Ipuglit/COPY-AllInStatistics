@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import { Viewing } from 'src/sections/uplines/view/';
+import { Viewing } from 'src/sections/fxrates/view/';
 
 // ----------------------------------------------------------------------
 
@@ -8,10 +8,10 @@ export default function FXRatesPage() {
   return (
     <>
       <Helmet>
-        <title> FX Rates | Poker Analytics </title>
+        <title> FX Rates | All In Statistics </title>
       </Helmet>
 
-      <Viewing TheFor="ALL" TheTitle="FXRATES" />
+      <Viewing TheFor="ALL" TheTitle="FX RATES" />
     </>
   );
 }

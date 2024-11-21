@@ -4,18 +4,19 @@
 
  if($Verified == "FOUND"){
 
-    $id =               $Got['id'];
-    $role =             $Got['roleID'];
-    $nickname =         $Got['nickname'];
-    $avatar =           $Got['avatarID'];
-    $username =         $Got['username'];
-    $password =         $Got['password'];
-    $email =            $Got['email'];
-    $telegram =         $Got['telegram'];
-    $status =           $Got['status'];
+    $id =               $Got['newuserID'];
+    $app =              $Got['newuserApp'];
+    $role =             $Got['newuserRole'];
+    $nickname =         $Got['newuserNickname'];
+    $avatar =           $Got['newuserAvatar'];
+    $username =         $Got['newuserUsername'];
+    $password =         $Got['newuserPassword'];
+    $email =            $Got['newuserEmail'];
+    $telegram =         $Got['newuserTelegram'];
+    $status =           $Got['newuserStatus'];
 
     $insert = "INSERT INTO users (`role`, `nickname`, `avatar`, `username`, `password`, `email`, `telegram`, `status`)
-                            VALUES ($role, '$nickname', '6', '$username', '$password', '$email', '$telegram', '$status') ";
+                            VALUES ($role, '$nickname', '$avatar', '$username', '$password', '$email', '$telegram', '$status') ";
 
     $check_insert = "SELECT * FROM users WHERE `nickname`='$nickname'";
 
@@ -39,27 +40,25 @@
 
             if ($duplicate_insert->num_rows > 0) {
                     while ($i = $duplicate_insert->fetch_assoc()) {
-                        $gotID              = $i["id"];
-                        $gotNickname        = $i["nickname"];
+                            $gotID = $i["id"];
                     }
-                    $feedback = "Already taken! ".$gotID." (".$gotNickname.")";
+                $feedback = "Duplicate: ".$gotID;
             } else {
 
                 if ($conx->query($insert) === TRUE) {
-                    $last_id            = mysqli_insert_id($conx);
-                    $feedback           = "Added New (".$last_id.")";
+                    $feedback = "Added";
                     $historyAction      = "ADDED";
                     $historyFor         = "USER";
                     $historyDetails     = "Nickname: ".$nickname.", Role ID: ".$role.", Username:".$username.", Status: ".$status;
                     include './history.php';
                 } else {
-                    $feedback = "Err Adding!";
+                    $feedback = "Err Add";
                 }
 
             }
 
         } catch (Exception $e) {
-            $feedback = "Catched Err Adding!";
+            $feedback = "Err";
         }
     } else {
         //IF WITH ID THEN UPDATE
@@ -68,10 +67,9 @@
 
             if ($duplicate_update->num_rows > 0) {
                     while ($i = $duplicate_update->fetch_assoc()) {
-                            $gotID              = $i["id"];
-                            $gotNickname        = $i["nickname"];
+                            $gotID = $i["id"];
                     }
-                    $feedback = "Already taken! ".$gotID." (".$gotNickname.")";
+                $feedback = "Duplicate: ".$gotID;
             } else {
 
                 if ($conx->query($update) === TRUE) {
@@ -81,18 +79,18 @@
                         $historyDetails     = "ID: ".$id.", Nickname: ".$nickname.", Role ID: ".$role.", Username:".$username.", Status: ".$status;
                         include './history.php';
                 } else {
-                    $feedback = "Err Updating!";
+                    $feedback = "Err Add";
                 }
 
             }
 
         } catch (Exception $e) {
-            $feedback = "Catched Err Updating!";
+            $feedback = "Err";
         }
     }
 
 } else {
-    $feedback = "NOTFOUND";
+    $feedback = "Err";
 }
 
 echo json_encode($feedback);

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 
 import { AppView } from 'src/sections/overview/view';
@@ -5,13 +6,16 @@ import { AppView } from 'src/sections/overview/view';
 // ----------------------------------------------------------------------
 
 export default function AppPage() {
+
+
   return (
     <>
       <Helmet>
-        <title> Dashboard | Poker Analytics </title>
+        <title> Dashboard | All In Statistics </title>
       </Helmet>
 
-      <AppView />
+    <AppView /> 
+
     </>
   );
 }

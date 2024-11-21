@@ -8,7 +8,7 @@ export default function ApplicationsPage() {
   return (
     <>
       <Helmet>
-        <title> Applications | Poker Analytics </title>
+        <title> Applications | All In Statistics </title>
       </Helmet>
 
       <Viewing />

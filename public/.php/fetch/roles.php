@@ -34,6 +34,7 @@ if($Verified == "FOUND"){
 
         if ($result->num_rows > 0) {
             while ($i = $result->fetch_assoc()) {
+
                 $counted++;
                 if($i['status']==0){
                     $status = "Active";
